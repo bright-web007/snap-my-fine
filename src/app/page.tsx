@@ -1,8 +1,27 @@
 "use client";
-import Image from "next/image";
-import { Button } from "@/component/ui/button/index";
-import { Upload, Camera, ArrowLeft } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+
+// Import section components
+import {
+  HomeSection,
+  CameraSection,
+  ImagePreviewSection,
+  ReviewSection,
+  PaymentSection,
+  RedirectingSection,
+  PaymentReceivedSection,
+  ProcessingSection,
+  PaymentStatusSection,
+  ReceiptSection,
+  SaveFineSection,
+  CheckInboxSection,
+  PaymentFailedSection,
+  SavedFinesSection,
+  AllTransactionsSection
+} from "@/components/sections";
+
+// Import types
+import type { Transaction, SavedFine, FormData, ValidationErrors } from "@/types";
 
 export default function Home() {
   const [showCamera, setShowCamera] = useState(false);
@@ -12,6 +31,163 @@ export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    // Simulate redirect delay
+    const interval = setInterval(() => {
+      setProgress((p) => (p < 100 ? p + 5 : 100));
+    }, 150);
+
+    return () => clearInterval(interval);
+  }, []);
+
+
+
+  // Form validation states
+  const [formData, setFormData] = useState<FormData>({
+    council: '',
+    pcnNumber: '',
+    vehicleNumber: '',
+    fineAmount: '',
+    email: ''
+  });
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({
+    council: false,
+    pcnNumber: false,
+    vehicleNumber: false,
+    fineAmount: false,
+    email: false
+  });
+
+  // Transaction history state
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  // Section navigation state
+  const [showReviewSection, setShowReviewSection] = useState(false); // 4th section
+  const [showPaymentSection, setShowPaymentSection] = useState(false); // 5th section
+  const [showRedirectingSection, setShowRedirectingSection] = useState(false); // 6th section
+  const [showPaymentReceivedSection, setShowPaymentReceivedSection] = useState(false); // 7th section
+  const [showProcessingSection, setShowProcessingSection] = useState(false); // 8th section
+  const [showPaymentStatusSection, setShowPaymentStatusSection] = useState(false); // 9th section
+  const [showReceiptSection, setShowReceiptSection] = useState(false); // 10th section
+  const [showSaveFineSection, setShowSaveFineSection] = useState(false); // 11th section
+  const [showCheckInboxSection, setShowCheckInboxSection] = useState(false); // 12th section
+  const [showPaymentFailedSection, setShowPaymentFailedSection] = useState(false); // 13th section
+  const [showSavedFinesSection, setShowSavedFinesSection] = useState(false); // 14th section
+  const [showAllTransactionsSection, setShowAllTransactionsSection] = useState(false); // 15th section
+
+  // Track if payment section is loaded from a saved fine
+  const [isLoadedFromSavedFine, setIsLoadedFromSavedFine] = useState(false);
+
+  // Track if user arrived at section 5 from section 14
+  const [cameFromSavedFines, setCameFromSavedFines] = useState(false);  // Saved fines state
+  const [savedFines, setSavedFines] = useState<SavedFine[]>([]);
+
+  // Section 6 to Section 7 transition (30 seconds) or failure after 10 seconds
+  useEffect(() => {
+    if (showRedirectingSection) {
+      // Simulate payment failure after 10 seconds (you can adjust this or add real failure logic)
+      const failureTimer = setTimeout(() => {
+        // Simulate random failure (30% chance) - you can replace this with real failure detection
+        const shouldFail = Math.random() < 0.3; // 30% chance of failure
+
+        if (shouldFail) {
+          setShowRedirectingSection(false);
+          setShowPaymentFailedSection(true);
+        }
+      }, 10000); // Check for failure after 10 seconds
+
+      // Normal success transition after 30 seconds
+      const successTimer = setTimeout(() => {
+        setShowRedirectingSection(false);
+        setShowPaymentReceivedSection(true);
+      }, 30000); // 30 seconds
+
+      return () => {
+        clearTimeout(failureTimer);
+        clearTimeout(successTimer);
+      };
+    }
+  }, [showRedirectingSection]);
+
+  // Section 7 to Section 8 transition (30 seconds)
+  useEffect(() => {
+    if (showPaymentReceivedSection) {
+      const timer = setTimeout(() => {
+        setShowPaymentReceivedSection(false);
+        setShowProcessingSection(true);
+      }, 30000); // 30 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [showPaymentReceivedSection]);
+
+  // Section 8 to Section 9 transition (20 seconds)
+  useEffect(() => {
+    if (showProcessingSection) {
+      const timer = setTimeout(() => {
+        setShowProcessingSection(false);
+        setShowPaymentStatusSection(true);
+      }, 20000); // 20 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [showProcessingSection]);
+
+  // Section 3 to Section 4 transition (5 seconds) - only if still on section 3
+  useEffect(() => {
+    if (showImagePreview) {
+      const timer = setTimeout(() => {
+        // Only transition if still showing image preview (user hasn't manually navigated away)
+        if (showImagePreview) {
+          setShowImagePreview(false);
+          setShowCamera(false); // Hide camera section
+          setShowReviewSection(true);
+        }
+      }, 5000); // 5 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [showImagePreview]);
+
+  const councils = [
+    "Barking and Dagenham",
+    "Barnet",
+    "Bexley",
+    "Brent",
+    "Bromley",
+    "Camden",
+    "Croydon",
+    "Ealing",
+    "Enfield",
+    "Greenwich",
+    "Hackney",
+    "Hammersmith and Fulham",
+    "Haringey",
+    "Harrow",
+    "Havering",
+    "Hillingdon",
+    "Hounslow",
+    "Islington",
+    "Kensington and Chelsea",
+    "Kingston upon Thames",
+    "Lambeth",
+    "Lewisham",
+    "Merton",
+    "Newham",
+    "Redbridge",
+    "Richmond upon Thames",
+    "Southwark",
+    "Sutton",
+    "Tower Hamlets",
+    "Waltham Forest",
+    "Wandsworth",
+    "Westminster",
+  ];
 
   const startCamera = async () => {
     try {
@@ -51,7 +227,7 @@ export default function Home() {
     }
   };
 
-  const takeSnapshot = () => {
+  const takeSnapshot = async () => {
     if (!videoRef.current || !canvasRef.current) return;
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -61,9 +237,11 @@ export default function Home() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imgData = canvas.toDataURL("image/png");
-    setSnapshot(imgData);
-    
+
+    // Create high-quality JPEG for n8n processing (smaller file size, good for OCR)
+    const imgDataJPEG = canvas.toDataURL("image/jpeg", 0.9); // 90% quality
+    setSnapshot(imgDataJPEG);
+
     // Stop video stream and show 3rd section
     if (videoRef.current.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
@@ -72,6 +250,115 @@ export default function Home() {
     setIsVideoVisible(false);
     setShowCamera(false);
     setShowImagePreview(true);
+
+    // Automatically send to n8n after capturing
+    console.log('Camera capture: sending to n8n...');
+    await sendToN8n(imgDataJPEG);
+  };
+
+  // Function to convert base64 to File object for n8n
+  const dataURLtoFile = (dataurl: string, filename: string) => {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)![1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
+
+  // Function to convert base64 to binary
+  const base64ToBinary = (base64String: string): Uint8Array => {
+    const binaryString = atob(base64String);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
+  };
+
+  // Function to send image to n8n for processing
+  const sendToN8n = async (imageData?: string) => {
+    const imgData = imageData || snapshot;
+    if (!imgData) return;
+
+    try {
+      // Extract base64 data and MIME type from data URL
+      const [header, base64Data] = imgData.split(',');
+      const mimeMatch = header.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+)/);
+      const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+
+      console.log('Processing image with MIME type:', mimeType);
+      console.log('Base64 data length:', base64Data?.length);
+
+      // Convert base64 to binary data
+      const binaryData = base64ToBinary(base64Data);
+
+      console.log('Binary data size:', binaryData.length, 'bytes');
+      console.log('Original base64 size:', base64Data.length, 'bytes');
+      console.log('Size reduction:', Math.round((1 - binaryData.length / base64Data.length) * 100) + '%');
+
+      // Send in Google AI Studio API format but with binary data
+      const payload = {
+        contents: [
+          {
+            parts: [
+              {
+                text: 'Analyze this parking fine/penalty charge notice image and extract information. Return ONLY a valid JSON object with these exact fields: {"fineAmount": number or null, "currency": "GBP/USD/EUR" or null, "issueDate": "DD/MM/YYYY" or null, "dueDate": "DD/MM/YYYY" or null, "referenceNumber": "string" or null, "vehicleRegistration": "string" or null, "location": "string" or null, "offense": "string" or null}. Look for fine amounts, reference numbers, vehicle registrations, dates, and locations. Return only the JSON object, no other text.'
+              },
+              {
+                inline_data: {
+                  mime_type: mimeType,
+                  data: base64Data // Base64 string data
+                }
+              }
+            ]
+          }
+        ]
+      };
+
+      // Your n8n webhook URL
+      const n8nWebhookUrl = 'https://n8n.seyibomba.com/webhook-test/webhook/process-ticket';
+
+      console.log('Sending binary data in Google AI Studio format to n8n...');
+      console.log('Webhook URL:', n8nWebhookUrl);
+      console.log('Payload size (bytes):', JSON.stringify(payload).length);
+      console.log('Binary data size:', binaryData.length, 'bytes');
+      console.log('MIME type:', mimeType);
+
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+      const webhookResponse = await fetch(n8nWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+      console.log('Response received:', webhookResponse.status, webhookResponse.statusText);
+
+      if (webhookResponse.ok) {
+        const result = await webhookResponse.json();
+        console.log('n8n processing result:', result);
+        // Handle the response from n8n here
+        alert('Ticket processed successfully!');
+      } else {
+        const errorText = await webhookResponse.text();
+        console.error('n8n response error:', webhookResponse.status, webhookResponse.statusText);
+        console.error('Error response body:', errorText);
+        throw new Error(`Failed to process ticket: ${webhookResponse.status} ${webhookResponse.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error sending to n8n:', error);
+      alert(`Failed to process ticket. Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   const retakePhoto = () => {
@@ -80,155 +367,490 @@ export default function Home() {
     setShowCamera(true);
   };
 
+  // Function to handle file upload from gallery
+  const handleFileUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  // Function to convert any image to JPEG format (like camera does)
+  const convertToJPEG = (imageDataURL: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = document.createElement('img');
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Could not get canvas context'));
+          return;
+        }
+
+        // Set canvas size to image size
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Draw image to canvas
+        ctx.drawImage(img, 0, 0);
+
+        // Resize image if too large
+        let targetWidth = img.width;
+        let targetHeight = img.height;
+
+        // If image is very large, resize it down
+        const maxDimension = 1024; // Max width or height
+        if (img.width > maxDimension || img.height > maxDimension) {
+          if (img.width > img.height) {
+            targetWidth = maxDimension;
+            targetHeight = (img.height * maxDimension) / img.width;
+          } else {
+            targetHeight = maxDimension;
+            targetWidth = (img.width * maxDimension) / img.height;
+          }
+        }
+
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        // Draw resized image to canvas
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+        // Convert to JPEG with lower quality for smaller file size
+        let jpegDataURL = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+
+        // If still too large, reduce quality further
+        if (jpegDataURL.length > 800000) { // If > 800KB
+          jpegDataURL = canvas.toDataURL('image/jpeg', 0.5); // 50% quality
+        }
+
+        console.log('Converted to JPEG. Original size:', imageDataURL.length, 'New size:', jpegDataURL.length);
+        console.log('Image resized from', img.width + 'x' + img.height, 'to', targetWidth + 'x' + targetHeight);
+        resolve(jpegDataURL);
+      };
+
+      img.onerror = () => {
+        reject(new Error('Failed to load image for conversion'));
+      };
+
+      img.src = imageDataURL;
+    });
+  };
+
+  // Function to handle file selection
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      console.log('Selected file:', file.name, 'Size:', file.size, 'Type:', file.type);
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const result = e.target?.result as string;
+          console.log('File read successfully, data URL length:', result.length);
+
+          setSnapshot(result);
+          setShowImagePreview(true);
+
+          // Check file size before processing
+          const fileSizeMB = result.length / (1024 * 1024);
+          console.log('File size: ', fileSizeMB.toFixed(2), 'MB');
+
+          if (fileSizeMB > 5) {
+            alert('File is too large (' + fileSizeMB.toFixed(2) + 'MB). Please select a smaller image or use the camera to take a photo.');
+            return;
+          }
+
+          // Try converting to JPEG for consistency with camera
+          try {
+            console.log('Converting to JPEG format...');
+            const jpegResult = await convertToJPEG(result);
+            console.log('JPEG conversion successful');
+
+            // Wait a moment for UI to update, then send to n8n
+            setTimeout(() => {
+              console.log('Sending converted JPEG to n8n...');
+              sendToN8n(jpegResult);
+            }, 1000);
+
+          } catch (conversionError) {
+            console.error('JPEG conversion failed, sending original:', conversionError);
+
+            // Fallback: send original file if conversion fails
+            setTimeout(() => {
+              console.log('Sending original file to n8n...');
+              sendToN8n(result);
+            }, 1000);
+          }
+
+        } catch (error) {
+          console.error('Error processing file:', error);
+          alert('Error processing the selected image.');
+        }
+      };
+
+      reader.onerror = (error) => {
+        console.error('FileReader error:', error);
+        alert('Error reading the selected file.');
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      alert('Please select a valid image file.');
+    }
+
+    // Reset the file input so the same file can be selected again
+    event.target.value = '';
+  };
+
+  // Handle form input changes
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+
+    // Clear validation error when user starts typing
+    if (validationErrors[field as keyof typeof validationErrors]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [field]: false
+      }));
+    }
+  };
+
+  // Handle form submission with validation
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Check for empty fields
+    const errors = {
+      council: !formData.council.trim(),
+      pcnNumber: !formData.pcnNumber.trim(),
+      vehicleNumber: !formData.vehicleNumber.trim(),
+      fineAmount: !formData.fineAmount.trim(),
+      email: false
+    };
+
+    setValidationErrors(errors);
+
+    // If all fields are filled, proceed to payment section
+    if (!Object.values(errors).some(error => error)) {
+      setShowReviewSection(false);
+      setShowPaymentSection(true);
+    }
+  };
+
+  // Call this after a transaction completes (success or failed)
+  const addTransaction = (status: 'success' | 'failed') => {
+    setTransactions(prev => {
+      const newTransaction = {
+        council: formData.council,
+        pcnNumber: formData.pcnNumber,
+        fineAmount: formData.fineAmount,
+        status,
+      };
+
+      // Add new transaction at the beginning to keep them in chronological order (newest first)
+      const updatedTransactions = [newTransaction, ...prev];
+      return updatedTransactions; // Keep ALL transactions
+    });
+  };
+
+  // Email validation function
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Function to open Gmail app
+  const openGmailApp = () => {
+    const userAgent = navigator.userAgent || navigator.vendor;
+
+    // Check if it's a mobile device
+    const isMobile = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
+
+    if (isMobile) {
+      // For mobile devices, try to open Gmail app
+      if (/android/i.test(userAgent)) {
+        // Android - try Gmail app first, fallback to web
+        window.location.href = 'intent://mail.google.com#Intent;scheme=https;package=com.google.android.gm;end';
+      } else if (/iphone|ipad|ipod/i.test(userAgent)) {
+        // iOS - try Gmail app, fallback to web
+        window.location.href = 'googlegmail://';
+        // Fallback after a short delay
+        setTimeout(() => {
+          window.open('https://mail.google.com', '_blank');
+        }, 1000);
+      }
+    } else {
+      // For desktop, open Gmail in new tab
+      window.open('https://mail.google.com', '_blank');
+    }
+  };
+
+  // Function to go back to section 1
+  const goToHomeSection = () => {
+    // Add a successful transaction when returning from receipt section
+    if (showReceiptSection) {
+      addTransaction('success');
+    }
+    // Add a failed transaction when returning from payment failed section
+    if (showPaymentFailedSection) {
+      addTransaction('failed');
+    }
+    setShowReceiptSection(false);
+    setShowCamera(false);
+    setShowImagePreview(false);
+    setShowReviewSection(false);
+    setShowPaymentSection(false);
+    setShowSaveFineSection(false);
+    setShowCheckInboxSection(false);
+    setShowRedirectingSection(false);
+    setShowPaymentReceivedSection(false);
+    setShowProcessingSection(false);
+    setShowPaymentStatusSection(false);
+    setShowPaymentFailedSection(false);
+    setShowSavedFinesSection(false);
+    setShowAllTransactionsSection(false);
+    setIsLoadedFromSavedFine(false);
+    setCameFromSavedFines(false);
+  };
+
+  // Function to retry payment (goes back to section 6)
+  const retryPayment = () => {
+    setShowPaymentFailedSection(false);
+    setShowRedirectingSection(true);
+  };
+
+  // Function to save fine to saved list
+  const saveFineToList = () => {
+    const newSavedFine = {
+      id: Date.now().toString(), // Simple ID generation
+      council: formData.council,
+      pcnNumber: formData.pcnNumber,
+      vehicleNumber: formData.vehicleNumber,
+      fineAmount: formData.fineAmount,
+      email: formData.email,
+      dateSaved: new Date().toLocaleDateString()
+    };
+
+    setSavedFines(prev => [newSavedFine, ...prev]); // Add to beginning (newest first)
+  };
+
+  // Function to delete saved fine
+  const deleteSavedFine = (fineId: string) => {
+    setSavedFines(prev => prev.filter(fine => fine.id !== fineId));
+  };
+
+  // Function to show saved fines section
+  const showSavedFines = () => {
+    setShowSavedFinesSection(true);
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-2">
       {/* 1st section */}
-      {!showCamera && !showImagePreview && (
-        <div className="flex flex-col gap-[38px] p-2">
-          <div className="flex flex-col gap-[4px] text-center">
-            <h1 className="text-[#105AE2] text-[32px] font-bold leading-[100%]">SnapMyFine</h1>
-            <p className="text-[#B2B2B3] text-[16px] leading-[24px]">Pay your parking fine in seconds</p>
-          </div>
-
-          <div className="w-full max-w-md flex flex-col items-center gap-6">
-            <div className="flex flex-col gap-[8px] w-full font-medium font-inter">
-              <Button
-                className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full"
-                onClick={() => setShowCamera(true)}
-              >
-                <Camera className="w-[24px] h-[24px] text-[white]" />
-                <p>Scan Ticket</p>
-              </Button>
-              <Button className="p-[12px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full">
-                <Upload className="w-[24px] h-[24px] text-[#323333]" />
-                <p>Upload from Gallery</p>
-              </Button>
-            </div>
-
-            <div className="text-[#19191A] bg-[#F1F7FE] p-[16px] w-full">
-              <h2 className="text-[16px] font-medium font-inter leading-[24px]">How it works</h2>
-              <ol className="text-[11px] font-medium font-inter list-decimal list-inside">
-                <li>Pay us securely through your bank.</li>
-                <li>We process your payment and take care of all the paperwork.</li>
-                <li>You receive a confirmation once the payment is made.</li>
-              </ol>
-            </div>
-            <p className="text-[14px] text-[#105AE2] font-medium font-inter text-center">Need help?</p>
-          </div>
-        </div>
+      {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && (
+        <HomeSection
+          transactions={transactions}
+          onScanTicket={() => setShowCamera(true)}
+          onUploadFromGallery={handleFileUpload}
+          onShowSavedFines={showSavedFines}
+          onShowAllTransactions={() => setShowAllTransactionsSection(true)}
+          onHamburgerClick={() => console.log('Hamburger menu clicked')}
+        />
       )}
 
       {/* 2nd section  */}
       {showCamera && !showImagePreview && (
-        <div className="w-full">
-          <div className="w-full flex flex-col gap-[1px]">
-            <button
-              className="flex items-center gap-[16px] text-gray-700 hover:text-black"
-              onClick={() => setShowCamera(false)}
-            >
-              <div className="p-[12px] rounded-full bg-[#E7EFFD]">
-                <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
-              </div>
-              <p className="flex flex-col text-left">
-                <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">SnapMyFine</span>
-                <span className="text-[#4A4C4F] text-[16px] leading-[24px] font-inter font-regular">Pay your parking fine in seconds</span>
-              </p>
-            </button>
-
-            <div className="w-full px-[12px] py-[15px]">
-              {/* Position ticket div - Hidden when video is visible */}
-              <div className={`bg-[#EAE9FC] w-full h-[423px] flex flex-col items-center justify-center gap-1 rounded-[12px] ${isVideoVisible ? 'hidden' : ''}`}>
-                <Camera className="w-[48px] h-[48px] text-[#105AE2]" />
-                <p className="text-[black] text-[12px] font-inter font-regular">Position ticket within frame</p>
-              </div>
-
-              {/* Video div - Visible when video is active */}
-              <div className={`${isVideoVisible ? '' : 'hidden'}`}>
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="w-full h-[423px] rounded-[12px] object-cover"
-                ></video>
-              </div>
-
-              <canvas ref={canvasRef} className="hidden"></canvas>
-            </div>
-
-          </div>
-          <div className="flex flex-col gap-[8px] w-full font-medium font-inter">
-            {/* Capture Ticket button - Visible when video is NOT showing */}
-            <Button
-              onClick={startCamera}
-              className={`p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full ${isVideoVisible ? 'hidden' : ''}`}
-            >
-              <Camera className="w-[24px] h-[24px] text-[white]" />
-              <p>Capture Ticket</p>
-            </Button>
-
-            {/* Take Snapshot button - Visible when video IS showing */}
-            <Button
-              onClick={takeSnapshot}
-              className={`p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full ${isVideoVisible ? '' : 'hidden'}`}
-            >
-              <Camera className="w-[24px] h-[24px] text-[white]" />
-              <p>Take Snapshot</p>
-            </Button>
-
-            <Button className="p-[12px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full">
-              <Upload className="w-[24px] h-[24px] text-[#323333]" />
-              <p>Upload from Gallery</p>
-            </Button>
-          </div>
-        </div>
+        <CameraSection
+          isVideoVisible={isVideoVisible}
+          videoRef={videoRef}
+          canvasRef={canvasRef}
+          onBack={() => setShowCamera(false)}
+          onStartCamera={startCamera}
+          onTakeSnapshot={takeSnapshot}
+          onUploadFromGallery={handleFileUpload}
+        />
       )}
 
 
       {/* 3rd section - Image Preview */}
       {showImagePreview && snapshot && (
-        <div className="w-full">
-          <div className="w-full flex flex-col gap-[24px]">
-            <button
-              className="flex items-center gap-[16px] text-gray-700 hover:text-black"
-              onClick={() => setShowImagePreview(false)}
-            >
-              <div className="p-[12px] rounded-full bg-[#E7EFFD]">
-                <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
-              </div>
-              <p className="flex flex-col text-left">
-                <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">SnapMyFine</span>
-                <span className="text-[#4A4C4F] text-[16px] leading-[24px] font-inter font-regular">Review your ticket</span>
-              </p>
-            </button>
+        <ImagePreviewSection
+          snapshot={snapshot}
+          onBack={() => {
+            setShowImagePreview(false);
+            setShowCamera(true);
+          }}
+          onRetakePhoto={retakePhoto}
+          onUploadFromGallery={handleFileUpload}
+        />
+      )}
 
-            <div className="w-full px-[12px] py-[15px]">
-              <div className="w-full h-[423px] rounded-[12px] overflow-hidden">
-                <img
-                  src={snapshot}
-                  alt="Captured ticket"
-                  className="w-full h-full object-cover rounded-[12px]"
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex flex-col gap-[8px] w-full font-medium font-inter">
-            <Button 
-              onClick={retakePhoto}
-              className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full"
-            >
-              <Camera className="w-[24px] h-[24px] text-[#323333]" />
-              <p>Retake</p>
-            </Button>
-            <Button className="p-[12px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full">
-              <Upload className="w-[24px] h-[24px] text-[#323333]" />
-              <p>Upload from Gallery</p>
-            </Button>
-          </div>
-        </div>
+      {/* Hidden file input for gallery upload */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileSelect}
+        accept="image/*"
+        style={{ display: 'none' }}
+      />
+
+      {/* 4th section - Review Details */}
+      {showReviewSection && (
+        <ReviewSection
+          formData={formData}
+          validationErrors={validationErrors}
+          councils={councils}
+          onBack={() => {
+            setShowReviewSection(false);
+            setShowCamera(true);
+          }}
+          onInputChange={handleInputChange}
+          onFormSubmit={handleFormSubmit}
+        />
+      )}
+
+      {/* 5th section - Payment Details */}
+      {showPaymentSection && (
+        <PaymentSection
+          formData={formData}
+          isLoadedFromSavedFine={isLoadedFromSavedFine}
+          onBack={() => {
+            if (cameFromSavedFines) {
+              setShowPaymentSection(false);
+              setShowSavedFinesSection(true);
+              setCameFromSavedFines(false);
+            } else {
+              setShowPaymentSection(false);
+              setShowReviewSection(true);
+            }
+          }}
+          onPayNow={() => {
+            setShowPaymentSection(false);
+            setShowRedirectingSection(true);
+          }}
+          onPayLater={() => {
+            setShowPaymentSection(false);
+            setShowSaveFineSection(true);
+          }}
+        />
+      )}
+
+
+
+      {/* 6th section - Redirecting to Payment */}
+      {showRedirectingSection && (
+        <RedirectingSection />
+      )}
+
+      {/* 7th section - Payment Received */}
+      {showPaymentReceivedSection && (
+        <PaymentReceivedSection formData={formData} />
+      )}
+
+      {/* 8th section - Processing Payment */}
+      {showProcessingSection && (
+        <ProcessingSection />
+      )}
+
+      {/* 9th section - Payment Status */}
+      {showPaymentStatusSection && (
+        <PaymentStatusSection
+          formData={formData}
+          validationErrors={validationErrors}
+          onBack={() => setShowCamera(false)}
+          onInputChange={handleInputChange}
+          onSendReceipt={() => {
+            if (isValidEmail(formData.email)) {
+              setShowPaymentStatusSection(false);
+              setShowReceiptSection(true);
+            }
+          }}
+          isValidEmail={isValidEmail}
+        />
+      )}
+
+      {/* 10th section */}
+      {showReceiptSection && (
+        <ReceiptSection
+          onClose={goToHomeSection}
+          onOpenGmail={openGmailApp}
+        />
+      )}
+
+      {/* 11th section */}
+      {showSaveFineSection && (
+        <SaveFineSection
+          formData={formData}
+          validationErrors={validationErrors}
+          onBack={() => {
+            setShowSaveFineSection(false);
+            setShowPaymentSection(true);
+          }}
+          onInputChange={handleInputChange}
+          onCreateAccount={() => {
+            if (isValidEmail(formData.email)) {
+              saveFineToList();
+              setShowSaveFineSection(false);
+              setShowCheckInboxSection(true);
+            }
+          }}
+          isValidEmail={isValidEmail}
+        />
+      )}
+
+      {/* 12th section-input email to get reciept */}
+      {showCheckInboxSection && (
+        <CheckInboxSection
+          formData={formData}
+          onClose={goToHomeSection}
+          onOpenGmail={openGmailApp}
+        />
+      )}
+
+      {/* 13th section - Error Payment Status */}
+      {showPaymentFailedSection && (
+        <PaymentFailedSection
+          onBack={() => setShowCamera(false)}
+          onTryAgain={retryPayment}
+        />
+      )}
+
+
+      {/* 14th section - Saved Fines */}
+      {showSavedFinesSection && (
+        <SavedFinesSection
+          savedFines={savedFines}
+          onBack={goToHomeSection}
+          onDeleteFine={deleteSavedFine}
+          onPayFine={(fine) => {
+            setFormData({
+              council: fine.council,
+              pcnNumber: fine.pcnNumber,
+              vehicleNumber: fine.vehicleNumber,
+              fineAmount: fine.fineAmount,
+              email: fine.email
+            });
+            setShowSavedFinesSection(false);
+            setShowPaymentSection(true);
+            setIsLoadedFromSavedFine(true);
+            setCameFromSavedFines(true);
+          }}
+        />
+      )}
+
+      {/* 15th section -payment reciept  */}
+      {showAllTransactionsSection && (
+        <AllTransactionsSection
+          transactions={transactions}
+          onBack={goToHomeSection}
+        />
       )}
 
     </div>
   );
 }
+
+
