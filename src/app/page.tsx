@@ -1,5 +1,10 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { ArrowLeft, AlertCircle } from "lucide-react";
+
+// Import components
+import HamburgerModal from "@/components/HamburgerModal";
+import { Button } from "@/component/ui/button/index";
 
 // Import section components
 import {
@@ -17,7 +22,8 @@ import {
   CheckInboxSection,
   PaymentFailedSection,
   SavedFinesSection,
-  AllTransactionsSection
+  AllTransactionsSection,
+  PartialPaymentStatusSection
 } from "@/components/sections";
 
 // Import types
@@ -86,6 +92,13 @@ export default function Home() {
   // Track if user arrived at section 5 from section 14
   const [cameFromSavedFines, setCameFromSavedFines] = useState(false);  // Saved fines state
   const [savedFines, setSavedFines] = useState<SavedFine[]>([]);
+
+  // Hamburger modal state
+  const [showHamburgerModal, setShowHamburgerModal] = useState(false);
+
+  // Section 16 - Partial Payment state
+  const [showPartialPaymentSection, setShowPartialPaymentSection] = useState(false);
+  const [partialPaymentReceived, setPartialPaymentReceived] = useState<number>(77.00); // Amount user actually paid
 
   // Section 6 to Section 7 transition (30 seconds) or failure after 10 seconds
   useEffect(() => {
@@ -650,14 +663,14 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-2">
       {/* 1st section */}
-      {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && (
+      {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && !showPartialPaymentSection && (
         <HomeSection
           transactions={transactions}
           onScanTicket={() => setShowCamera(true)}
           onUploadFromGallery={handleFileUpload}
           onShowSavedFines={showSavedFines}
           onShowAllTransactions={() => setShowAllTransactionsSection(true)}
-          onHamburgerClick={() => console.log('Hamburger menu clicked')}
+          onHamburgerClick={() => setShowHamburgerModal(true)}
         />
       )}
 
@@ -846,6 +859,62 @@ export default function Home() {
         <AllTransactionsSection
           transactions={transactions}
           onBack={goToHomeSection}
+        />
+      )}
+
+      {/* Hamburger Modal */}
+      <HamburgerModal
+        isOpen={showHamburgerModal}
+        onClose={() => setShowHamburgerModal(false)}
+        onSavedFines={() => {
+          setShowSavedFinesSection(true);
+          // Hide all other sections when navigating to saved fines
+          setShowCamera(false);
+          setShowImagePreview(false);
+          setShowReviewSection(false);
+          setShowPaymentSection(false);
+          setShowRedirectingSection(false);
+          setShowPaymentReceivedSection(false);
+          setShowProcessingSection(false);
+          setShowPaymentStatusSection(false);
+          setShowReceiptSection(false);
+          setShowSaveFineSection(false);
+          setShowCheckInboxSection(false);
+          setShowPaymentFailedSection(false);
+          setShowAllTransactionsSection(false);
+        }}
+        onPaymentHistory={() => {
+          setShowAllTransactionsSection(true);
+          // Hide all other sections when navigating to payment history
+          setShowCamera(false);
+          setShowImagePreview(false);
+          setShowReviewSection(false);
+          setShowPaymentSection(false);
+          setShowRedirectingSection(false);
+          setShowPaymentReceivedSection(false);
+          setShowProcessingSection(false);
+          setShowPaymentStatusSection(false);
+          setShowReceiptSection(false);
+          setShowSaveFineSection(false);
+          setShowCheckInboxSection(false);
+          setShowPaymentFailedSection(false);
+          setShowSavedFinesSection(false);
+        }}
+        onContactUs={() => {
+          console.log('Contact Us clicked');
+          // You can implement contact us functionality here
+        }}
+      />
+
+      {/* 16th section - Partial Payment Status */}
+      {showPartialPaymentSection && (
+        <PartialPaymentStatusSection
+          partialPaymentReceived={partialPaymentReceived}
+          formData={formData}
+          isLoadedFromSavedFine={isLoadedFromSavedFine}
+          onBack={() => setShowPartialPaymentSection(false)}
+          onPayNow={() => setShowPaymentSection(true)}
+          onPayLater={() => setShowSaveFineSection(true)}
         />
       )}
 
