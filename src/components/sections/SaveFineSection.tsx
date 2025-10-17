@@ -6,28 +6,28 @@ import { useTicketStore } from "@/lib/stores/ticketStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket-processor";
 
 interface FormData {
-  council: string;
-  pcnNumber: string;
-  vehicleNumber: string;
-  fineAmount: string;
-  email: string;
+    council: string;
+    pcnNumber: string;
+    vehicleNumber: string;
+    fineAmount: string;
+    email: string;
 }
 
 interface ValidationErrors {
-  council: boolean;
-  pcnNumber: boolean;
-  vehicleNumber: boolean;
-  fineAmount: boolean;
-  email: boolean;
+    council: boolean;
+    pcnNumber: boolean;
+    vehicleNumber: boolean;
+    fineAmount: boolean;
+    email: boolean;
 }
 
 interface SaveFineSectionProps {
-  formData: FormData;
-  validationErrors: ValidationErrors;
-  onBack: () => void;
-  onInputChange: (field: string, value: string) => void;
-  onCreateAccount: () => void;
-  isValidEmail: (email: string) => boolean;
+    formData: FormData;
+    validationErrors: ValidationErrors;
+    onBack: () => void;
+    onInputChange: (field: string, value: string) => void;
+    onCreateAccount: () => void;
+    isValidEmail: (email: string) => boolean;
 }
 
 export default function SaveFineSection({

@@ -4,37 +4,37 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 
 interface FormData {
-  council: string;
-  pcnNumber: string;
-  vehicleNumber: string;
-  fineAmount: string;
-  email: string;
+    council: string;
+    pcnNumber: string;
+    vehicleNumber: string;
+    fineAmount: string;
+    email: string;
 }
 
 interface ValidationErrors {
-  council: boolean;
-  pcnNumber: boolean;
-  vehicleNumber: boolean;
-  fineAmount: boolean;
-  email: boolean;
+    council: boolean;
+    pcnNumber: boolean;
+    vehicleNumber: boolean;
+    fineAmount: boolean;
+    email: boolean;
 }
 
 interface ReviewSectionProps {
-  formData: FormData;
-  validationErrors: ValidationErrors;
-  councils: string[];
-  onBack: () => void;
-  onInputChange: (field: string, value: string) => void;
-  onFormSubmit: (e: React.FormEvent) => void;
+    formData: FormData;
+    validationErrors: ValidationErrors;
+    councils: string[];
+    onBack: () => void;
+    onInputChange: (field: string, value: string) => void;
+    onFormSubmit: (e: React.FormEvent) => void;
 }
 
 export default function ReviewSection({
-  formData,
-  validationErrors,
-  councils,
-  onBack,
-  onInputChange,
-  onFormSubmit
+    formData,
+    validationErrors,
+    councils,
+    onBack,
+    onInputChange,
+    onFormSubmit
 }: ReviewSectionProps) {
   const { ticketData } = useTicketStore();
 
@@ -53,9 +53,9 @@ export default function ReviewSection({
           </p>
         </button>
 
-        <div className="text-[14px] text-[#0A398F] bg-[#F1F7FE] leading-[20px] font-inter font-regular p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
-          <p>Please verify the details below are correct before proceeding to payment.</p>
-        </div>
+                <div className="text-[14px] text-[#0A398F] bg-[#F1F7FE] leading-[20px] font-inter font-regular p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
+                    <p>Please verify the details below are correct before proceeding to payment.</p>
+                </div>
 
         <div className="w-full">
           <form

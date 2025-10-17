@@ -5,27 +5,27 @@ import { useTicketProcessor } from "@/lib/hooks/use-ticket-processor";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 
 interface SavedFine {
-  id: string;
-  council: string;
-  pcnNumber: string;
-  vehicleNumber: string;
-  fineAmount: string;
-  email: string;
-  dateSaved: string;
+    id: string;
+    council: string;
+    pcnNumber: string;
+    vehicleNumber: string;
+    fineAmount: string;
+    email: string;
+    dateSaved: string;
 }
 
 interface SavedFinesSectionProps {
-  savedFines: SavedFine[];
-  onBack: () => void;
-  onDeleteFine: (fineId: string) => void;
-  onPayFine: (fine: SavedFine) => void;
+    savedFines: SavedFine[];
+    onBack: () => void;
+    onDeleteFine: (fineId: string) => void;
+    onPayFine: (fine: SavedFine) => void;
 }
 
 export default function SavedFinesSection({
-  savedFines,
-  onBack,
-  onDeleteFine,
-  onPayFine
+    savedFines,
+    onBack,
+    onDeleteFine,
+    onPayFine
 }: SavedFinesSectionProps) {
   const { deleteTicket, loading } = useTicketProcessor();
   const { removeSavedTicket } = useTicketStore();
@@ -61,9 +61,9 @@ export default function SavedFinesSection({
         </button>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 flex flex-col px-4 py-6">
-        <div className="w-full max-w-md mx-auto flex flex-col gap-[16px]">
+            {/* Content */}
+            <div className="flex-1 flex flex-col px-4 py-6">
+                <div className="w-full max-w-md mx-auto flex flex-col gap-[16px]">
 
           {savedFines.length === 0 ? (
             // Empty state
@@ -90,41 +90,41 @@ export default function SavedFinesSection({
                         </button>
                       </p>
 
-                      <p className="mb-1">
-                        <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">PCN: {fine.pcnNumber}</span>
-                      </p>
+                                            <p className="mb-1">
+                                                <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">PCN: {fine.pcnNumber}</span>
+                                            </p>
 
-                      <p className="mb-2">
-                        <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">Vehicle: {fine.vehicleNumber}</span>
-                      </p>
-                    </div>
-                  </div>
+                                            <p className="mb-2">
+                                                <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">Vehicle: {fine.vehicleNumber}</span>
+                                            </p>
+                                        </div>
+                                    </div>
 
-                  <div className="flex justify-between items-center">
-                    <p className="flex gap-[8px] items-center">
-                      <Clock className="w-[16px] h-[16px] text-[#7E8081]" />
-                      <span className="text-[12px] text-[#7E8081] leading-[16px] font-regular font-inter tracking-[0.4%]">Saved on {fine.dateSaved}</span>
-                    </p>
+                                    <div className="flex justify-between items-center">
+                                        <p className="flex gap-[8px] items-center">
+                                            <Clock className="w-[16px] h-[16px] text-[#7E8081]" />
+                                            <span className="text-[12px] text-[#7E8081] leading-[16px] font-regular font-inter tracking-[0.4%]">Saved on {fine.dateSaved}</span>
+                                        </p>
 
-                    <p className="text-[16px] font-semibold font-inter leading-[24px] text-[#19191A]">
-                      £{fine.fineAmount ? Number(fine.fineAmount).toFixed(2) : '0.00'}
-                    </p>
-                  </div>
+                                        <p className="text-[16px] font-semibold font-inter leading-[24px] text-[#19191A]">
+                                            £{fine.fineAmount ? Number(fine.fineAmount).toFixed(2) : '0.00'}
+                                        </p>
+                                    </div>
 
-                  <hr className="border-1 border-[#E5E7EB] my-2" />
+                                    <hr className="border-1 border-[#E5E7EB] my-2" />
 
-                  <Button
-                    className="bg-[#105AE2] text-[#FFFFFF] text-[14px] py-[12px] px-[12px] w-full"
-                    onClick={() => onPayFine(fine)}
-                  >
-                    Pay Now
-                  </Button>
+                                    <Button
+                                        className="bg-[#105AE2] text-[#FFFFFF] text-[14px] py-[12px] px-[12px] w-full"
+                                        onClick={() => onPayFine(fine)}
+                                    >
+                                        Pay Now
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-              ))}
             </div>
-          )}
         </div>
-      </div>
-    </div>
-  );
+    );
 }

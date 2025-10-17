@@ -14,3 +14,4 @@ export { default as CheckInboxSection } from './CheckInboxSection';
 export { default as PaymentFailedSection } from './PaymentFailedSection';
 export { default as SavedFinesSection } from './SavedFinesSection';
 export { default as AllTransactionsSection } from './AllTransactionsSection';
+export { default as PartialPaymentStatusSection } from './PartialPaymentStatusSection';
