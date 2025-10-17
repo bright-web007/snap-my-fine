@@ -9,7 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@apollo/client": "^3.13.9",
     "@radix-ui/react-slot": "^1.2.3",
+    "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",
     "lucide-react": "^0.545.0",
     "next": "15.5.4",
@@ -29,6 +31,13 @@
     "express": "^5.1.0",
     "multer": "^2.0.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "zod": "^3.23.8",
+    "zustand": "^5.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "zustand": "$zustand"
+    }
   }
 }

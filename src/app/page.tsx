@@ -23,7 +23,12 @@ import {
 // Import types
 import type { Transaction, SavedFine, FormData, ValidationErrors } from "@/types";
 
+// Import stores and hooks
+import { useTicketStore } from "@/lib/stores/ticketStore";
+import { useTicketProcessor } from "@/lib/hooks/use-ticket-processor";
+
 export default function Home() {
+  const { processTicket, fetchTickets } = useTicketProcessor();
   const [showCamera, setShowCamera] = useState(false);
   const [isVideoVisible, setIsVideoVisible] = useState(false);
   const [showImagePreview, setShowImagePreview] = useState(false);
@@ -32,7 +37,7 @@ export default function Home() {
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+  const { savedTickets, ticketData, addSavedTicket, removeSavedTicket } = useTicketStore();
 
   const [progress, setProgress] = useState(0);
 
@@ -40,10 +45,39 @@ export default function Home() {
     // Simulate redirect delay
     const interval = setInterval(() => {
       setProgress((p) => (p < 100 ? p + 5 : 100));
-    }, 150);
+    }, 50);
 
     return () => clearInterval(interval);
   }, []);
+
+  // Fetch tickets on component mount
+  useEffect(() => {
+    const fetchSavedTickets = async () => {
+      try {
+        // You might want to get the user's email from somewhere (e.g., localStorage, auth context, etc.)
+        // For now, I'll use a placeholder - you'll need to replace this with actual user email
+        const userEmail = 'ogwurup@gmail.com'; // Replace with actual user email
+        await fetchTickets(userEmail);
+      } catch (error) {
+        console.error('Error fetching saved tickets:', error);
+      }
+    };
+
+    fetchSavedTickets();
+  }, [fetchTickets]);
+
+  // Sync ticketData to formData when ticketData is available
+  useEffect(() => {
+    if (ticketData) {
+      setFormData(prev => ({
+        ...prev,
+        council: prev.council || ticketData.council_name || '',
+        pcnNumber: prev.pcnNumber || ticketData.pcn_number || '',
+        vehicleNumber: prev.vehicleNumber || ticketData.plate_number || '',
+        fineAmount: prev.fineAmount || ticketData.amount?.toString() || ''
+      }));
+    }
+  }, [ticketData]);
 
 
 
@@ -84,8 +118,7 @@ export default function Home() {
   const [isLoadedFromSavedFine, setIsLoadedFromSavedFine] = useState(false);
 
   // Track if user arrived at section 5 from section 14
-  const [cameFromSavedFines, setCameFromSavedFines] = useState(false);  // Saved fines state
-  const [savedFines, setSavedFines] = useState<SavedFine[]>([]);
+  const [cameFromSavedFines, setCameFromSavedFines] = useState(false);  // Use the saved tickets from the store
 
   // Section 6 to Section 7 transition (30 seconds) or failure after 10 seconds
   useEffect(() => {
@@ -285,76 +318,11 @@ export default function Home() {
     if (!imgData) return;
 
     try {
-      // Extract base64 data and MIME type from data URL
-      const [header, base64Data] = imgData.split(',');
-      const mimeMatch = header.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+)/);
-      const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+      // Use the hook to process the ticket which handles the API call and state management
+      await processTicket(imgData);
 
-      console.log('Processing image with MIME type:', mimeType);
-      console.log('Base64 data length:', base64Data?.length);
-
-      // Convert base64 to binary data
-      const binaryData = base64ToBinary(base64Data);
-
-      console.log('Binary data size:', binaryData.length, 'bytes');
-      console.log('Original base64 size:', base64Data.length, 'bytes');
-      console.log('Size reduction:', Math.round((1 - binaryData.length / base64Data.length) * 100) + '%');
-
-      // Send in Google AI Studio API format but with binary data
-      const payload = {
-        contents: [
-          {
-            parts: [
-              {
-                text: 'Analyze this parking fine/penalty charge notice image and extract information. Return ONLY a valid JSON object with these exact fields: {"fineAmount": number or null, "currency": "GBP/USD/EUR" or null, "issueDate": "DD/MM/YYYY" or null, "dueDate": "DD/MM/YYYY" or null, "referenceNumber": "string" or null, "vehicleRegistration": "string" or null, "location": "string" or null, "offense": "string" or null}. Look for fine amounts, reference numbers, vehicle registrations, dates, and locations. Return only the JSON object, no other text.'
-              },
-              {
-                inline_data: {
-                  mime_type: mimeType,
-                  data: base64Data // Base64 string data
-                }
-              }
-            ]
-          }
-        ]
-      };
-
-      // Your n8n webhook URL
-      const n8nWebhookUrl = 'https://n8n.seyibomba.com/webhook-test/webhook/process-ticket';
-
-      console.log('Sending binary data in Google AI Studio format to n8n...');
-      console.log('Webhook URL:', n8nWebhookUrl);
-      console.log('Payload size (bytes):', JSON.stringify(payload).length);
-      console.log('Binary data size:', binaryData.length, 'bytes');
-      console.log('MIME type:', mimeType);
-
-      // Create AbortController for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-      const webhookResponse = await fetch(n8nWebhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-        signal: controller.signal
-      });
-
-      clearTimeout(timeoutId);
-      console.log('Response received:', webhookResponse.status, webhookResponse.statusText);
-
-      if (webhookResponse.ok) {
-        const result = await webhookResponse.json();
-        console.log('n8n processing result:', result);
-        // Handle the response from n8n here
-        alert('Ticket processed successfully!');
-      } else {
-        const errorText = await webhookResponse.text();
-        console.error('n8n response error:', webhookResponse.status, webhookResponse.statusText);
-        console.error('Error response body:', errorText);
-        throw new Error(`Failed to process ticket: ${webhookResponse.status} ${webhookResponse.statusText}`);
-      }
+      // Handle the response from n8n (data is now stored in the zustand store)
+      alert('Ticket processed successfully!');
     } catch (error) {
       console.error('Error sending to n8n:', error);
       alert(`Failed to process ticket. Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -522,12 +490,12 @@ export default function Home() {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check for empty fields
+    // Check for empty fields, also considering ticketData if formData is empty
     const errors = {
-      council: !formData.council.trim(),
-      pcnNumber: !formData.pcnNumber.trim(),
-      vehicleNumber: !formData.vehicleNumber.trim(),
-      fineAmount: !formData.fineAmount.trim(),
+      council: !(formData.council.trim() || (ticketData?.council_name || '').trim()),
+      pcnNumber: !(formData.pcnNumber.trim() || (ticketData?.pcn_number || '').trim()),
+      vehicleNumber: !(formData.vehicleNumber.trim() || (ticketData?.plate_number || '').trim()),
+      fineAmount: !(formData.fineAmount.trim() || (ticketData?.amount?.toString() || '').trim()),
       email: false
     };
 
@@ -535,6 +503,15 @@ export default function Home() {
 
     // If all fields are filled, proceed to payment section
     if (!Object.values(errors).some(error => error)) {
+      // Ensure formData has the final values before proceeding
+      setFormData(prev => ({
+        ...prev,
+        council: prev.council || ticketData?.council_name || '',
+        pcnNumber: prev.pcnNumber || ticketData?.pcn_number || '',
+        vehicleNumber: prev.vehicleNumber || ticketData?.plate_number || '',
+        fineAmount: prev.fineAmount || ticketData?.amount?.toString() || ''
+      }));
+
       setShowReviewSection(false);
       setShowPaymentSection(true);
     }
@@ -625,21 +602,19 @@ export default function Home() {
   // Function to save fine to saved list
   const saveFineToList = () => {
     const newSavedFine = {
-      id: Date.now().toString(), // Simple ID generation
       council: formData.council,
       pcnNumber: formData.pcnNumber,
       vehicleNumber: formData.vehicleNumber,
       fineAmount: formData.fineAmount,
       email: formData.email,
-      dateSaved: new Date().toLocaleDateString()
     };
 
-    setSavedFines(prev => [newSavedFine, ...prev]); // Add to beginning (newest first)
+    addSavedTicket(newSavedFine); // Add to store
   };
 
   // Function to delete saved fine
   const deleteSavedFine = (fineId: string) => {
-    setSavedFines(prev => prev.filter(fine => fine.id !== fineId));
+    removeSavedTicket(fineId);
   };
 
   // Function to show saved fines section
@@ -822,7 +797,7 @@ export default function Home() {
       {/* 14th section - Saved Fines */}
       {showSavedFinesSection && (
         <SavedFinesSection
-          savedFines={savedFines}
+          savedFines={savedTickets}
           onBack={goToHomeSection}
           onDeleteFine={deleteSavedFine}
           onPayFine={(fine) => {
@@ -852,5 +827,3 @@ export default function Home() {
     </div>
   );
 }
-
-

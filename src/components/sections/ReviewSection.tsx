@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useTicketStore } from "@/lib/stores/ticketStore";
 
 interface FormData {
   council: string;
@@ -35,6 +36,8 @@ export default function ReviewSection({
   onInputChange,
   onFormSubmit
 }: ReviewSectionProps) {
+  const { ticketData } = useTicketStore();
+
   return (
     <div className="w-full">
       <div className="w-full flex flex-col gap-[16px]">
@@ -67,7 +70,7 @@ export default function ReviewSection({
               </label>
               <select
                 name="council"
-                value={formData.council}
+                value={formData.council || (ticketData?.council_name ? ticketData.council_name : '')}
                 onChange={(e) => onInputChange('council', e.target.value)}
                 className="border border-[#D1D5DB] text-[#4A4C4F] rounded-[8px] p-[16px] text-[14px] outline-none focus:ring-2 focus:ring-[#105AE2]"
               >
@@ -77,6 +80,10 @@ export default function ReviewSection({
                     {c}
                   </option>
                 ))}
+                {/* Add ticket data option if it's not in the councils list */}
+                {ticketData?.council_name && !councils.includes(ticketData.council_name) && (
+                  <option value={ticketData.council_name}>{ticketData.council_name}</option>
+                )}
               </select>
             </div>
 
@@ -89,7 +96,7 @@ export default function ReviewSection({
               <input
                 type="text"
                 name="pcnNumber"
-                value={formData.pcnNumber}
+                value={formData.pcnNumber || ticketData?.pcn_number || ''}
                 onChange={(e) => onInputChange('pcnNumber', e.target.value)}
                 placeholder="Enter PCN number"
                 className="border border-[#D1D5DB] rounded-[8px] p-[16px] text-[14px] text-[#4A4C4F] outline-none focus:ring-2 focus:ring-[#105AE2]"
@@ -105,7 +112,7 @@ export default function ReviewSection({
               <input
                 type="text"
                 name="vehicleNumber"
-                value={formData.vehicleNumber}
+                value={formData.vehicleNumber || ticketData?.plate_number || ''}
                 onChange={(e) => onInputChange('vehicleNumber', e.target.value)}
                 placeholder="Enter vehicle registration number"
                 className="border border-[#D1D5DB] rounded-[8px] text-[#4A4C4F] p-[16px] text-[14px] outline-none focus:ring-2 focus:ring-[#105AE2]"
@@ -121,7 +128,7 @@ export default function ReviewSection({
               <input
                 type="number"
                 name="fineAmount"
-                value={formData.fineAmount}
+                value={formData.fineAmount || (ticketData?.amount ? ticketData.amount.toString() : '')}
                 onChange={(e) => onInputChange('fineAmount', e.target.value)}
                 placeholder="Enter fine amount"
                 className="border border-[#D1D5DB] rounded-[8px] p-[16px] text-[14px] text-[#4A4C4F] outline-none focus:ring-2 focus:ring-[#105AE2]"
@@ -136,7 +143,7 @@ export default function ReviewSection({
               >
                 <ArrowRight className="w-[20px] h-[20px]" /> Continue to payment
               </Button>
-              <p className="text-[12px] text-[#7E8081] leading-[16px] font-inter font-regular text-center px-[30px]">By continuing, you agree to proceed with secure payment through your bank's gateway</p>
+              <p className="text-[12px] text-[#7E8081] leading-[16px] font-inter font-regular text-center px-[30px]">By continuing, you agree to proceed with secure payment through your bank&apos;s gateway</p>
             </div>
           </form>
         </div>

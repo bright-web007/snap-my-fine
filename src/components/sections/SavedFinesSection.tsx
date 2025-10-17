@@ -1,6 +1,8 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
 import { ArrowLeft, Clock, Trash } from "lucide-react";
+import { useTicketProcessor } from "@/lib/hooks/use-ticket-processor";
+import { useTicketStore } from "@/lib/stores/ticketStore";
 
 interface SavedFine {
   id: string;
@@ -25,6 +27,24 @@ export default function SavedFinesSection({
   onDeleteFine,
   onPayFine
 }: SavedFinesSectionProps) {
+  const { deleteTicket, loading } = useTicketProcessor();
+  const { removeSavedTicket } = useTicketStore();
+
+  const handleDeleteFine = async (fine: SavedFine) => {
+    if (loading) return;
+    
+    try {
+      // Call the API to delete the ticket from the server
+      await deleteTicket(fine.email, fine.pcnNumber);
+      
+      // Remove the ticket from local store
+      removeSavedTicket(fine.id);
+      
+      // Call the original onDeleteFine callback if needed
+      onDeleteFine(fine.id);
+    } catch (error) {
+    }
+  };
   return (
     <div className="w-full min-h-screen flex flex-col">
       <div className="w-full mt-[16px]">
@@ -50,7 +70,7 @@ export default function SavedFinesSection({
             <div className="text-center py-12">
               <Clock className="w-12 h-12 text-[#B2B2B3] mx-auto mb-4" />
               <p className="text-[#19191A] text-[16px] font-inter font-medium mb-2">No available saved fine</p>
-              <p className="text-[#7E8081] text-[14px] font-inter font-regular">You haven't saved any fines yet. Scan a ticket to get started.</p>
+              <p className="text-[#7E8081] text-[14px] font-inter font-regular">You haven&apos;t saved any fines yet. Scan a ticket to get started.</p>
             </div>
           ) : (
             // Saved fines list
@@ -62,8 +82,9 @@ export default function SavedFinesSection({
                       <p className="flex justify-between items-center mb-2">
                         <span className="text-[14px] text-[#000000] leading-[16px] font-medium font-inter tracking-[0.4%]">{fine.council}</span>
                         <button
-                          onClick={() => onDeleteFine(fine.id)}
-                          className="p-1 hover:bg-gray-200 rounded transition-colors"
+                          onClick={() => handleDeleteFine(fine)}
+                          disabled={loading}
+                          className="p-1 hover:bg-gray-200 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <Trash className="w-[16px] h-[16px] text-[#7E8081]" />
                         </button>
