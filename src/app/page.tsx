@@ -31,7 +31,7 @@ import type { Transaction, SavedFine, FormData, ValidationErrors } from "@/types
 
 // Import stores and hooks
 import { useTicketStore } from "@/lib/stores/ticketStore";
-import { useTicketProcessor } from "@/lib/hooks/use-ticket-processor";
+import { useTicketProcessor } from "@/lib/hooks/use-ticket";
 
 export default function Home() {
   const { processTicket, fetchTickets } = useTicketProcessor();

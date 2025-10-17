@@ -25,7 +25,7 @@ export const useTicketStore = create<TicketStore>()(
         savedTickets: [
           {
             ...fine,
-            id: Date.now().toString(), // Simple ID generation
+            id: Date.now().toString(), // ID generation
             dateSaved: new Date().toLocaleDateString()
           },
           ...state.savedTickets
@@ -38,8 +38,8 @@ export const useTicketStore = create<TicketStore>()(
       clearSavedTickets: () => set({ savedTickets: [] }),
     }),
     {
-      name: 'ticket-storage', // name of the item in storage (must be unique)
-      storage: createJSONStorage(() => sessionStorage), // use sessionStorage instead of localStorage
+      name: 'ticket-storage',
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );

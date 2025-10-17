@@ -25,7 +25,7 @@ export const SendEmailParamsSchema = z.object({
   to: z.string().email("Invalid email address"),
 });
 
-// Raw n8n response schema based on actual n8n response structure from issue.md
+// Raw n8n response schema 
 export const N8nResponseSchema = z.object({
   output: z.object({
     pcn_number: z.union([z.string(), z.null(), z.undefined()]),
