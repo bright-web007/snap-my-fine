@@ -26,7 +26,6 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        // Step 1: Get access token
         console.log("📡 Getting access token...");
         const tokenResponse = await axios.post(
             process.env.NEXT_TRUELAYER_AUTH_URL! + '/connect/token',
@@ -56,7 +55,7 @@ export async function POST(req: NextRequest) {
         console.log(`💰 Total amount to charge (including service fee): £${totalAmount.toFixed(2)}`);
         actualAmount = totalAmount * 100;  // Convert to minor units
 
-        // Step 2: Create payment
+        console.log("📝 Preparing payment request...");
         const paymentBody = {
             "currency": "GBP",
             "amount_in_minor": actualAmount,
@@ -95,7 +94,6 @@ export async function POST(req: NextRequest) {
         console.log("🔐 Signing request...");
         console.log("Body length:", bodyString.length);
 
-        // Step 3: Sign the request
         const signature = tlSigning.sign({
             kid: process.env.NEXT_TRUELAYER_KID!,
             privateKeyPem: process.env.NEXT_PRIVATE_KEY_PEM!,
@@ -110,7 +108,6 @@ export async function POST(req: NextRequest) {
         console.log("✅ Request signed");
         console.log("Signature length:", signature.length);
 
-        // Step 4: Send create payment request
         console.log("💳 Creating payment...");
 
         const paymentResponse = await axios.request({
