@@ -5,12 +5,31 @@ import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
 
-    const { amount, pcnNumber, vehicleReg } = await req.json();
+    const { amount, pcnNumber, vehicleReg, email, fullName } = await req.json();
+
+    if (!amount || !pcnNumber || !vehicleReg || !email || !fullName) {
+        return NextResponse.json({
+            error: 'Missing required fields: amount, pcnNumber, vehicleReg, email, fullName',
+        }, { status: 400 });
+    }
+
+    if (fullName.length < 2 || fullName.length > 100) {
+        return NextResponse.json({
+            error: 'Full name must be between 2 and 100 characters',
+        }, { status: 400 });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return NextResponse.json({
+            error: 'Invalid email format',
+        }, { status: 400 });
+    }
+
     try {
         // Step 1: Get access token
         console.log("📡 Getting access token...");
         const tokenResponse = await axios.post(
-            'https://auth.truelayer-sandbox.com/connect/token',
+            process.env.NEXT_TRUELAYER_AUTH_URL! + '/connect/token',
             new URLSearchParams({
                 grant_type: 'client_credentials',
                 client_id: process.env.NEXT_TRUELAYER_CLIENT_ID!,
@@ -26,10 +45,21 @@ export async function POST(req: NextRequest) {
         const { access_token } = tokenResponse.data;
         console.log("✅ Access token obtained");
 
+        let actualAmount: number | undefined = amount ? parseInt(amount, 10) : undefined;
+
+        if (actualAmount === undefined) {
+            throw new Error("Invalid amount provided");
+        }
+
+        const serviceFee = 5.00; // Example service fee
+        const totalAmount = actualAmount + serviceFee;  // 50 + 5 = 55.00
+        console.log(`💰 Total amount to charge (including service fee): £${totalAmount.toFixed(2)}`);
+        actualAmount = totalAmount * 100;  // Convert to minor units
+
         // Step 2: Create payment
         const paymentBody = {
             "currency": "GBP",
-            "amount_in_minor": 100,
+            "amount_in_minor": actualAmount,
             "payment_method": {
                 "type": "bank_transfer",
                 "provider_selection": {
@@ -47,15 +77,16 @@ export async function POST(req: NextRequest) {
             },
             "user": {
                 "id": "f9b48c9d-176b-46dd-b2da-fe1a2b77350c",
-                "email": "test@gmail.com",
-                "name": "Test User"
+                "email": email,
+                "name": fullName
             },
             "hosted_page": {
                 "return_uri": "https://console.truelayer.com/redirect-page"
             },
             "metadata": {
-                "vehicle_number": "test"
-            },
+                "vehicle_number": vehicleReg,
+                "pcn_number": pcnNumber
+            }
         };
 
         const idempotencyKey = crypto.randomUUID();
@@ -84,7 +115,7 @@ export async function POST(req: NextRequest) {
 
         const paymentResponse = await axios.request({
             method: 'POST',
-            url: 'https://api.truelayer-sandbox.com/v3/payments',
+            url: process.env.NEXT_TRUELAYER_API_BASE_URL! + '/v3/payments',
             data: bodyString,
             headers: {
                 accept: 'application/json; charset=UTF-8',
@@ -114,7 +145,6 @@ export async function POST(req: NextRequest) {
             const axiosError = error as AxiosError;
 
             if (axiosError.response) {
-                // TrueLayer returned an error
                 console.error("Status:", axiosError.response.status);
                 console.error("Response:", JSON.stringify(axiosError.response.data, null, 2));
 
@@ -124,7 +154,6 @@ export async function POST(req: NextRequest) {
                     details: axiosError.response.data,
                 }, { status: axiosError.response.status });
             } else if (axiosError.request) {
-                // Request made but no response
                 console.error("No response received");
                 console.error("Error code:", axiosError.code);
 
@@ -136,7 +165,6 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        // Other errors
         console.error("Unexpected error:", error.message);
         return NextResponse.json({
             error: error.message,
