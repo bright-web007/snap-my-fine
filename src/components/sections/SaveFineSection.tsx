@@ -6,28 +6,28 @@ import { useTicketStore } from "@/lib/stores/ticketStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket";
 
 interface FormData {
-    council: string;
-    pcnNumber: string;
-    vehicleNumber: string;
-    fineAmount: string;
-    email: string;
+  council: string;
+  pcnNumber: string;
+  vehicleNumber: string;
+  fineAmount: string;
+  email: string;
 }
 
 interface ValidationErrors {
-    council: boolean;
-    pcnNumber: boolean;
-    vehicleNumber: boolean;
-    fineAmount: boolean;
-    email: boolean;
+  council: boolean;
+  pcnNumber: boolean;
+  vehicleNumber: boolean;
+  fineAmount: boolean;
+  email: boolean;
 }
 
 interface SaveFineSectionProps {
-    formData: FormData;
-    validationErrors: ValidationErrors;
-    onBack: () => void;
-    onInputChange: (field: string, value: string) => void;
-    onCreateAccount: () => void;
-    isValidEmail: (email: string) => boolean;
+  formData: FormData;
+  validationErrors: ValidationErrors;
+  onBack: () => void;
+  onInputChange: (field: string, value: string) => void;
+  onCreateAccount: () => void;
+  isValidEmail: (email: string) => boolean;
 }
 
 export default function SaveFineSection({
@@ -36,7 +36,7 @@ export default function SaveFineSection({
   onBack,
   onInputChange,
   onCreateAccount,
-  isValidEmail,                                       
+  isValidEmail,
 }: SaveFineSectionProps) {
   const { sendPayLaterEmail } = useMailer();
   const { saveTicket } = useTicketProcessor();
@@ -49,34 +49,19 @@ export default function SaveFineSection({
 
     try {
       const fineDetails = {
-        ...ticketData,
         council: ticketData?.council_name || formData.council,
         email: formData.email || null,
-      };
+        pcn_number: ticketData?.pcn_number || formData.pcnNumber || null,
+        plate_number: ticketData?.plate_number || formData.vehicleNumber || null,
+        amount: ticketData?.amount || parseInt(formData.fineAmount) || null,
+        service_date_notice: ticketData?.service_date_notice || null,
+        council_name: ticketData?.council_name || null,
+        issued_by: ticketData?.issued_by || null,
+        convtravention_time_from: ticketData?.convtravention_time_from || null,
+        convtravention_time_to: ticketData?.convtravention_time_to || null,
+      }
       await saveTicket(formData.email, fineDetails);
-      
-      // Clear the ticket data after successful save to allow processing new tickets
-      clearTicketData();
-      
-      // Create email details
-      // const emailData = {
-      //   to: formData.email,
-      //   subject: 'Your Parking Fine Details - Pay Later Option Selected',
-      //   body: `
-      //     <h1>Your Parking Fine Details</h1>
-      //     <p>Thank you for choosing the pay later option for your parking fine.</p>
-      //     <p><strong>Council:</strong> ${fineDetails.council || formData.council}</p>
-      //     <p><strong>PCN Number:</strong> ${fineDetails.pcn_number || formData.pcnNumber}</p>
-      //     <p><strong>Vehicle Number:</strong> ${fineDetails.plate_number || formData.vehicleNumber}</p>
-      //     <p><strong>Fine Amount:</strong> £${fineDetails.amount || formData.fineAmount}</p>
-      //     <p>You have chosen to pay later. Please make the payment before the due date to avoid additional charges.</p>
-      //     <p>We'll send you reminders before your payment deadline.</p>
-      //   `,
-      //   fineDetails: fineDetails
-      // };
-
-      // // Send the email
-      // const result = await sendPayLaterEmail(emailData);
+      await sendPayLaterEmail(fineDetails);
 
       // Call the original onCreateAccount function to save the fine locally
       onCreateAccount();
@@ -149,11 +134,10 @@ export default function SaveFineSection({
               <Button
                 disabled={!isValidEmail(formData.email)}
                 onClick={handleCreateAccount}
-                className={`text-[14px] w-full h-[41px] transition-colors ${
-                  isValidEmail(formData.email)
+                className={`text-[14px] w-full h-[41px] transition-colors ${isValidEmail(formData.email)
                     ? "text-[#FFFFFF] bg-[#105AE2] hover:bg-[#0e4cc7] cursor-pointer"
                     : "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed"
-                }`}
+                  }`}
               >
                 Create Account
               </Button>

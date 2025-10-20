@@ -1,86 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createApolloClient } from "@/lib/apolloClient";
-import { SEND_PAY_LATER_EMAIL } from "@/lib/mutations";
+import { TicketResponse } from "@/lib/schema";
 
 export async function POST(request: NextRequest) {
   try {
-    const { to, subject, body, fineDetails } = await request.json();
+    const payload = await request.json();
 
-    // Validate required fields
-    if (!to) {
-      return NextResponse.json(
-        { success: false, error: "Email recipient is required" },
-        { status: 400 },
-      );
-    }
+    console.log({ payload });
 
-    if (!subject) {
-      return NextResponse.json(
-        { success: false, error: "Email subject is required" },
-        { status: 400 },
-      );
-    }
+    // Prepare the payload for Heracles /ticket endpoint
+    const heraclesPayload: TicketResponse = { ...payload };
 
-    if (!body) {
-      return NextResponse.json(
-        { success: false, error: "Email body is required" },
-        { status: 400 },
-      );
-    }
+    // Get Heracles service URL from environment variables
+    const heraclesUrl = process.env.NEXT_HERACLES_ENDPOINT!;
 
-    if (!fineDetails) {
-      return NextResponse.json(
-        { success: false, error: "Fine details are required" },
-        { status: 400 },
-      );
-    }
-
-    // Create Apollo client for server-side usage
-    const heraclesClient = createApolloClient();
-
-    // Execute the GraphQL mutation using Apollo Client
-    const result = await heraclesClient.mutate({
-      mutation: SEND_PAY_LATER_EMAIL,
-      variables: {
-        input: {
-          to,
-          subject,
-          body,
-          fineDetails,
-        },
+    // Send request to Heracles /ticket endpoint using fetch
+    const response = await fetch(`${heraclesUrl}/ticket/send`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(heraclesPayload),
     });
 
-    if (result.errors) {
-      throw new Error(result.errors[0]?.message || "GraphQL error occurred");
-    }
+    const result = await response.json();
 
-    if (!result.data?.sendPayLaterEmail?.success) {
+    if (!response.ok) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            result.data?.sendPayLaterEmail?.message || "Failed to send email",
+          error: result.message || "Failed to send fine reminder email",
         },
-        { status: 500 },
+        { status: response.status },
       );
     }
 
     return NextResponse.json(
       {
         success: true,
-        message:
-          result.data.sendPayLaterEmail.message ||
-          "Pay later email sent successfully",
-        emailSentTo: to,
+        message: result.message || "Fine reminder email queued for processing",
+        emailSentTo: heraclesPayload.email,
       },
       { status: 200 },
     );
   } catch (error) {
+    console.error("Error sending fine reminder email:", error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Failed to send email",
+        error: error instanceof Error ? error.message : "Failed to send fine reminder email",
       },
       { status: 500 },
     );

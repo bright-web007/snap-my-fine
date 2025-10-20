@@ -32,17 +32,15 @@ export default function SavedFinesSection({
 
   const handleDeleteFine = async (fine: SavedFine) => {
     if (loading) return;
-    
     try {
-      // Call the API to delete the ticket from the server
+      const confirmed = window.confirm(`Delete ticket ${fine.pcnNumber}? This cannot be undone.`);
+      if (!confirmed) return;
       await deleteTicket(fine.email, fine.pcnNumber);
-      
-      // Remove the ticket from local store
       removeSavedTicket(fine.id);
-      
-      // Call the original onDeleteFine callback if needed
       onDeleteFine(fine.id);
     } catch (error) {
+      console.error('Failed to delete ticket', error);
+      alert('Failed to delete ticket. Please try again.');
     }
   };
   return (

@@ -1,21 +1,33 @@
-import { N8nResponse } from '@/lib/schema';
+import { N8nResponse, TicketDetailsInterface } from '@/lib/schema';
 
 interface SendPayLaterEmailInput {
   to: string;
   subject: string;
   body: string;
-  fineDetails: N8nResponse;
+  fineDetails: TicketDetailsInterface;
 }
 
 interface UseMailerReturn {
-  sendPayLaterEmail: (input: SendPayLaterEmailInput) => Promise<{ success: boolean; message?: string; error?: string }>;
+  sendPayLaterEmail: (input: TicketDetailsInterface) => Promise<{ success: boolean; message?: string; error?: string }>;
   loading: boolean;
   error: string | null;
 }
 
 export const useMailer = (): UseMailerReturn => {
-  const sendPayLaterEmail = async (input: SendPayLaterEmailInput) => {
+  const sendPayLaterEmail = async (input: TicketDetailsInterface) => {
     try {
+      // // Adapt payload to API route expectation: { data: { ...fields } }
+      // const apiPayload = {
+      //   data: {
+      //     email: input.to,
+      //     council: input.fineDetails.council || null,
+      //     pcn_number: input.fineDetails.pcn_number || (input as any).pcnNumber || null,
+      //     plate_number: input.fineDetails.plate_number || (input as any).vehicleNumber || null,
+      //     amount: input.fineDetails.amount ?? null,
+      //     subject: input.subject,
+      //     body: input.body,
+      //   }
+      // };
       const response = await fetch('/api/email/send', {
         method: 'POST',
         headers: {
