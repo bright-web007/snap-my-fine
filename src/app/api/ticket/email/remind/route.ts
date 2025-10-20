@@ -13,8 +13,7 @@ export async function POST(request: NextRequest) {
     // Get Heracles service URL from environment variables
     const heraclesUrl = process.env.NEXT_HERACLES_ENDPOINT!;
 
-    // Send request to Heracles /ticket endpoint using fetch
-    const response = await fetch(`${heraclesUrl}/ticket/send`, {
+    const response = await fetch(`${heraclesUrl}/ticket/payment/reminder`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

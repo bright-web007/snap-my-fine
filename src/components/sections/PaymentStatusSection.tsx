@@ -1,6 +1,8 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
 import { ArrowLeft, CheckCircle, Mail } from "lucide-react";
+import { useMailer } from "@/lib/hooks/use-mailer";
+import { useState } from "react";
 
 interface FormData {
     council: string;
@@ -35,6 +37,37 @@ export default function PaymentStatusSection({
     onSendReceipt,
     isValidEmail
 }: PaymentStatusSectionProps) {
+    const { sendPaymentSuccessEmail, loading } = useMailer();
+    const [emailSent, setEmailSent] = useState(false);
+
+    const handleSendReceipt = async () => {
+        if (!isValidEmail(formData.email)) {
+            return;
+        }
+
+        try {
+            const emailData = {
+                council: formData.council,
+                email: formData.email,
+                pcn_number: formData.pcnNumber,
+                plate_number: formData.vehicleNumber,
+                amount: parseFloat(formData.fineAmount) || 0,
+            };
+
+            const result = await sendPaymentSuccessEmail(emailData);
+            
+            if (result.success) {
+                setEmailSent(true);
+                // Call the original onSendReceipt callback
+                onSendReceipt();
+            } else {
+                alert(result.error || 'Failed to send receipt email');
+            }
+        } catch (error) {
+            console.error('Error sending receipt:', error);
+            alert('An error occurred while sending the receipt. Please try again.');
+        }
+    };
     return (
         <div className="w-full min-h-screen flex flex-col">
             {/* Header with arrow and title - positioned at top left */}
@@ -93,16 +126,20 @@ export default function PaymentStatusSection({
                                 />
                             </div>
                             <Button
-                                disabled={!isValidEmail(formData.email)}
-                                onClick={onSendReceipt}
-                                className={`text-[14px] w-full h-[48px] transition-colors ${isValidEmail(formData.email)
-                                    ? 'text-[#FFFFFF] bg-[#105AE2] hover:bg-[#0e4cc7] cursor-pointer'
-                                    : 'text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed'
+                                disabled={!isValidEmail(formData.email) || loading || emailSent}
+                                onClick={handleSendReceipt}
+                                className={`text-[14px] w-full h-[48px] transition-colors ${
+                                    isValidEmail(formData.email) && !loading && !emailSent
+                                        ? 'text-[#FFFFFF] bg-[#105AE2] hover:bg-[#0e4cc7] cursor-pointer'
+                                        : 'text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed'
                                     }`}
                             >
-                                <Mail className={`w-[24px] h-[24px] ${isValidEmail(formData.email) ? 'text-[#FFFFFF]' : 'text-[#ffffff]'
+                                <Mail className={`w-[24px] h-[24px] ${
+                                    isValidEmail(formData.email) && !loading && !emailSent ? 'text-[#FFFFFF]' : 'text-[#ffffff]'
                                     }`} />
-                                <p>Send Receipt</p>
+                                <p>
+                                    {loading ? 'Sending...' : emailSent ? 'Receipt Sent!' : 'Send Receipt'}
+                                </p>
                             </Button>
                         </div>
                     </div>
