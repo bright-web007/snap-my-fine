@@ -151,13 +151,16 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     try {
       const payload = {
         type: "single",
-        data: { email, pcn_number: pcnNumber },
+        data: {
+          email,
+          pcn_number: pcnNumber,
+        },
       };
       // Create AbortController for timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-      const response = await fetch(`/api/ticket/delete/${pcnNumber}`, {
+      const response = await fetch(`/api/ticket/delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

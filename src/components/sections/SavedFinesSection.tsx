@@ -33,8 +33,6 @@ export default function SavedFinesSection({
   const handleDeleteFine = async (fine: SavedFine) => {
     if (loading) return;
     try {
-      const confirmed = window.confirm(`Delete ticket ${fine.pcnNumber}? This cannot be undone.`);
-      if (!confirmed) return;
       await deleteTicket(fine.email, fine.pcnNumber);
       removeSavedTicket(fine.id);
       onDeleteFine(fine.id);
