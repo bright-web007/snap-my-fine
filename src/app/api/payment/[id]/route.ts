@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
-export async function GET(req: NextRequest) {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id') || '';
-
-    console.log(`🚀 Fetching payment details for ID: ${id}`);
-
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+    const id = params.id;
     try {
         console.log("📡 Getting access token...");
         const tokenResponse = await axios.post(
