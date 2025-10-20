@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
             throw new Error("Invalid amount provided");
         }
 
-        const serviceFee = 5.00; // Example service fee
+        const serviceFee = parseFloat(process.env.NEXT_SERVICE_FEE!) || 5.00;
         const totalAmount = actualAmount + serviceFee;  // 50 + 5 = 55.00
         console.log(`💰 Total amount to charge (including service fee): £${totalAmount.toFixed(2)}`);
         actualAmount = totalAmount * 100;  // Convert to minor units
@@ -97,6 +97,7 @@ export async function POST(req: NextRequest) {
         const signature = tlSigning.sign({
             kid: process.env.NEXT_TRUELAYER_KID!,
             privateKeyPem: process.env.NEXT_PRIVATE_KEY_PEM!,
+            //@ts-ignore
             method: 'POST',
             path: '/v3/payments',
             headers: {

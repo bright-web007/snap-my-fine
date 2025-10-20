@@ -43,6 +43,8 @@ export default function Home() {
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isProcessingTicket, setIsProcessingTicket] = useState(false);
+  const [hasProcessingError, setHasProcessingError] = useState(false);
   const { savedTickets, ticketData, addSavedTicket, removeSavedTicket } = useTicketStore();
 
   const [progress, setProgress] = useState(0);
@@ -330,15 +332,20 @@ export default function Home() {
     const imgData = imageData || snapshot;
     if (!imgData) return;
 
+    setIsProcessingTicket(true);
+    setHasProcessingError(false);
+
     try {
       // Use the hook to process the ticket which handles the API call and state management
       await processTicket(imgData);
 
       // Handle the response from n8n (data is now stored in the zustand store)
-      alert('Ticket processed successfully!');
+      setIsProcessingTicket(false);
+      console.log('Ticket processed successfully!');
     } catch (error) {
       console.error('Error sending to n8n:', error);
-      alert(`Failed to process ticket. Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setIsProcessingTicket(false);
+      setHasProcessingError(true);
     }
   };
 
@@ -346,6 +353,8 @@ export default function Home() {
     setSnapshot(null);
     setShowImagePreview(false);
     setShowCamera(true);
+    setIsProcessingTicket(false);
+    setHasProcessingError(false);
   };
 
   // Function to handle file upload from gallery
@@ -667,9 +676,13 @@ export default function Home() {
       {showImagePreview && snapshot && (
         <ImagePreviewSection
           snapshot={snapshot}
+          isProcessing={isProcessingTicket}
+          hasError={hasProcessingError}
           onBack={() => {
             setShowImagePreview(false);
             setShowCamera(true);
+            setIsProcessingTicket(false);
+            setHasProcessingError(false);
           }}
           onRetakePhoto={retakePhoto}
           onUploadFromGallery={handleFileUpload}

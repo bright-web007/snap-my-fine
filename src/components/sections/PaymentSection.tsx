@@ -82,6 +82,8 @@ export default function PaymentSection({
                             <span className="text-[12px] text-[#000000] leading-[16px] font-medium font-inter tracking-[0.4%] ">{formData.vehicleNumber}</span>
                         </p>
                     </div>
+
+
                 </div>
             </div>
             <div className="flex flex-col gap-[8px] w-full font-medium font-inter">
