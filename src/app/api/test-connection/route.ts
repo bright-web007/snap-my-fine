@@ -33,11 +33,13 @@ export async function GET() {
             api_reachable: true,
         });
         
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        const cause = error instanceof Error && (error as any).cause instanceof Error ? (error as any).cause.message : undefined;
         return Response.json({ 
             success: false,
-            error: error.message,
-            cause: error.cause?.message,
+            error: message,
+            cause,
         }, { status: 500 });
     }
 }

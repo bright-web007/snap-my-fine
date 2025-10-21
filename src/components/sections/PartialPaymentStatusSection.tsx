@@ -50,7 +50,7 @@ export default function PartialPaymentStatusSection({
 
                     <div>
                         <p className="text-[16px] text-[#19191A] leading-[24px] font-inter font-medium tracking-[0.15%]">Payment Amount Mismatch</p>
-                        <p className="text-[14px] text-[#4A4C4F] leading-[20px] font-inter font-regular tracking-[0.25%]">We receive your payment, but it doesn't match the fine amount</p>
+                        <p className="text-[14px] text-[#4A4C4F] leading-[20px] font-inter font-regular tracking-[0.25%]">We receive your payment, but it doesn&apos;t match the fine amount</p>
                     </div>
 
                     <div className="flex flex-col gap-[16px] py-[24px] px-[16px] border-1 border-[#CACCCE] rounded-[16px]">
@@ -80,7 +80,7 @@ export default function PartialPaymentStatusSection({
                         <p className="text-[#000000] text-[12px] leading-[100%] font-inter font-regular">
                             Your payment of <span>£{partialPaymentReceived.toFixed(2)}</span> is less than the fine of <span>£{totalFineAmount.toFixed(2)}</span>. Please pay the remaining <span>£{remainingBalance.toFixed(2)}</span> to complete the process.
                         </p>
-                        <p className="text-[#4A4C4F] text-[12px] leading-[100%] font-inter font-regular">Note: Payments can't be refunded once submitted</p>
+                        <p className="text-[#4A4C4F] text-[12px] leading-[100%] font-inter font-regular">Note: Payments can&apos;t be refunded once submitted</p>
                     </div>
 
                     <div className="flex flex-col gap-[4px] py-[24px] px-[16px] border-1 border-[#CFDFFC] bg-[#F1F7FE] rounded-[16px]">

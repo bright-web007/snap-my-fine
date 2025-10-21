@@ -57,3 +57,17 @@ export const TicketResponseSchema = z.object({
   }).optional()
 });
 export type TicketResponse = z.infer<typeof TicketResponseSchema>;
+
+export interface TicketDetailsInterface {
+  council: string;
+  email: string | null;
+  pcn_number?: string | null;
+  plate_number?: string | null;
+  amount?: number | null;
+  service_date_notice?: string | null;
+  council_name?: string | null;
+  issued_by?: string | null;
+  convtravention_time_from?: string | null;
+  convtravention_time_to?: string | null;
+}
+

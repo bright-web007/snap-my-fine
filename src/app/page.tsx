@@ -1,10 +1,8 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, AlertCircle } from "lucide-react";
 
 // Import components
 import HamburgerModal from "@/components/HamburgerModal";
-import { Button } from "@/component/ui/button/index";
 
 // Import section components
 import {
@@ -27,7 +25,7 @@ import {
 } from "@/components/sections";
 
 // Import types
-import type { Transaction, SavedFine, FormData, ValidationErrors } from "@/types";
+import type { Transaction, FormData, ValidationErrors } from "@/types";
 
 // Import stores and hooks
 import { useTicketStore } from "@/lib/stores/ticketStore";
@@ -41,20 +39,10 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [snapshot, setSnapshot] = useState<string | null>(null);
-  const [showPreview, setShowPreview] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isProcessingTicket, setIsProcessingTicket] = useState(false);
+  const [hasProcessingError, setHasProcessingError] = useState(false);
   const { savedTickets, ticketData, addSavedTicket, removeSavedTicket } = useTicketStore();
-
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    // Simulate redirect delay
-    const interval = setInterval(() => {
-      setProgress((p) => (p < 100 ? p + 5 : 100));
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, []);
 
   // Fetch tickets on component mount
   useEffect(() => {
@@ -131,7 +119,7 @@ export default function Home() {
 
   // Section 16 - Partial Payment state
   const [showPartialPaymentSection, setShowPartialPaymentSection] = useState(false);
-  const [partialPaymentReceived, setPartialPaymentReceived] = useState<number>(77.00); // Amount user actually paid
+  const [partialPaymentReceived] = useState<number>(77.00); // Amount user actually paid
 
   // Section 6 to Section 7 transition (30 seconds) or failure after 10 seconds
   useEffect(() => {
@@ -248,7 +236,7 @@ export default function Home() {
             height: { ideal: 720 }
           }
         });
-      } catch (backCameraError) {
+      } catch {
         // Fallback to any available camera if back camera fails
         stream = await navigator.mediaDevices.getUserMedia({
           video: {
@@ -263,9 +251,9 @@ export default function Home() {
         await videoRef.current.play();
         setIsVideoVisible(true); // Show video, hide position text
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Camera access failed:', error);
-      if (error.name === 'NotAllowedError') {
+      if (error instanceof Error && error.name === 'NotAllowedError') {
         alert('Camera permission denied. Please allow camera access in your browser settings.');
       } else {
         alert('Unable to access camera. Make sure your device has a camera and try again.');
@@ -302,43 +290,27 @@ export default function Home() {
     await sendToN8n(imgDataJPEG);
   };
 
-  // Function to convert base64 to File object for n8n
-  const dataURLtoFile = (dataurl: string, filename: string) => {
-    const arr = dataurl.split(',');
-    const mime = arr[0].match(/:(.*?);/)![1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, { type: mime });
-  };
 
-  // Function to convert base64 to binary
-  const base64ToBinary = (base64String: string): Uint8Array => {
-    const binaryString = atob(base64String);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes;
-  };
 
   // Function to send image to n8n for processing
   const sendToN8n = async (imageData?: string) => {
     const imgData = imageData || snapshot;
     if (!imgData) return;
 
+    setIsProcessingTicket(true);
+    setHasProcessingError(false);
+
     try {
       // Use the hook to process the ticket which handles the API call and state management
       await processTicket(imgData);
 
       // Handle the response from n8n (data is now stored in the zustand store)
-      alert('Ticket processed successfully!');
+      setIsProcessingTicket(false);
+      console.log('Ticket processed successfully!');
     } catch (error) {
       console.error('Error sending to n8n:', error);
-      alert(`Failed to process ticket. Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setIsProcessingTicket(false);
+      setHasProcessingError(true);
     }
   };
 
@@ -346,6 +318,8 @@ export default function Home() {
     setSnapshot(null);
     setShowImagePreview(false);
     setShowCamera(true);
+    setIsProcessingTicket(false);
+    setHasProcessingError(false);
   };
 
   // Function to handle file upload from gallery
@@ -631,9 +605,9 @@ export default function Home() {
   };
 
   // Function to show saved fines section
-  const showSavedFines = () => {
-    setShowSavedFinesSection(true);
-  };
+  // const showSavedFines = () => {
+  //   setShowSavedFinesSection(true);
+  // };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-2">
@@ -643,7 +617,6 @@ export default function Home() {
           transactions={transactions}
           onScanTicket={() => setShowCamera(true)}
           onUploadFromGallery={handleFileUpload}
-          onShowSavedFines={showSavedFines}
           onShowAllTransactions={() => setShowAllTransactionsSection(true)}
           onHamburgerClick={() => setShowHamburgerModal(true)}
         />
@@ -667,9 +640,13 @@ export default function Home() {
       {showImagePreview && snapshot && (
         <ImagePreviewSection
           snapshot={snapshot}
+          isProcessing={isProcessingTicket}
+          hasError={hasProcessingError}
           onBack={() => {
             setShowImagePreview(false);
             setShowCamera(true);
+            setIsProcessingTicket(false);
+            setHasProcessingError(false);
           }}
           onRetakePhoto={retakePhoto}
           onUploadFromGallery={handleFileUpload}

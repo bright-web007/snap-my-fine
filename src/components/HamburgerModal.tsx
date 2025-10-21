@@ -98,7 +98,7 @@ export default function HamburgerModal({
                     className="fixed inset-0 z-40"
                     onClick={(e) => {
                         // Only close if clicking outside the modal area
-                        const rect = e.currentTarget.getBoundingClientRect();
+                        // const rect = e.currentTarget.getBoundingClientRect();
                         const clickX = e.clientX;
                         if (clickX > 330) { // 330px is the modal width
                             onClose();

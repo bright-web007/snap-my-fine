@@ -40,7 +40,7 @@ export default function PaymentReceivedSection({
                 {/* Subtext */}
                 <div className="flex flex-col gap-[8px]">
                     <p className="text-[16px] text-[#19191A] font-regular font-inter leading-[18px] max-w-xs tracking-[0.5%]">
-                        Your payment of <span className="font-semibold">£{formData.fineAmount ? (Number(formData.fineAmount) + 3).toFixed(2) : '3.00'}</span> has been received successfully. We're now processing your payment with the council.
+                        Your payment of <span className="font-semibold">£{formData.fineAmount ? (Number(formData.fineAmount) + 3).toFixed(2) : '3.00'}</span> has been received successfully. We&apos;re now processing your payment with the council.
                     </p>
                     <p className="text-[14px] text-[#4A4C4F] font-inter font-regular leading-[20px] tracking-[0.25%]">
                         This may take a few moments. Please keep this page open.

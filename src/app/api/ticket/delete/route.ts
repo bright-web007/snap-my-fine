@@ -4,15 +4,15 @@ export async function DELETE(request: NextRequest) {
   try {
     const payload = await request.json();
 
-    // Validate required fields
-    if (!payload.pcn_number) {
+    // Validate required fields in nested structure
+    if (!payload.data?.pcn_number) {
       return NextResponse.json(
         { error: "PCN Number is required" },
         { status: 400 },
       );
     }
 
-    if (!payload.email) {
+    if (!payload.data?.email) {
       return NextResponse.json(
         { error: "Email is required" },
         { status: 400 },

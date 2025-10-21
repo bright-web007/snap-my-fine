@@ -13,7 +13,7 @@ interface UseTicketProcessorReturn {
 }
 
 export const useTicketProcessor = (): UseTicketProcessorReturn => {
-  const { setTicketData, addSavedTicket, setSavedTickets, removeSavedTicket } = useTicketStore();
+  const { setTicketData, setSavedTickets } = useTicketStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -151,13 +151,16 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     try {
       const payload = {
         type: "single",
-        data: { email, pcn_number: pcnNumber },
+        data: {
+          email,
+          pcn_number: pcnNumber,
+        },
       };
       // Create AbortController for timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-      const response = await fetch(`/api/ticket/delete/${pcnNumber}`, {
+      const response = await fetch(`/api/ticket/delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -280,14 +283,14 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const fetchedTickets = result.data || [];
 
       // Convert fetched tickets to SavedFine format
-      const savedFines = fetchedTickets.map((ticket: any) => ({
-        id: ticket.id || Date.now().toString() + Math.random().toString(36).substr(2, 9), // Generate unique ID
-        council: ticket.council_name || ticket.council || '',
-        pcnNumber: ticket.pcn_number || ticket.pcnNumber || '',
-        vehicleNumber: ticket.plate_number || ticket.vehicleNumber || '',
-        fineAmount: ticket.amount ? ticket.amount.toString() : ticket.fineAmount || '',
+      const savedFines = (fetchedTickets as TicketResponse[]).map((ticket) => ({
+        id: (ticket as any).id || Date.now().toString() + Math.random().toString(36).slice(2, 11), // fall back id generation
+        council: (ticket as any).council_name || ticket.council || '',
+        pcnNumber: ticket.pcn_number || (ticket as any).pcnNumber || '',
+        vehicleNumber: ticket.plate_number || (ticket as any).vehicleNumber || '',
+        fineAmount: ticket.amount != null ? ticket.amount.toString() : (ticket as any).fineAmount || '',
         email: ticket.email || email,
-        dateSaved: ticket.dateSaved || new Date().toLocaleDateString()
+        dateSaved: (ticket as any).dateSaved || new Date().toLocaleDateString()
       }));
 
       // Set all saved tickets at once to prevent duplicates

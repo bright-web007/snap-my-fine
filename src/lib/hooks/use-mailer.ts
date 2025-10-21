@@ -1,22 +1,47 @@
-import { N8nResponse } from '@/lib/schema';
-
-interface SendPayLaterEmailInput {
-  to: string;
-  subject: string;
-  body: string;
-  fineDetails: N8nResponse;
-}
+import { TicketDetailsInterface } from '@/lib/schema';
 
 interface UseMailerReturn {
-  sendPayLaterEmail: (input: SendPayLaterEmailInput) => Promise<{ success: boolean; message?: string; error?: string }>;
+  sendPayLaterEmail: (input: TicketDetailsInterface) => Promise<{ success: boolean; message?: string; error?: string }>;
+  sendPaymentSuccessEmail: (input: TicketDetailsInterface) => Promise<{ success: boolean; message?: string; error?: string }>;
   loading: boolean;
   error: string | null;
 }
 
 export const useMailer = (): UseMailerReturn => {
-  const sendPayLaterEmail = async (input: SendPayLaterEmailInput) => {
+  const sendPayLaterEmail = async (input: TicketDetailsInterface) => {
     try {
-      const response = await fetch('/api/email/send', {
+      const response = await fetch('/api/ticket/email/remind', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(input),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        return {
+          success: true,
+          message: result.message || 'Email sent successfully'
+        };
+      } else {
+        return {
+          success: false,
+          error: result.error || 'Failed to send email'
+        };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'An unexpected error occurred'
+      };
+    }
+  };
+
+  const sendPaymentSuccessEmail = async (input: TicketDetailsInterface) => {
+    try {
+      const response = await fetch('/api/ticket/email/success', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +72,8 @@ export const useMailer = (): UseMailerReturn => {
 
   return {
     sendPayLaterEmail,
-    loading: false, // The loading state would be managed at call time in a real implementation
-    error: null     // The error state would also be managed at call time in a real implementation
+    sendPaymentSuccessEmail,
+    loading: false,
+    error: null
   };
 };

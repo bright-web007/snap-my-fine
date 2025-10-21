@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
             throw new Error("Invalid amount provided");
         }
 
-        const serviceFee = 5.00; // Example service fee
+        const serviceFee = parseFloat(process.env.NEXT_SERVICE_FEE!) || 5.00;
         const totalAmount = actualAmount + serviceFee;  // 50 + 5 = 55.00
         console.log(`💰 Total amount to charge (including service fee): £${totalAmount.toFixed(2)}`);
         actualAmount = totalAmount * 100;  // Convert to minor units
@@ -94,10 +94,11 @@ export async function POST(req: NextRequest) {
         console.log("🔐 Signing request...");
         console.log("Body length:", bodyString.length);
 
+        // TrueLayer signing expects proper HTTP method.
         const signature = tlSigning.sign({
             kid: process.env.NEXT_TRUELAYER_KID!,
             privateKeyPem: process.env.NEXT_PRIVATE_KEY_PEM!,
-            method: 'POST',
+            method: 'post' as any,
             path: '/v3/payments',
             headers: {
                 'Idempotency-Key': idempotencyKey,
@@ -124,9 +125,9 @@ export async function POST(req: NextRequest) {
         })
 
         console.log("✅ Payment created successfully!");
-        console.log("Payment ID:", paymentResponse.data.id);
+        console.log("Payment ID:", (paymentResponse.data as any).id);
 
-        const payment = paymentResponse.data;
+        const payment = paymentResponse.data as any;
         console.log("Payment Details:", JSON.stringify(payment, null, 2));
 
         return NextResponse.json({
@@ -135,7 +136,7 @@ export async function POST(req: NextRequest) {
             status: payment.status,
         }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("❌ Payment Error");
 
         if (axios.isAxiosError(error)) {
@@ -143,12 +144,12 @@ export async function POST(req: NextRequest) {
 
             if (axiosError.response) {
                 console.error("Status:", axiosError.response.status);
-                console.error("Response:", JSON.stringify(axiosError.response.data, null, 2));
+                console.error("Response:", JSON.stringify((axiosError.response as any).data, null, 2));
 
                 return NextResponse.json({
                     error: 'TrueLayer API error',
                     status: axiosError.response.status,
-                    details: axiosError.response.data,
+                    details: (axiosError.response as any).data,
                 }, { status: axiosError.response.status });
             } else if (axiosError.request) {
                 console.error("No response received");
@@ -162,9 +163,10 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        console.error("Unexpected error:", error.message);
+        const genericMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.error("Unexpected error:", genericMessage);
         return NextResponse.json({
-            error: error.message,
+            error: genericMessage,
         }, { status: 500 });
     }
 }

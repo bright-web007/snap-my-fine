@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
-import { ArrowLeft, Clock, Send, Download } from "lucide-react";
+import { ArrowLeft, Clock, Send } from "lucide-react";
 
 interface Transaction {
     council: string;
@@ -43,7 +43,7 @@ export default function AllTransactionsSection({
                         <div className="text-center py-12">
                             <Clock className="w-12 h-12 text-[#B2B2B3] mx-auto mb-4" />
                             <p className="text-[#19191A] text-[16px] font-inter font-medium mb-2">No Transaction Made</p>
-                            <p className="text-[#7E8081] text-[14px] font-inter font-regular">You haven't made any transaction yet. Scan a ticket to get started.</p>
+                            <p className="text-[#7E8081] text-[14px] font-inter font-regular">You haven&apos;t made any transaction yet. Scan a ticket to get started.</p>
                         </div>
                     )}
 

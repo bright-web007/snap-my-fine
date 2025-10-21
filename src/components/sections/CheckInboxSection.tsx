@@ -45,7 +45,7 @@ export default function CheckInboxSection({
                                 Check your inbox
                             </p>
                             <p className="text-[#000000] text-[14px] font-inter font-regular leading-[24px] tracking-[0.25%]">
-                                We've sent a verification link to <span className="font-medium">{formData.email}</span>
+                                We&apos;ve sent a verification link to <span className="font-medium">{formData.email}</span>
                             </p>
                             <p className="text-[#7E8081] text-[14px] font-inter font-regular leading-[24px] tracking-[0.25%]">
                                 Click the link to verify your email and access your saved fines.

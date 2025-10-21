@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
-import { Camera, Upload, Clock, Menu } from "lucide-react";
+import { Camera, Upload, Menu } from "lucide-react";
 
 interface Transaction {
     council: string;
@@ -13,7 +13,6 @@ interface HomeSectionProps {
     transactions: Transaction[];
     onScanTicket: () => void;
     onUploadFromGallery: () => void;
-    onShowSavedFines: () => void;
     onShowAllTransactions: () => void;
     onHamburgerClick: () => void;
 }
@@ -22,7 +21,6 @@ export default function HomeSection({
     transactions,
     onScanTicket,
     onUploadFromGallery,
-    onShowSavedFines,
     onShowAllTransactions,
     onHamburgerClick
 }: HomeSectionProps) {
@@ -101,6 +99,24 @@ export default function HomeSection({
                                 <li>You receive a confirmation once the payment is made.</li>
                             </ol>
                         </div>
+
+                        {/* Terms and Conditions */}
+                        <div className="w-full text-center">
+                            <p className="text-[12px] text-[#7E8081] font-inter font-regular leading-[16px] mb-2">
+                                By using SnapMyFine, you agree to our{" "}
+                                <button className="text-[#105AE2] underline hover:no-underline">
+                                    Terms and Conditions
+                                </button>
+                                {" "}and{" "}
+                                <button className="text-[#105AE2] underline hover:no-underline">
+                                    Privacy Policy
+                                </button>
+                            </p>
+                            <p className="text-[10px] text-[#7E8081] font-inter font-regular leading-[14px]">
+                                Service fee is non-refundable. Additional charges may apply for payment processing.
+                            </p>
+                        </div>
+
                         <p className="text-[14px] text-[#105AE2] font-medium font-inter text-center">Need help?</p>
                     </div>
                 </div>
