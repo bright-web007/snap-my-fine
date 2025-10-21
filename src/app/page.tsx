@@ -604,18 +604,19 @@ export default function Home() {
     removeSavedTicket(fineId);
   };
 
-  // Function to show saved fines section
-  // const showSavedFines = () => {
-  //   setShowSavedFinesSection(true);
-  // };
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-2">
       {/* 1st section */}
       {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && !showPartialPaymentSection && (
         <HomeSection
           transactions={transactions}
-          onScanTicket={() => setShowCamera(true)}
+          onScanTicket={() => {
+            setShowCamera(true);
+            // Automatically start camera after a brief delay to ensure the camera section is rendered
+            setTimeout(() => {
+              startCamera();
+            }, 100);
+          }}
           onUploadFromGallery={handleFileUpload}
           onShowAllTransactions={() => setShowAllTransactionsSection(true)}
           onHamburgerClick={() => setShowHamburgerModal(true)}
