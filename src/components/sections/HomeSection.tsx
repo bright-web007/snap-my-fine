@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
-import { Camera, Upload, Clock, Menu } from "lucide-react";
+import { Camera, Upload, Menu } from "lucide-react";
 
 interface Transaction {
     council: string;
@@ -13,7 +13,6 @@ interface HomeSectionProps {
     transactions: Transaction[];
     onScanTicket: () => void;
     onUploadFromGallery: () => void;
-    onShowSavedFines: () => void;
     onShowAllTransactions: () => void;
     onHamburgerClick: () => void;
 }
@@ -22,7 +21,6 @@ export default function HomeSection({
     transactions,
     onScanTicket,
     onUploadFromGallery,
-    onShowSavedFines,
     onShowAllTransactions,
     onHamburgerClick
 }: HomeSectionProps) {

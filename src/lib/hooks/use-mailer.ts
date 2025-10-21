@@ -1,11 +1,4 @@
-import { N8nResponse, TicketDetailsInterface } from '@/lib/schema';
-
-interface SendPayLaterEmailInput {
-  to: string;
-  subject: string;
-  body: string;
-  fineDetails: TicketDetailsInterface;
-}
+import { TicketDetailsInterface } from '@/lib/schema';
 
 interface UseMailerReturn {
   sendPayLaterEmail: (input: TicketDetailsInterface) => Promise<{ success: boolean; message?: string; error?: string }>;

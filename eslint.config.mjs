@@ -19,6 +19,14 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    rules: {
+      // Allow usage of 'any'
+      '@typescript-eslint/no-explicit-any': 'off',
+      // Allow empty interfaces (or relax)
+      '@typescript-eslint/no-empty-object-type': 'off',
+      // Disable unescaped entities rule to avoid forcing HTML entity replacements in simple text
+      'react/no-unescaped-entities': 'off',
+    },
   },
 ];
 

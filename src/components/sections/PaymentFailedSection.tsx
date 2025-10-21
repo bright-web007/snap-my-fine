@@ -60,7 +60,7 @@ export default function PaymentFailedSection({
                             </Button>
                         </div>
                         <p className="text-[#7E8081] text-[12px] font-inter font-regular leading-[16px] tracking-[0.25%] text-center">
-                            if your bank already charged you, don't worry, we'll double check and update your receipt soon.
+                            if your bank already charged you, don&apos;t worry, we&apos;ll double check and update your receipt soon.
                         </p>
                     </div>
                 </div>

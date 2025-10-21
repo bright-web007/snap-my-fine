@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-    const id = params.id;
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     try {
         console.log("📡 Getting access token...");
         const tokenResponse = await axios.post(
@@ -30,12 +30,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         const paymentResponse = await axios.request(options);
         console.log("✅ Payment details obtained");
 
-        return NextResponse.json(paymentResponse.data, { status: 200 });
+        return NextResponse.json(paymentResponse.data as any, { status: 200 });
 
-    } catch (error: any) {
-        console.error("Unexpected error:", error.message);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        console.error("Unexpected error:", message);
         return NextResponse.json({
-            error: error.message,
+            error: message,
         }, { status: 500 });
     }
 }

@@ -29,7 +29,7 @@ export default function RedirectingSection({ }: RedirectingSectionProps) {
 
                 {/* Subtext */}
                 <p className="text-[16px] text-[#4A4C4F] font-regular font-inter leading-[18px] max-w-xs tracking-[0.5%]">
-                    Please wait while we securely redirect you to your bank's payment gateway
+                    Please wait while we securely redirect you to your bank&apos;s payment gateway
                 </p>
             </div>
         </div>

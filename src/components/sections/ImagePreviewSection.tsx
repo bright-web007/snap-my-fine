@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
 import { Camera, Upload, ArrowLeft, AlertCircle } from "lucide-react";
+import Image from "next/image";
 
 interface ImagePreviewSectionProps {
     snapshot: string;
@@ -37,9 +38,11 @@ export default function ImagePreviewSection({
 
                 <div className="w-full px-[12px] py-[15px]">
                     <div className="w-full h-[423px] rounded-[12px] overflow-hidden">
-                        <img
+                        <Image
                             src={snapshot}
                             alt="Captured ticket"
+                            width={400}
+                            height={423}
                             className="w-full h-full object-cover rounded-[12px]"
                         />
                     </div>
@@ -49,7 +52,7 @@ export default function ImagePreviewSection({
             {isProcessing && !hasError && (
                 <div className="justify-center text-center px-[24px]">
                     <p className="text-[16px] text-[black] font-inter font-medium leading-[24px] tracking-[0.15%]">Processing your ticket...</p>
-                    <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%]">We're automatically scanning your ticket for payment details</p>
+                    <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%]">We&apos;re automatically scanning your ticket for payment details</p>
                 </div>
             )}
             {hasError && (
@@ -57,7 +60,7 @@ export default function ImagePreviewSection({
                     <div className="p-[12px] rounded-full bg-[#F8D3D3] flex justify-center items-center w-fit mx-auto mb-[8px]">
                         <AlertCircle className="w-[24px] h-[24px] text-[#DC2626]" />
                     </div>
-                    <p className="text-[16px] text-[#000000] font-inter font-medium leading-[24px] tracking-[0.15%] text-center">We couldn't read your ticket</p>
+                    <p className="text-[16px] text-[#000000] font-inter font-medium leading-[24px] tracking-[0.15%] text-center">We couldn&apos;t read your ticket</p>
                     <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%] text-center">Try again with better lighting and make sure all text are visible</p>
                 </div>
             )}

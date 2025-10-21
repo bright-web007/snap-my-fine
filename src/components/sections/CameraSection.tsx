@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
 import { Camera, Upload, ArrowLeft } from "lucide-react";
-import { useRef } from "react";
 
 interface CameraSectionProps {
     isVideoVisible: boolean;

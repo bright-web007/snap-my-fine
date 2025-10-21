@@ -40,7 +40,7 @@ export default function SaveFineSection({
 }: SaveFineSectionProps) {
   const { sendPayLaterEmail } = useMailer();
   const { saveTicket } = useTicketProcessor();
-  const { ticketData, clearTicketData } = useTicketStore();
+  const { ticketData } = useTicketStore();
 
   const handleCreateAccount = async () => {
     if (!isValidEmail(formData.email)) {
