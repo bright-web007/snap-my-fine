@@ -49,8 +49,8 @@ export default function ImagePreviewSection({
                 </div>
             </div>
 
-            {/* Status Messages with proper spacing */}
-            <div className="flex-1 flex flex-col justify-center px-[16px] py-[10px]">
+            {/* Status Messages with fixed spacing */}
+            <div className="h-[125px] flex flex-col justify-center px-[16px]">
                 {isProcessing && !hasError && (
                     <div className="text-center px-[24px]">
                         <p className="text-[16px] text-[black] font-inter font-medium leading-[24px] tracking-[0.15%]">Processing your ticket...</p>
@@ -69,7 +69,7 @@ export default function ImagePreviewSection({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col gap-[8px] w-full font-medium font-inter px-[16px] pb-[5px]">
+            <div className="flex flex-col gap-[8px] w-full font-medium font-inter px-[16px] pt-[10px]">
                 <Button
                     onClick={onRetakePhoto}
                     className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full"
