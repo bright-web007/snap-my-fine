@@ -47,15 +47,18 @@ export default function ImagePreviewSection({
                         />
                     </div>
                 </div>
+            </div>
 
+            {/* Status Messages with proper spacing */}
+            <div className="flex-1 flex flex-col justify-center px-[16px] py-[10px]">
                 {isProcessing && !hasError && (
-                    <div className="justify-center text-center px-[24px]">
+                    <div className="text-center px-[24px]">
                         <p className="text-[16px] text-[black] font-inter font-medium leading-[24px] tracking-[0.15%]">Processing your ticket...</p>
                         <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%]">We&apos;re automatically scanning your ticket for payment details</p>
                     </div>
                 )}
                 {hasError && (
-                    <div className="px-[48px] pt-3">
+                    <div className="px-[24px]">
                         <div className="p-[12px] rounded-full bg-[#F8D3D3] flex justify-center items-center w-fit mx-auto mb-[8px]">
                             <AlertCircle className="w-[24px] h-[24px] text-[#DC2626]" />
                         </div>
@@ -65,7 +68,8 @@ export default function ImagePreviewSection({
                 )}
             </div>
 
-            <div className="flex flex-col gap-[8px] w-full font-medium font-inter px-[16px]">
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-[8px] w-full font-medium font-inter px-[16px] pb-[5px]">
                 <Button
                     onClick={onRetakePhoto}
                     className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full"

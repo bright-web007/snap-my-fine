@@ -9,9 +9,19 @@ interface PaymentData {
 }
 
 interface PaymentResponse {
-  payment_id: string;
-  authorization_url: string;
-  status: string;
+  billingRequestFlow: {
+    id: string;
+    authorisation_url: string;
+    auto_fulfil: boolean;
+    created_at: string;
+    exit_uri: string;
+    expires_at: string;
+    links: any;
+    lock_bank_account: boolean;
+    lock_currency: boolean;
+    lock_customer_details: boolean;
+    redirect_uri: string;
+  };
 }
 
 interface UsePaymentReturn {

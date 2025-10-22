@@ -31,9 +31,11 @@ import type { Transaction, FormData, ValidationErrors } from "@/types";
 // Import stores and hooks
 import { useTicketStore } from "@/lib/stores/ticketStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket";
+import { usePayment } from "@/lib/hooks/use-payment";
 
 export default function Home() {
     const { processTicket, fetchTickets } = useTicketProcessor();
+    const { makePayment } = usePayment();
     const [showCamera, setShowCamera] = useState(false);
     const [isVideoVisible, setIsVideoVisible] = useState(false);
     const [showImagePreview, setShowImagePreview] = useState(false);
@@ -618,6 +620,41 @@ export default function Home() {
         removeSavedTicket(fineId);
     };
 
+    // Function to handle payment flow
+    const handlePayNow = async () => {
+        // Show RedirectingSection for 800ms first
+        setShowPaymentSection(false);
+        setShowRedirectingSection(true);
+
+        setTimeout(async () => {
+            try {
+                const paymentData = {
+                    amount: (Number(formData.fineAmount) + 3).toString(), // Fine amount + £3 service fee
+                    pcnNumber: formData.pcnNumber,
+                    vehicleReg: formData.vehicleNumber,
+                    email: formData.email || "user@example.com", // Use form email or placeholder
+                    fullName: "Parking Fine Payer" // Placeholder - consider collecting this in the form
+                };
+
+                const result = await makePayment(paymentData);
+                
+                // Redirect to the payment gateway
+                if (result.billingRequestFlow?.authorisation_url) {
+                    window.location.href = result.billingRequestFlow.authorisation_url;
+                } else {
+                    // Handle error - redirect failed
+                    setShowRedirectingSection(false);
+                    setShowPaymentFailedSection(true);
+                }
+            } catch (error) {
+                console.error('Payment failed:', error);
+                // Show payment failed section
+                setShowRedirectingSection(false);
+                setShowPaymentFailedSection(true);
+            }
+        }, 800);
+    };
+
     // Function to show saved fines section
     // const showSavedFines = () => {
     //   setShowSavedFinesSection(true);
@@ -718,10 +755,7 @@ export default function Home() {
                             setShowReviewSection(true);
                         }
                     }}
-                    onPayNow={() => {
-                        setShowPaymentSection(false);
-                        setShowRedirectingSection(true);
-                    }}
+                    onPayNow={handlePayNow}
                     onPayLater={() => {
                         setShowPaymentSection(false);
                         setShowSaveFineSection(true);
