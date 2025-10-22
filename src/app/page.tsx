@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 
 // Import components
 import HamburgerModal from "@/components/HamburgerModal";
+import { Notification } from "@/components/ui/notification";
 
 // Import section components
 import {
@@ -117,6 +118,10 @@ export default function Home() {
     // Hamburger modal state
     const [showHamburgerModal, setShowHamburgerModal] = useState(false);
 
+    // No outstanding charge notification state
+    const [showNoOutstandingChargeNotification, setShowNoOutstandingChargeNotification] = useState(false);
+    const [showConfirmationErrorNotification, setShowConfirmationErrorNotification] = useState(false);
+
     // Section 16 - Partial Payment state
     const [showPartialPaymentSection, setShowPartialPaymentSection] = useState(false);
     const [partialPaymentReceived] = useState<number>(77.00); // Amount user actually paid
@@ -172,21 +177,28 @@ export default function Home() {
         }
     }, [showProcessingSection]);
 
-    // Section 3 to Section 4 transition (5 seconds) - only if still on section 3
+    // Section 3 to Section 4 transition (5 seconds) - only if still on section 3 and no processing error
     useEffect(() => {
-        if (showImagePreview) {
+        if (showImagePreview && !isProcessingTicket) {
             const timer = setTimeout(() => {
-                // Only transition if still showing image preview (user hasn't manually navigated away)
-                if (showImagePreview) {
+                // Only transition if still showing image preview, processing is done, and no error occurred
+                if (showImagePreview && !hasProcessingError) {
                     setShowImagePreview(false);
                     setShowCamera(false); // Hide camera section
                     setShowReviewSection(true);
+                } else if (showImagePreview && hasProcessingError) {
+                    // If there's an error, go back to home section
+                    setShowImagePreview(false);
+                    setShowCamera(false);
+                    setSnapshot(null);
+                    setIsProcessingTicket(false);
+                    setHasProcessingError(false);
                 }
             }, 5000); // 5 seconds
 
             return () => clearTimeout(timer);
         }
-    }, [showImagePreview]);
+    }, [showImagePreview, isProcessingTicket, hasProcessingError]);
 
     const councils = [
         "Barking and Dagenham",
@@ -578,6 +590,8 @@ export default function Home() {
         setShowAllTransactionsSection(false);
         setIsLoadedFromSavedFine(false);
         setCameFromSavedFines(false);
+        setShowNoOutstandingChargeNotification(false);
+        setShowConfirmationErrorNotification(false);
     };
 
     // Function to retry payment (goes back to section 6)
@@ -674,6 +688,18 @@ export default function Home() {
                     }}
                     onInputChange={handleInputChange}
                     onFormSubmit={handleFormSubmit}
+                    onNoOutstandingCharge={() => {
+                        setShowReviewSection(false);
+                        setShowCamera(false);
+                        setShowImagePreview(false);
+                        setShowNoOutstandingChargeNotification(true);
+                    }}
+                    onConfirmationError={() => {
+                        setShowReviewSection(false);
+                        setShowCamera(false);
+                        setShowImagePreview(false);
+                        setShowConfirmationErrorNotification(true);
+                    }}
                 />
             )}
 
@@ -870,6 +896,25 @@ export default function Home() {
                 />
             )}
 
+            {/* No Outstanding Charge Notification */}
+            {showNoOutstandingChargeNotification && (
+                <Notification
+                    message="Great news! There is no outstanding charge on this PCN"
+                    type="success"
+                    duration={6000}
+                    onClose={() => setShowNoOutstandingChargeNotification(false)}
+                />
+            )}
+
+            {/* Confirmation Error Notification */}
+            {showConfirmationErrorNotification && (
+                <Notification
+                    message="Failed to confirm payment amount with council"
+                    type="error"
+                    duration={6000}
+                    onClose={() => setShowConfirmationErrorNotification(false)}
+                />
+            )}
         </div>
     );
 }

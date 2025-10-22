@@ -2,6 +2,9 @@
 import { Button } from "@/component/ui/button/index";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useTicketStore } from "@/lib/stores/ticketStore";
+import { useTicketProcessor } from "@/lib/hooks/use-ticket";
+import { useEffect, useState } from "react";
+import { Loader } from "@/components/ui/loader";
 
 interface FormData {
   council: string;
@@ -26,6 +29,8 @@ interface ReviewSectionProps {
   onBack: () => void;
   onInputChange: (field: string, value: string) => void;
   onFormSubmit: (e: React.FormEvent) => void;
+  onNoOutstandingCharge: () => void;
+  onConfirmationError: () => void;
 }
 
 export default function ReviewSection({
@@ -34,12 +39,92 @@ export default function ReviewSection({
   councils,
   onBack,
   onInputChange,
-  onFormSubmit
+  onFormSubmit,
+  onNoOutstandingCharge,
+  onConfirmationError
 }: ReviewSectionProps) {
   const { ticketData } = useTicketStore();
+  const { confirmTicket } = useTicketProcessor();
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [confirmedAmount, setConfirmedAmount] = useState<string | null>(null);
+  const [confirmationError, setConfirmationError] = useState(false);
+  const [confirmationAttempted, setConfirmationAttempted] = useState(false);
+
+  // Confirm ticket details when component mounts
+  useEffect(() => {
+    const confirmTicketDetails = async () => {
+      if (!ticketData?.pcn_number || !ticketData?.council_name || confirmationAttempted) {
+        return;
+      }
+
+      setIsConfirming(true);
+      setConfirmationError(false);
+      setConfirmationAttempted(true);
+
+      try {
+        const result = await confirmTicket(ticketData.pcn_number, ticketData.council_name);
+        
+        if (result?.success) {
+          if (result.status === "No Outstanding Charge" || result.paymentRequired === false) {
+            // Redirect to HomeSection and trigger notification there
+            setTimeout(() => {
+              onNoOutstandingCharge();
+            }, 500); // Small delay to complete the loading animation
+          } else if (result.status === "Payment required" && result.amount) {
+            // Update with confirmed amount (remove £ symbol if present)
+            const cleanAmount = result.amount.replace(/[£,]/g, '');
+            setConfirmedAmount(cleanAmount);
+            // Update the form data with confirmed amount
+            onInputChange('fineAmount', cleanAmount);
+          } else {
+            // Fallback if we can't determine status clearly - redirect with error
+            setTimeout(() => {
+              onConfirmationError();
+            }, 500);
+          }
+        } else {
+          // API returned success: false - redirect to HomeSection with error
+          setTimeout(() => {
+            onConfirmationError();
+          }, 500);
+        }
+      } catch (error) {
+        console.error('Failed to confirm ticket:', error);
+        // Network error or exception - redirect to HomeSection with error
+        setTimeout(() => {
+          onConfirmationError();
+        }, 500);
+      } finally {
+        setIsConfirming(false);
+      }
+    };
+
+    confirmTicketDetails();
+  }, [ticketData?.pcn_number, ticketData?.council_name, confirmTicket, confirmationAttempted]);
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
+    <div className="w-full min-h-screen flex flex-col relative">
+      {/* Loading overlay */}
+      {isConfirming && (
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-40 flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex items-center justify-center h-16 w-16 bg-gray-100 rounded-md">
+              <Loader size={32} className="text-black" />
+            </div>
+            <div className="text-center">
+              {/* <h3 className="text-[16px] font-inter font-semibold text-[#19191A] mb-2">
+                Inputting your ticket details
+              </h3> */}
+              <p className="text-[14px] font-inter text-[#7E8081]">
+                Confirming your payment amount with the council...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+
       <div className="w-full flex flex-col gap-[16px] pt-[20px] px-[16px]">
         <button
           className="flex items-center gap-[16px] text-gray-700 hover:text-black"
@@ -127,11 +212,17 @@ export default function ReviewSection({
               <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
                 Fine Amount (£)
                 {validationErrors.fineAmount && <span className="text-red-500">*</span>}
+                {confirmedAmount && !confirmationError && (
+                  <span className="text-[12px] text-green-600 font-normal ml-2">(Confirmed)</span>
+                )}
+                {confirmationError && (
+                  <span className="text-[12px] text-orange-600 font-normal ml-2"></span>
+                )}
               </label>
               <input
                 type="number"
                 name="fineAmount"
-                value={formData.fineAmount || (ticketData?.amount ? ticketData.amount.toString() : '')}
+                value={confirmedAmount || formData.fineAmount || (ticketData?.amount ? ticketData.amount.toString() : '')}
                 onChange={(e) => onInputChange('fineAmount', e.target.value)}
                 placeholder="Enter fine amount"
                 readOnly
@@ -143,9 +234,15 @@ export default function ReviewSection({
             <div className="text-[black] w-full font-medium font-inter flex flex-col gap-[8px]">
               <Button
                 type="submit"
-                className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
+                disabled={isConfirming}
+                className={`p-[16px] text-[14px] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2 transition-colors ${
+                  isConfirming 
+                    ? "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed" 
+                    : "text-white bg-[#105AE2] cursor-pointer hover:bg-[#0e4cc7]"
+                }`}
               >
-                Continue to payment <ArrowRight className="w-[20px] h-[20px]" />
+                {isConfirming ? "Confirming..." : "Continue to payment"} 
+                <ArrowRight className="w-[20px] h-[20px]" />
               </Button>
               <p className="text-[12px] text-[#7E8081] leading-[16px] font-inter font-regular text-center px-[30px]">By continuing, you agree to proceed with secure payment through your bank&apos;s gateway</p>
             </div>

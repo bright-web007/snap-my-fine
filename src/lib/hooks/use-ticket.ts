@@ -6,6 +6,7 @@ interface UseTicketProcessorReturn {
   fetchTickets: (email: string) => Promise<TicketResponse[]>;
   fetchTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
   deleteTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
+  confirmTicket: (pcnNumber: string, council: string) => Promise<any>;
   saveTicket: (email: string, ticket: N8nResponse["output"]) => Promise<void>;
   processTicket: (imageData: string) => Promise<void>;
   loading: boolean;
@@ -41,7 +42,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
       // Create AbortController for timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 30 second timeout
 
       // Send the request to our API route instead of directly to n8n
       const response = await fetch("/api/ticket/process", {
@@ -71,18 +72,12 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       if (validationResult.success) {
         validatedData = { ...result["output"] };
       } else {
-        console.error(
-          "n8n response validation failed:",
-          validationResult.error,
-        );
         // If validation fails, create a default object
         validatedData = null;
       }
       // Store the validated data in the zustand store
       setTicketData(validatedData);
-      console.log("Ticket processed successfully:", validatedData);
     } catch (err) {
-      console.error("Error processing ticket:", err);
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
@@ -183,6 +178,58 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       //remove the deleted ticket from the ticket list.
     } catch (err) {
       console.error("Error fetching ticket:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const confirmTicket = useCallback(async (pcnNumber: string, council: string): Promise<TicketResponse> => {
+    if (!council) {
+      setError("Council is required");
+    }
+    if (!pcnNumber) {
+      setError("PCN number is required");
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const payload = {
+        pcnNumber,
+        councilName: council,
+      };
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 35000);
+
+      const response = await fetch(`/api/ticket/confirm`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Failed to fetch ticket: ${response.status} ${response.statusText}. ${errorText}`,
+        );
+      }
+
+      const result = await response.json();
+      return result || null;
+
+      //remove the deleted ticket from the ticket list.
+    } catch (err) {
+      console.error("Error confirming ticket:", err);
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
@@ -311,6 +358,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
   return {
     processTicket,
+    confirmTicket,
     fetchTickets,
     fetchTicket,
     deleteTicket,
