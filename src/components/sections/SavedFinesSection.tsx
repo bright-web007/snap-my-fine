@@ -30,6 +30,17 @@ export default function SavedFinesSection({
   const { deleteTicket, loading } = useTicketProcessor();
   const { removeSavedTicket } = useTicketStore();
 
+  // Filter out empty objects that N8N sometimes returns
+  const validSavedFines = savedFines.filter(fine => 
+    fine && 
+    fine.id && 
+    fine.pcnNumber && 
+    fine.council &&
+    Object.keys(fine).length > 0 &&
+    fine.id.trim() !== '' &&
+    fine.pcnNumber.trim() !== ''
+  );
+
   const handleDeleteFine = async (fine: SavedFine) => {
     if (loading) return;
     try {
@@ -61,7 +72,7 @@ export default function SavedFinesSection({
             <div className="flex-1 flex flex-col px-4 py-6">
                 <div className="w-full max-w-md mx-auto flex flex-col gap-[16px]">
 
-          {savedFines.length === 0 ? (
+          {validSavedFines.length === 0 ? (
             // Empty state
             <div className="text-center py-12">
               <Clock className="w-12 h-12 text-[#B2B2B3] mx-auto mb-4" />
@@ -71,7 +82,7 @@ export default function SavedFinesSection({
           ) : (
             // Saved fines list
             <div className="w-full flex flex-col gap-[12px]">
-              {savedFines.map((fine) => (
+              {validSavedFines.map((fine) => (
                 <div key={fine.id} className="flex flex-col gap-[8px] py-[24px] px-[16px] border-1 border-[#CFDFFC] bg-[#F1F7FE] rounded-[16px]">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
@@ -110,7 +121,7 @@ export default function SavedFinesSection({
                                     <hr className="border-1 border-[#E5E7EB] my-2" />
 
                                     <Button
-                                        className="bg-[#105AE2] text-[#FFFFFF] text-[14px] py-[12px] px-[12px] w-full"
+                                        className="bg-[#105AE2] text-[#FFFFFF] text-[14px] h-[44px] px-[12px] w-full cursor-pointer"
                                         onClick={() => onPayFine(fine)}
                                     >
                                         Pay Now

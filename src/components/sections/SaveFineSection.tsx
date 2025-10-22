@@ -66,17 +66,15 @@ export default function SaveFineSection({
       // Call the original onCreateAccount function to save the fine locally
       onCreateAccount();
     } catch (error) {
-      console.error("Error in handleCreateAccount:", error);
       alert(
-        "An error occurred while saving the ticket or sending the email. Please try again.",
+        "An error occurred while saving the fine. Please try again.",
       );
     }
   };
 
   return (
     <div className="w-full min-h-screen flex flex-col">
-      {/* Header with Save Fine - positioned at top left */}
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-[16px] pt-[20px] px-[16px]">
         <button
           className="flex items-center gap-[16px] text-gray-700 hover:text-black"
           onClick={onBack}
@@ -90,12 +88,10 @@ export default function SaveFineSection({
             </span>
           </p>
         </button>
-      </div>
 
-      {/* Centered content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
-        <div className="w-full max-w-md flex flex-col gap-[16px]">
-          <div className="text-[14px] text-[#0A398F] bg-[#F1F7FE] leading-[20px] font-inter font-regular p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
+        {/* Content aligned from top */}
+        <div className="w-full max-w-md mx-auto flex flex-col gap-[16px]">
+          <div className="text-[14px] text-[#0A398F] bg-[#F1F7FE] leading-[20px] font-inter font-light p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
             <p>
               Note: You need to create an account to allow us save your ticket
               so you can pay when you&apos;re ready. You&apos;ll also receive
@@ -143,7 +139,8 @@ export default function SaveFineSection({
               </Button>
             </div>
 
-            <div className="flex flex-col gap-[4px] py-[24px] px-[16px] border-1 border-[#CFDFFC] bg-[#F1F7FE] rounded-[16px]">
+            <div className="flex flex-col gap-[6px] py-[24px] px-[16px] border-1 border-[#CFDFFC] bg-[#F1F7FE] rounded-[16px]">
+              <h3 className="text-[#000000]">What you&apos;e saving</h3>
               <p className="flex justify-between">
                 <span className="text-[12px] text-[#000000] leading-[16px] font-regular font-inter tracking-[0.4%] ">
                   Council:
