@@ -15,7 +15,10 @@ export async function POST(request: NextRequest) {
     });
 
     const result = await response.json();
-    return NextResponse.json(result, { status: response.status });
+    
+    // Always return the result with 200 status if we got a response, 
+    // let the client handle success/error based on the result.success field
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error("Error forwarding to ticket confirmation API:", error);
     return NextResponse.json(

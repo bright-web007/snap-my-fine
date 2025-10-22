@@ -7,6 +7,7 @@ interface UseTicketProcessorReturn {
   fetchTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
   deleteTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
   confirmTicket: (pcnNumber: string, council: string) => Promise<any>;
+  payCouncilTicket: (pcnNumber: string, council: string, amount: string) => Promise<any>;
   saveTicket: (email: string, ticket: N8nResponse["output"]) => Promise<void>;
   processTicket: (imageData: string) => Promise<void>;
   loading: boolean;
@@ -65,6 +66,11 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
       const result = await response.json();
 
+      // Check if the result contains an error message (even with 200 status)
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       // Validate the response using the schema
       let validatedData;
       const validationResult = N8nResponseSchema.safeParse(result);
@@ -72,8 +78,8 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       if (validationResult.success) {
         validatedData = { ...result["output"] };
       } else {
-        // If validation fails, create a default object
-        validatedData = null;
+        // If validation fails, throw an error
+        throw new Error("Invalid response format from ticket processing service");
       }
       // Store the validated data in the zustand store
       setTicketData(validatedData);
@@ -239,6 +245,62 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     }
   }, []);
 
+  const payCouncilTicket = useCallback(async (pcnNumber: string, council: string, amount: string): Promise<TicketResponse> => {
+    if (!council) {
+      setError("Council is required");
+    }
+    if (!pcnNumber) {
+      setError("PCN number is required");
+    }
+    if (!amount) {
+      setError("Amount is required");
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const payload = {
+        pcnNumber,
+        councilName: council,
+        amount,
+      };
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 35000);
+
+      const response = await fetch(`/api/ticket/pay`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Failed to fetch ticket: ${response.status} ${response.statusText}. ${errorText}`,
+        );
+      }
+
+      const result = await response.json();
+      return result || null;
+
+      //remove the deleted ticket from the ticket list.
+    } catch (err) {
+      console.error("Error paying council ticket:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const fetchTicket = useCallback(async (email: string, pcnNumber: string): Promise<TicketResponse> => {
     if (!email) {
       setError("Email is required");
@@ -359,6 +421,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
   return {
     processTicket,
     confirmTicket,
+    payCouncilTicket,
     fetchTickets,
     fetchTicket,
     deleteTicket,

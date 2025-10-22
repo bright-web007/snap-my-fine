@@ -123,6 +123,7 @@ export default function Home() {
     // No outstanding charge notification state
     const [showNoOutstandingChargeNotification, setShowNoOutstandingChargeNotification] = useState(false);
     const [showConfirmationErrorNotification, setShowConfirmationErrorNotification] = useState(false);
+    const [showProcessingErrorNotification, setShowProcessingErrorNotification] = useState(false);
 
     // Section 16 - Partial Payment state
     const [showPartialPaymentSection, setShowPartialPaymentSection] = useState(false);
@@ -325,6 +326,14 @@ export default function Home() {
             console.error('Error sending to n8n:', error);
             setIsProcessingTicket(false);
             setHasProcessingError(true);
+            
+            // Show error notification and return to home section after a delay
+            setTimeout(() => {
+                setShowProcessingErrorNotification(true);
+                setShowImagePreview(false);
+                setShowCamera(false);
+                setSnapshot(null);
+            }, 1000); // Small delay to show the error state briefly
         }
     };
 
@@ -594,6 +603,7 @@ export default function Home() {
         setCameFromSavedFines(false);
         setShowNoOutstandingChargeNotification(false);
         setShowConfirmationErrorNotification(false);
+        setShowProcessingErrorNotification(false);
     };
 
     // Function to retry payment (goes back to section 6)
@@ -633,13 +643,17 @@ export default function Home() {
                     pcnNumber: formData.pcnNumber,
                     vehicleReg: formData.vehicleNumber,
                     email: formData.email || "user@example.com", // Use form email or placeholder
-                    fullName: "Parking Fine Payer" // Placeholder - consider collecting this in the form
+                    fullName: "Parking Fine Payer", // Placeholder - consider collecting this in the form
+                    council: formData.council
                 };
 
                 const result = await makePayment(paymentData);
                 
                 // Redirect to the payment gateway
                 if (result.billingRequestFlow?.authorisation_url) {
+                    // Clear ticket data before redirecting as it will be passed via URL params
+                    // Note: We don't clear it here as the verification page needs it
+                    // It will be cleared after successful receipt sending
                     window.location.href = result.billingRequestFlow.authorisation_url;
                 } else {
                     // Handle error - redirect failed
@@ -947,6 +961,16 @@ export default function Home() {
                     type="error"
                     duration={6000}
                     onClose={() => setShowConfirmationErrorNotification(false)}
+                />
+            )}
+
+            {/* Processing Error Notification */}
+            {showProcessingErrorNotification && (
+                <Notification
+                    message="Failed to process ticket"
+                    type="error"
+                    duration={6000}
+                    onClose={() => setShowProcessingErrorNotification(false)}
                 />
             )}
         </div>

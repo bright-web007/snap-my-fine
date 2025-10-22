@@ -6,7 +6,7 @@ const constants = require('gocardless-nodejs/constants');
 
 export async function POST(req: NextRequest) {
 
-    const { amount, pcnNumber, vehicleReg, email, fullName } = await req.json();
+    const { amount, pcnNumber, vehicleReg, email, fullName, council } = await req.json();
 
     if (!amount || !pcnNumber || !vehicleReg || !email || !fullName) {
         return NextResponse.json({
@@ -43,8 +43,17 @@ export async function POST(req: NextRequest) {
             },
         });
 
+        // Build redirect URI with ticket data as query parameters
+        const redirectUri = new URL(process.env.NEXT_GO_REDIRECT_URI!);
+        redirectUri.searchParams.set('pcn_number', pcnNumber);
+        redirectUri.searchParams.set('vehicle_number', vehicleReg);
+        redirectUri.searchParams.set('amount', amount);
+        if (council) {
+            redirectUri.searchParams.set('council', council);
+        }
+
         const billingRequestFlow = await client.billingRequestFlows.create({
-            redirect_uri: process.env.NEXT_GO_REDIRECT_URI!,
+            redirect_uri: redirectUri.toString(),
             exit_uri: process.env.NEXT_GO_EXIT_URI!,
             links: {
                 billing_request: billingRequest.id,

@@ -6,6 +6,7 @@ interface PaymentData {
   vehicleReg: string;
   email: string;
   fullName: string;
+  council?: string;
 }
 
 interface PaymentResponse {
