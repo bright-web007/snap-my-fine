@@ -4,43 +4,43 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 
 interface FormData {
-    council: string;
-    pcnNumber: string;
-    vehicleNumber: string;
-    fineAmount: string;
-    email: string;
+  council: string;
+  pcnNumber: string;
+  vehicleNumber: string;
+  fineAmount: string;
+  email: string;
 }
 
 interface ValidationErrors {
-    council: boolean;
-    pcnNumber: boolean;
-    vehicleNumber: boolean;
-    fineAmount: boolean;
-    email: boolean;
+  council: boolean;
+  pcnNumber: boolean;
+  vehicleNumber: boolean;
+  fineAmount: boolean;
+  email: boolean;
 }
 
 interface ReviewSectionProps {
-    formData: FormData;
-    validationErrors: ValidationErrors;
-    councils: string[];
-    onBack: () => void;
-    onInputChange: (field: string, value: string) => void;
-    onFormSubmit: (e: React.FormEvent) => void;
+  formData: FormData;
+  validationErrors: ValidationErrors;
+  councils: string[];
+  onBack: () => void;
+  onInputChange: (field: string, value: string) => void;
+  onFormSubmit: (e: React.FormEvent) => void;
 }
 
 export default function ReviewSection({
-    formData,
-    validationErrors,
-    councils,
-    onBack,
-    onInputChange,
-    onFormSubmit
+  formData,
+  validationErrors,
+  councils,
+  onBack,
+  onInputChange,
+  onFormSubmit
 }: ReviewSectionProps) {
   const { ticketData } = useTicketStore();
 
   return (
-    <div className="w-full">
-      <div className="w-full flex flex-col gap-[16px]">
+    <div className="w-full min-h-screen flex flex-col">
+      <div className="w-full flex flex-col gap-[16px] pt-[20px] px-[16px]">
         <button
           className="flex items-center gap-[16px] text-gray-700 hover:text-black"
           onClick={onBack}
@@ -53,9 +53,9 @@ export default function ReviewSection({
           </p>
         </button>
 
-                <div className="text-[14px] text-[#0A398F] bg-[#F1F7FE] leading-[20px] font-inter font-regular p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
-                    <p>Please verify the details below are correct before proceeding to payment.</p>
-                </div>
+        <div className="text-[14px] text-[#0A398F] bg-[#F1F7FE] leading-[20px] font-inter font-light p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
+          <p>Please verify the details below are correct before proceeding to payment.</p>
+        </div>
 
         <div className="w-full">
           <form
@@ -72,7 +72,8 @@ export default function ReviewSection({
                 name="council"
                 value={formData.council || (ticketData?.council_name ? ticketData.council_name : '')}
                 onChange={(e) => onInputChange('council', e.target.value)}
-                className="border border-[#D1D5DB] text-[#4A4C4F] rounded-[8px] p-[16px] text-[14px] outline-none focus:ring-2 focus:ring-[#105AE2]"
+                disabled
+                className="appearance-none border border-[#D1D5DB] text-[#4A4C4F] rounded-[8px] pl-[16px] pr-[40px] py-[16px] text-[14px] outline-none bg-gray-50 cursor-not-allowed opacity-75"
               >
                 <option value="">Select Council</option>
                 {councils.map((c) => (
@@ -99,7 +100,8 @@ export default function ReviewSection({
                 value={formData.pcnNumber || ticketData?.pcn_number || ''}
                 onChange={(e) => onInputChange('pcnNumber', e.target.value)}
                 placeholder="Enter PCN number"
-                className="border border-[#D1D5DB] rounded-[8px] p-[16px] text-[14px] text-[#4A4C4F] outline-none focus:ring-2 focus:ring-[#105AE2]"
+                readOnly
+                className="border border-[#D1D5DB] rounded-[8px] p-[16px] text-[14px] text-[#4A4C4F] outline-none bg-gray-50 cursor-not-allowed opacity-75"
               />
             </div>
 
@@ -115,7 +117,8 @@ export default function ReviewSection({
                 value={formData.vehicleNumber || ticketData?.plate_number || ''}
                 onChange={(e) => onInputChange('vehicleNumber', e.target.value)}
                 placeholder="Enter vehicle registration number"
-                className="border border-[#D1D5DB] rounded-[8px] text-[#4A4C4F] p-[16px] text-[14px] outline-none focus:ring-2 focus:ring-[#105AE2]"
+                readOnly
+                className="border border-[#D1D5DB] rounded-[8px] text-[#4A4C4F] p-[16px] text-[14px] outline-none bg-gray-50 cursor-not-allowed opacity-75"
               />
             </div>
 
@@ -131,7 +134,8 @@ export default function ReviewSection({
                 value={formData.fineAmount || (ticketData?.amount ? ticketData.amount.toString() : '')}
                 onChange={(e) => onInputChange('fineAmount', e.target.value)}
                 placeholder="Enter fine amount"
-                className="border border-[#D1D5DB] rounded-[8px] p-[16px] text-[14px] text-[#4A4C4F] outline-none focus:ring-2 focus:ring-[#105AE2]"
+                readOnly
+                className="border border-[#D1D5DB] rounded-[8px] p-[16px] text-[14px] text-[#4A4C4F] outline-none bg-gray-50 cursor-not-allowed opacity-75"
               />
             </div>
 
@@ -139,9 +143,9 @@ export default function ReviewSection({
             <div className="text-[black] w-full font-medium font-inter flex flex-col gap-[8px]">
               <Button
                 type="submit"
-                className="p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
+                className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
               >
-                <ArrowRight className="w-[20px] h-[20px]" /> Continue to payment
+                Continue to payment <ArrowRight className="w-[20px] h-[20px]" />
               </Button>
               <p className="text-[12px] text-[#7E8081] leading-[16px] font-inter font-regular text-center px-[30px]">By continuing, you agree to proceed with secure payment through your bank&apos;s gateway</p>
             </div>

@@ -22,8 +22,8 @@ export default function CameraSection({
     onUploadFromGallery
 }: CameraSectionProps) {
     return (
-        <div className="w-full">
-            <div className="w-full flex flex-col gap-[1px]">
+        <div className="w-full min-h-screen flex flex-col">
+            <div className="w-full flex flex-col gap-[16px] pt-[20px] px-[16px]">
                 <button
                     className="flex items-center gap-[16px] text-gray-700 hover:text-black"
                     onClick={onBack}
@@ -33,7 +33,7 @@ export default function CameraSection({
                     </div>
                     <p className="flex flex-col text-left">
                         <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">SnapMyFine</span>
-                        <span className="text-[#4A4C4F] text-[16px] leading-[24px] font-inter font-regular">Pay your parking fine in seconds</span>
+                        <span className="text-[#4A4C4F] text-[14px] leading-[24px] font-inter font-light">Pay your parking fine in seconds</span>
                     </p>
                 </button>
 
@@ -41,7 +41,7 @@ export default function CameraSection({
                     {/* Position ticket div - Hidden when video is visible */}
                     <div className={`bg-[#EAE9FC] w-full h-[423px] flex flex-col items-center justify-center gap-1 rounded-[12px] ${isVideoVisible ? 'hidden' : ''}`}>
                         <Camera className="w-[48px] h-[48px] text-[#105AE2]" />
-                        <p className="text-[black] text-[12px] font-inter font-regular">Position ticket within frame</p>
+                        <p className="text-[black] text-[12px] font-inter font-light">Position ticket within frame</p>
                     </div>
 
                     {/* Video div - Visible when video is active */}
@@ -59,31 +59,31 @@ export default function CameraSection({
                 </div>
 
             </div>
-            <div className="flex flex-col gap-[8px] w-full font-medium font-inter">
+            <div className="flex flex-col gap-[8px] w-full font-inter px-[16px]">
                 {/* Capture Ticket button - Visible when video is NOT showing */}
                 <Button
                     onClick={onStartCamera}
-                    className={`p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full ${isVideoVisible ? 'hidden' : ''}`}
+                    className={`cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? 'hidden' : ''}`}
                 >
-                    <Camera className="w-[24px] h-[24px] text-[white]" />
-                    <p>Capture Ticket</p>
+                    <Camera className="w-[24px] h-[24px] text-white" />
+                    Capture Ticket
                 </Button>
 
                 {/* Take Snapshot button - Visible when video IS showing */}
                 <Button
                     onClick={onTakeSnapshot}
-                    className={`p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full ${isVideoVisible ? '' : 'hidden'}`}
+                    className={`cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? '' : 'hidden'}`}
                 >
-                    <Camera className="w-[24px] h-[24px] text-[white]" />
-                    <p>Take Snapshot</p>
+                    <Camera className="w-[24px] h-[24px] text-white" />
+                    Take Snapshot
                 </Button>
 
                 <Button
-                    className="p-[12px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full"
+                    className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
                     onClick={onUploadFromGallery}
                 >
                     <Upload className="w-[24px] h-[24px] text-[#323333]" />
-                    <p>Upload from Gallery</p>
+                    Upload from Gallery
                 </Button>
             </div>
         </div>

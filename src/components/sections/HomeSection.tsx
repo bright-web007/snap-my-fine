@@ -37,7 +37,7 @@ export default function HomeSection({
             </header>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col items-center justify-center p-4">
+            <div className="flex-1 flex flex-col items-center justify-center">
                 <div className="w-full max-w-md flex flex-col gap-[38px]">
                     <div className="flex flex-col gap-[4px] text-center">
                         <h1 className="text-[#105AE2] text-[32px] font-bold leading-[100%]">SnapMyFine</h1>
@@ -47,18 +47,18 @@ export default function HomeSection({
                     <div className="w-full max-w-md flex flex-col items-center gap-6">
                         <div className="flex flex-col gap-[8px] w-full font-medium font-inter">
                             <Button
-                                className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full"
+                                className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
                                 onClick={onScanTicket}
                             >
-                                <Camera className="w-[24px] h-[24px] text-[white]" />
-                                <p>Scan Ticket</p>
+                                <Camera className="w-[24px] h-[24px] text-white" />
+                                Scan Ticket
                             </Button>
                             <Button
-                                className="p-[12px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full"
+                                className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
                                 onClick={onUploadFromGallery}
                             >
                                 <Upload className="w-[24px] h-[24px] text-[#323333]" />
-                                <p>Upload from Gallery</p>
+                                Upload from Gallery
                             </Button>
                         </div>
 
@@ -93,7 +93,7 @@ export default function HomeSection({
 
                         <div className="text-[#19191A] bg-[#F1F7FE] p-[16px] w-full">
                             <h2 className="text-[16px] font-medium font-inter leading-[24px]">How it works</h2>
-                            <ol className="text-[12px] font-medium font-inter list-decimal list-inside">
+                            <ol className="text-[12px] font-light font-inter list-decimal list-inside">
                                 <li>Pay us securely through your bank.</li>
                                 <li>We process your payment and take care of all the paperwork.</li>
                                 <li>You receive a confirmation once the payment is made.</li>
@@ -102,7 +102,7 @@ export default function HomeSection({
 
                         {/* Terms and Conditions */}
                         <div className="w-full text-center">
-                            <p className="text-[12px] text-[#7E8081] font-inter font-regular leading-[16px] mb-2">
+                            <p className="text-[10px] text-[#7E8081] font-inter font-regular leading-[16px] mb-2">
                                 By using SnapMyFine, you agree to our{" "}
                                 <button className="text-[#105AE2] underline hover:no-underline">
                                     Terms and Conditions
@@ -117,7 +117,7 @@ export default function HomeSection({
                             </p>
                         </div>
 
-                        <p className="text-[14px] text-[#105AE2] font-medium font-inter text-center">Need help?</p>
+                        <p className="text-[14px] text-[#105AE2] font-light font-inter text-center">Need help?</p>
                     </div>
                 </div>
             </div>

@@ -26,8 +26,8 @@ export default function PaymentSection({
     onPayLater
 }: PaymentSectionProps) {
     return (
-        <div className="w-full flex flex-col gap-[32px]">
-            <div className="w-full flex flex-col gap-[32px]">
+        <div className="w-full min-h-screen flex flex-col gap-[32px]">
+            <div className="w-full flex flex-col gap-[32px] pt-[20px] px-[16px]">
                 <button
                     className="flex items-center gap-[20px] text-gray-700 hover:text-black"
                     onClick={onBack}
@@ -35,9 +35,9 @@ export default function PaymentSection({
                     <div className="p-[12px] rounded-full bg-[#E7EFFD]">
                         <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
                     </div>
-                    <p className="flex flex-col text-left w-[248px]">
+                    <p className="flex flex-col text-left">
                         <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">What you will pay</span>
-                        <span className="text-[#4A4C4F] text-[14px] leading-[20px] font-inter font-regular">Review the total amount before proceeding to payment</span>
+                        <span className="text-[#4A4C4F] text-[14px] leading-[20px] font-inter font-light">Review the total amount before proceeding</span>
                     </p>
                 </button>
 
@@ -86,18 +86,18 @@ export default function PaymentSection({
 
                 </div>
             </div>
-            <div className="flex flex-col gap-[8px] w-full font-medium font-inter">
+            <div className="flex flex-col gap-[8px] w-full font-medium font-inter px-[16px]">
                 {/* Pay Now button - shows dynamic total */}
                 <Button
                     onClick={onPayNow}
-                    className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full"
+                    className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
                 >
                     Pay Now - £{formData.fineAmount ? (Number(formData.fineAmount) + 3).toFixed(2) : '3.00'}
                 </Button>
                 {!isLoadedFromSavedFine && (
                     <Button
                         onClick={onPayLater}
-                        className="p-[12px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full"
+                        className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
                     >
                         Pay Later
                     </Button>
