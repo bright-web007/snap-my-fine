@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as tlSigning from 'truelayer-signing';
-import axios, { AxiosError } from "axios";
-import crypto from "crypto";
+const gocardless = require('gocardless-nodejs');
+const constants = require('gocardless-nodejs/constants');
 
 export async function POST(req: NextRequest) {
 
@@ -26,143 +25,33 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        console.log("📡 Getting access token...");
-        const tokenResponse = await axios.post(
-            process.env.NEXT_TRUELAYER_AUTH_URL! + '/connect/token',
-            new URLSearchParams({
-                grant_type: 'client_credentials',
-                client_id: process.env.NEXT_TRUELAYER_CLIENT_ID!,
-                client_secret: process.env.NEXT_TRUELAYER_CLIENT_SECRET!,
-                scope: 'payments',
-            }),
-            {
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                timeout: 30000,
-            }
+
+        const client = gocardless(
+            process.env.NEXT_GO_CARDLESS_ACCESS_TOKEN,
+            process.env.NEXT_GO_CARDLESS_ENVIRONMENT === 'live' ? constants.Environments.Live : constants.Environments.Sandbox,
+            { raiseOnIdempotencyConflict: true },
         );
 
-        const { access_token } = tokenResponse.data;
-        console.log("✅ Access token obtained");
-
-        let actualAmount: number | undefined = amount ? parseInt(amount, 10) : undefined;
-
-        if (actualAmount === undefined) {
-            throw new Error("Invalid amount provided");
-        }
-
-        const serviceFee = parseFloat(process.env.NEXT_SERVICE_FEE!) || 5.00;
-        const totalAmount = actualAmount + serviceFee;  // 50 + 5 = 55.00
-        console.log(`💰 Total amount to charge (including service fee): £${totalAmount.toFixed(2)}`);
-        actualAmount = totalAmount * 100;  // Convert to minor units
-
-        console.log("📝 Preparing payment request...");
-        const paymentBody = {
-            "currency": "GBP",
-            "amount_in_minor": actualAmount,
-            "payment_method": {
-                "type": "bank_transfer",
-                "provider_selection": {
-                    "type": "user_selected",
-                    "filter": {
-                        "countries": [
-                            "GB"
-                        ],
-                    }
-                },
-                "beneficiary": {
-                    "type": "merchant_account",
-                    "merchant_account_id": process.env.NEXT_TRUELAYER_MERCHANT_ACCOUNT_ID!
-                }
+        const billingRequest = await client.billingRequests.create({
+            payment_request: {
+                description: "First Payment",
+                amount: `${amount}`,
+                currency: "GBP",
+                app_fee: `${5}.00`,
             },
-            "user": {
-                "id": "f9b48c9d-176b-46dd-b2da-fe1a2b77350c",
-                "email": email,
-                "name": fullName
-            },
-            "hosted_page": {
-                "return_uri": "https://console.truelayer.com/redirect-page"
-            },
-            "metadata": {
-                "vehicle_number": vehicleReg,
-                "pcn_number": pcnNumber
-            }
-        };
-
-        const idempotencyKey = crypto.randomUUID();
-        const bodyString = JSON.stringify(paymentBody);
-
-        console.log("🔐 Signing request...");
-        console.log("Body length:", bodyString.length);
-
-        // TrueLayer signing expects proper HTTP method.
-        const signature = tlSigning.sign({
-            kid: process.env.NEXT_TRUELAYER_KID!,
-            privateKeyPem: process.env.NEXT_PRIVATE_KEY_PEM!,
-            method: 'post' as any,
-            path: '/v3/payments',
-            headers: {
-                'Idempotency-Key': idempotencyKey,
-            },
-            body: bodyString,
         });
 
-        console.log("✅ Request signed");
-        console.log("Signature length:", signature.length);
-
-        console.log("💳 Creating payment...");
-
-        const paymentResponse = await axios.request({
-            method: 'POST',
-            url: process.env.NEXT_TRUELAYER_API_BASE_URL! + '/v3/payments',
-            data: bodyString,
-            headers: {
-                accept: 'application/json; charset=UTF-8',
-                'Authorization': `Bearer ${access_token}`,
-                'Content-Type': 'application/json; charset=UTF-8',
-                'Idempotency-Key': idempotencyKey,
-                'Tl-Signature': signature,
+        const billingRequestFlow = await client.billingRequestFlows.create({
+            redirect_uri: process.env.NEXT_GO_REDIRECT_URI!,
+            exit_uri: process.env.NEXT_GO_EXIT_URI!,
+            links: {
+                billing_request: billingRequest.id,
             }
-        })
+        });
 
-        console.log("✅ Payment created successfully!");
-        console.log("Payment ID:", (paymentResponse.data as any).id);
-
-        const payment = paymentResponse.data as any;
-        console.log("Payment Details:", JSON.stringify(payment, null, 2));
-
-        return NextResponse.json({
-            payment_id: payment.id,
-            authorization_url: payment.hosted_page?.uri,
-            status: payment.status,
-        }, { status: 200 });
+        return NextResponse.json({ billingRequestFlow }, { status: 200 });
 
     } catch (error: unknown) {
-        console.error("❌ Payment Error");
-
-        if (axios.isAxiosError(error)) {
-            const axiosError = error as AxiosError;
-
-            if (axiosError.response) {
-                console.error("Status:", axiosError.response.status);
-                console.error("Response:", JSON.stringify((axiosError.response as any).data, null, 2));
-
-                return NextResponse.json({
-                    error: 'TrueLayer API error',
-                    status: axiosError.response.status,
-                    details: (axiosError.response as any).data,
-                }, { status: axiosError.response.status });
-            } else if (axiosError.request) {
-                console.error("No response received");
-                console.error("Error code:", axiosError.code);
-
-                return NextResponse.json({
-                    error: 'No response from TrueLayer',
-                    code: axiosError.code,
-                    message: axiosError.message,
-                }, { status: 500 });
-            }
-        }
-
         const genericMessage = error instanceof Error ? error.message : 'Unknown error';
         console.error("Unexpected error:", genericMessage);
         return NextResponse.json({

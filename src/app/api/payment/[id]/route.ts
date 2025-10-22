@@ -1,36 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
+const gocardless = require('gocardless-nodejs');
+const constants = require('gocardless-nodejs/constants');
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
+
+    if (!id) {
+        return NextResponse.json({
+            error: 'Missing required field: id',
+        }, { status: 400 });
+    }
+        
     try {
-        console.log("📡 Getting access token...");
-        const tokenResponse = await axios.post(
-            process.env.NEXT_TRUELAYER_AUTH_URL! + '/connect/token',
-            new URLSearchParams({
-                grant_type: 'client_credentials',
-                client_id: process.env.NEXT_TRUELAYER_CLIENT_ID!,
-                client_secret: process.env.NEXT_TRUELAYER_CLIENT_SECRET!,
-                scope: 'payments',
-            }),
-            {
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                timeout: 30000,
-            }
+        const client = gocardless(
+            process.env.NEXT_GO_CARDLESS_ACCESS_TOKEN,
+            process.env.NEXT_GO_CARDLESS_ENVIRONMENT === 'live' ? constants.Environments.Live : constants.Environments.Sandbox,
+            { raiseOnIdempotencyConflict: true },
         );
-        const { access_token } = tokenResponse.data;
-        console.log("✅ Access token obtained");
 
-        const options = {
-            method: 'GET',
-            url: process.env.NEXT_TRUELAYER_API_BASE_URL + '/v3/payments/' + id,
-            headers: { accept: 'application/json; charset=UTF-8', authorization: 'Bearer ' + access_token }
-        };
+        const resp = await client.billingRequests.find(id);
 
-        const paymentResponse = await axios.request(options);
-        console.log("✅ Payment details obtained");
-
-        return NextResponse.json(paymentResponse.data as any, { status: 200 });
+        return NextResponse.json({ billingRequest: resp }, { status: 200 });
 
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : 'Unknown error';
