@@ -14,6 +14,8 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(payload),
     });
 
+    console.log("Response status from ticket confirmation API:", {response});
+
     const result = await response.json();
     
     // Always return the result with 200 status if we got a response, 
