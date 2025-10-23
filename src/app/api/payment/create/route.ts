@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 // import * as gocardless from 'gocardless-nodejs';
 // import * as constants from 'gocardless-nodejs/constants';
 const gocardless = require('gocardless-nodejs');
@@ -80,7 +81,24 @@ export async function POST(req: NextRequest) {
 
     } catch (error: unknown) {
         const genericMessage = error instanceof Error ? error.message : 'Unknown error';
-        console.error("Unexpected error:", genericMessage);
+        console.error("Payment creation error:", genericMessage);
+        
+        // Capture payment creation errors with Sentry
+        Sentry.captureException(error, {
+            tags: {
+                category: 'payment',
+                operation: 'create_payment',
+                council: council || 'unknown'
+            },
+            extra: {
+                amount,
+                pcnNumber,
+                vehicleReg,
+                email: email.substring(0, 3) + '***', // Partial email for privacy
+                council
+            }
+        });
+        
         return NextResponse.json({
             error: genericMessage,
         }, { status: 500 });

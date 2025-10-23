@@ -76,17 +76,17 @@ export default function ImagePreviewSection({
             <div className="flex flex-col gap-[8px] w-full font-medium font-inter px-[16px] pt-[10px]">
                 <Button
                     onClick={onRetakePhoto}
-                    className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full"
+                    className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
                 >
                     <Camera className="w-[24px] h-[24px] text-[white]" />
-                    <p>Retake Photo</p>
+                    Retake Photo
                 </Button>
                 <Button
-                    className="p-[12px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full"
+                    className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
                     onClick={onUploadFromGallery}
                 >
                     <Upload className="w-[24px] h-[24px] text-[#323333]" />
-                    <p>Upload from Gallery</p>
+                    Upload from Gallery
                 </Button>
             </div>
         </div>

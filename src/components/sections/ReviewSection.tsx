@@ -4,7 +4,6 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket";
 import { useEffect, useState } from "react";
-import { Loader } from "@/components/ui/loader";
 
 interface FormData {
   council: string;
@@ -107,18 +106,11 @@ export default function ReviewSection({
       {/* Loading overlay */}
       {isConfirming && (
         <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-40 flex flex-col items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="flex items-center justify-center h-16 w-16 bg-gray-100 rounded-md">
-              <Loader size={32} className="text-black" />
-            </div>
-            <div className="text-center">
-              {/* <h3 className="text-[16px] font-inter font-semibold text-[#19191A] mb-2">
-                Inputting your ticket details
-              </h3> */}
-              <p className="text-[14px] font-inter text-[#7E8081]">
-                Confirming your payment amount with the council...
-              </p>
-            </div>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#105AE2] mx-auto mb-4"></div>
+            <p className="text-[#19191A] font-inter">
+              Confirming your payment amount with the council...
+            </p>
           </div>
         </div>
       )}
@@ -148,7 +140,7 @@ export default function ReviewSection({
             onSubmit={onFormSubmit}
           >
             {/* Council Name Dropdown */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
                 Council Name
                 {validationErrors.council && <span className="text-red-500">*</span>}
@@ -174,7 +166,7 @@ export default function ReviewSection({
             </div>
 
             {/* PCN Number */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
                 PCN Number
                 {validationErrors.pcnNumber && <span className="text-red-500">*</span>}
@@ -191,7 +183,7 @@ export default function ReviewSection({
             </div>
 
             {/* Vehicle Registration Number */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
                 Vehicle Registration Number
                 {validationErrors.vehicleNumber && <span className="text-red-500">*</span>}
@@ -208,7 +200,7 @@ export default function ReviewSection({
             </div>
 
             {/* Fine Amount */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
                 Fine Amount (£)
                 {validationErrors.fineAmount && <span className="text-red-500">*</span>}

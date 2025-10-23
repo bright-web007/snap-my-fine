@@ -1,5 +1,20 @@
 // app/api/test-connection/route.ts
+import * as Sentry from "@sentry/nextjs";
+
 export async function GET() {
+    // Test Sentry error capture
+    console.log('Testing Sentry error capture...');
+    Sentry.captureException(new Error("Sentry test error from test-connection API"), {
+        tags: {
+            category: 'sentry_test',
+            operation: 'test_error_capture'
+        },
+        extra: {
+            testMessage: 'This is a test error to verify Sentry integration',
+            timestamp: new Date().toISOString()
+        }
+    });
+    console.log('Sentry test error sent');
     try {
         console.log('Testing TrueLayer connection...');
         

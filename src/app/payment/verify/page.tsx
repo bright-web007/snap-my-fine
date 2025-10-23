@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import * as Sentry from "@sentry/nextjs";
 import PaymentStatusSection from "@/components/sections/PaymentStatusSection";
 import ReceiptSection from "@/components/sections/ReceiptSection";
 import { useTicketStore } from "@/lib/stores/ticketStore";
@@ -88,6 +89,20 @@ function PaymentVerificationContent() {
                     console.log('Payment record updated successfully');
                 } catch (paymentUpdateError) {
                     console.error('Failed to update payment record:', paymentUpdateError);
+                    
+                    // Capture payment record update errors with Sentry
+                    Sentry.captureException(paymentUpdateError, {
+                        tags: {
+                            category: 'payment',
+                            operation: 'update_payment_record'
+                        },
+                        extra: {
+                            pcnNumber,
+                            paymentId,
+                            council
+                        }
+                    });
+                    
                     // Continue with council payment even if payment record update fails
                 }
             }
@@ -113,6 +128,22 @@ function PaymentVerificationContent() {
             }
         } catch (error) {
             console.error('Council payment API error:', error);
+            
+            // Capture council payment errors with Sentry
+            Sentry.captureException(error, {
+                tags: {
+                    category: 'council_integration',
+                    operation: 'council_payment',
+                    council: council || 'unknown'
+                },
+                extra: {
+                    pcnNumber,
+                    council,
+                    amount,
+                    paymentId
+                }
+            });
+            
             // If there's an API error, still show email collection for receipt
             // The user has already paid via GoCardless
             setTimeout(() => {

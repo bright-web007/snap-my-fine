@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { N8nResponseSchema, N8nResponse, TicketResponse } from "@/lib/schema";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 
@@ -70,6 +71,22 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       // Check if the result contains an error message (even with 200 status)
       if (result.error) {
         console.log('Processing error detected:', result.error);
+        
+        // Capture processing errors returned by the service (even with 200 status)
+        Sentry.captureException(new Error(result.error), {
+          tags: {
+            category: 'processing_service_error',
+            operation: 'image_processing_response',
+            error_type: result.error.includes("Unsupported council:") ? 'unsupported_council' : 'processing_failure'
+          },
+          extra: {
+            serviceError: result.error,
+            imageDataLength: imageData?.length || 0,
+            responseStatus: 200,
+            fullResponse: result
+          }
+        });
+        
         // Check for specific error messages that need special handling
         if (result.error.includes("Unsupported council:")) {
           console.log('Detected unsupported council, throwing custom error');
@@ -84,6 +101,41 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
       if (validationResult.success) {
         validatedData = { ...result["output"] };
+        
+        // Check if the extracted data contains meaningful values
+        const hasValidData = validatedData.pcn_number && 
+                           validatedData.pcn_number.trim() !== '' &&
+                           validatedData.plate_number && 
+                           validatedData.plate_number.trim() !== '' &&
+                           validatedData.council_name && 
+                           validatedData.council_name.trim() !== '' &&
+                           validatedData.amount && 
+                           validatedData.amount > 0;
+
+        if (!hasValidData) {
+          // Log invalid extraction data to Sentry
+          Sentry.captureException(new Error("Invalid ticket data extracted - empty or missing critical fields"), {
+            tags: {
+              category: 'processing_service_error',
+              operation: 'data_validation_failure',
+              error_type: 'invalid_extraction_data'
+            },
+            extra: {
+              extractedData: validatedData,
+              imageDataLength: imageData?.length || 0,
+              responseStatus: 200,
+              fullResponse: result,
+              validationDetails: {
+                hasPcnNumber: !!(validatedData.pcn_number && validatedData.pcn_number.trim()),
+                hasPlateNumber: !!(validatedData.plate_number && validatedData.plate_number.trim()),
+                hasCouncilName: !!(validatedData.council_name && validatedData.council_name.trim()),
+                hasValidAmount: !!(validatedData.amount && validatedData.amount > 0)
+              }
+            }
+          });
+          
+          throw new Error("We couldn't read your ticket. Please try again with better lighting and make sure all text is visible.");
+        }
       } else {
         // If validation fails, throw an error
         throw new Error("Invalid response format from ticket processing service");
@@ -94,6 +146,19 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
+      
+      // Capture ticket processing errors with Sentry
+      Sentry.captureException(err, {
+        tags: {
+          category: 'ticket_processing',
+          operation: 'process_image'
+        },
+        extra: {
+          imageDataLength: imageData?.length || 0,
+          errorMessage
+        }
+      });
+      
       throw err;
     } finally {
       setLoading(false);
@@ -190,10 +255,24 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
       //remove the deleted ticket from the ticket list.
     } catch (err) {
-      console.error("Error fetching ticket:", err);
+      console.error("Error deleting ticket:", err);
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
+      
+      // Capture ticket deletion errors with Sentry
+      Sentry.captureException(err, {
+        tags: {
+          category: 'ticket_management',
+          operation: 'delete_ticket'
+        },
+        extra: {
+          email: email.substring(0, 3) + '***', // Partial email for privacy
+          pcnNumber,
+          errorMessage
+        }
+      });
+      
       throw err;
     } finally {
       setLoading(false);
@@ -246,6 +325,21 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
+      
+      // Capture ticket confirmation errors with Sentry
+      Sentry.captureException(err, {
+        tags: {
+          category: 'council_integration',
+          operation: 'confirm_ticket',
+          council: council || 'unknown'
+        },
+        extra: {
+          pcnNumber,
+          council,
+          errorMessage
+        }
+      });
+      
       throw err;
     } finally {
       setLoading(false);
@@ -313,6 +407,22 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
+      
+      // Capture council payment errors with Sentry
+      Sentry.captureException(err, {
+        tags: {
+          category: 'council_integration',
+          operation: 'pay_ticket',
+          council: council || 'unknown'
+        },
+        extra: {
+          pcnNumber,
+          council,
+          amount,
+          errorMessage
+        }
+      });
+      
       throw err;
     } finally {
       setLoading(false);
