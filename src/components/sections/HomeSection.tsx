@@ -27,14 +27,14 @@ export default function HomeSection({
     return (
         <div className="w-full max-w-md min-h-screen flex flex-col">
             {/* Header with Hamburger Menu */}
-            <header className="w-full flex justify-end px-4 py-4 bg-white">
+            {/* <header className="w-full flex justify-end px-4 py-4 bg-white">
                 <button
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                     onClick={onHamburgerClick}
                 >
                     <Menu className="w-[24px] h-[24px] text-[#323333]" />
                 </button>
-            </header>
+            </header> */}
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col items-center justify-center">
