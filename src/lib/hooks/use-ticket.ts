@@ -69,8 +69,10 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
       // Check if the result contains an error message (even with 200 status)
       if (result.error) {
+        console.log('Processing error detected:', result.error);
         // Check for specific error messages that need special handling
-        if (result.error.includes("Council not supported yet!")) {
+        if (result.error.includes("Unsupported council:")) {
+          console.log('Detected unsupported council, throwing custom error');
           throw new Error("Council not supported yet!");
         }
         throw new Error(result.error);

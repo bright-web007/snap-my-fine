@@ -61,8 +61,8 @@ export default function ImagePreviewSection({
                     </div>
                 ) : isProcessing === false ? (
                     <div className="text-center px-[24px]">
-                        <p className="text-[16px] text-[black] font-inter font-medium leading-[24px] tracking-[0.15%]">Ticket processed.</p>
-                        <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%]">Please wait...</p>
+                        <p className="text-[14px] text-[black] font-inter font-light leading-[24px] tracking-[0.15%]">Please wait ...</p>
+                        {/* <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%]">Please wait...</p> */}
                     </div>
                 ) : (
                     <div className="text-center px-[24px]">
