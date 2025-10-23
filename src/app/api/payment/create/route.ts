@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
         redirectUri.searchParams.set('pcn_number', pcnNumber);
         redirectUri.searchParams.set('vehicle_number', vehicleReg);
         redirectUri.searchParams.set('amount', amount);
+        redirectUri.searchParams.set('payment_id', billingRequest.id);
         if (council) {
             redirectUri.searchParams.set('council', council);
         }
@@ -70,7 +71,12 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        return NextResponse.json({ billingRequestFlow }, { status: 200 });
+        console.log('Payment creation successful - Payment ID:', billingRequest.id);
+        
+        return NextResponse.json({ 
+            billingRequestFlow,
+            paymentId: billingRequest.id
+        }, { status: 200 });
 
     } catch (error: unknown) {
         const genericMessage = error instanceof Error ? error.message : 'Unknown error';

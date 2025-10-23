@@ -8,6 +8,7 @@ interface UseTicketProcessorReturn {
   deleteTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
   confirmTicket: (pcnNumber: string, council: string) => Promise<any>;
   payCouncilTicket: (pcnNumber: string, council: string, amount: string) => Promise<any>;
+  updateTicketPayment: (pcnNumber: string, paymentId: string) => Promise<any>;
   saveTicket: (email: string, ticket: N8nResponse["output"]) => Promise<void>;
   processTicket: (imageData: string) => Promise<void>;
   loading: boolean;
@@ -432,11 +433,65 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     }
   }, [setSavedTickets]);
 
+  const updateTicketPayment = useCallback(async (pcnNumber: string, paymentId: string): Promise<any> => {
+    if (!pcnNumber) {
+      setError("PCN number is required");
+      throw new Error("PCN number is required");
+    }
+    if (!paymentId) {
+      setError("Payment ID is required");
+      throw new Error("Payment ID is required");
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const payload = {
+        pcnNumber,
+        paymentId,
+      };
+
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+      const response = await fetch(`/api/ticket/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Failed to update ticket payment: ${response.status} ${response.statusText}. ${errorText}`,
+        );
+      }
+
+      const result = await response.json();
+      console.log("Ticket payment updated successfully");
+      return result;
+    } catch (err) {
+      console.error("Error updating ticket payment:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   return {
     processTicket,
     confirmTicket,
     payCouncilTicket,
+    updateTicketPayment,
     fetchTickets,
     fetchTicket,
     deleteTicket,
