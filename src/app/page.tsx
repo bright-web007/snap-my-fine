@@ -124,6 +124,7 @@ export default function Home() {
     const [showNoOutstandingChargeNotification, setShowNoOutstandingChargeNotification] = useState(false);
     const [showConfirmationErrorNotification, setShowConfirmationErrorNotification] = useState(false);
     const [showProcessingErrorNotification, setShowProcessingErrorNotification] = useState(false);
+    const [showCouncilNotSupportedNotification, setShowCouncilNotSupportedNotification] = useState(false);
 
     // Section 16 - Partial Payment state
     const [showPartialPaymentSection, setShowPartialPaymentSection] = useState(false);
@@ -327,9 +328,17 @@ export default function Home() {
             setIsProcessingTicket(false);
             setHasProcessingError(true);
             
-            // Show error notification and return to home section after a delay
+            // Check if it's a council support error
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            const isCouncilNotSupported = errorMessage.includes("Council not supported yet!");
+            
+            // Show appropriate error notification and return to home section after a delay
             setTimeout(() => {
-                setShowProcessingErrorNotification(true);
+                if (isCouncilNotSupported) {
+                    setShowCouncilNotSupportedNotification(true);
+                } else {
+                    setShowProcessingErrorNotification(true);
+                }
                 setShowImagePreview(false);
                 setShowCamera(false);
                 setSnapshot(null);
@@ -604,6 +613,7 @@ export default function Home() {
         setShowNoOutstandingChargeNotification(false);
         setShowConfirmationErrorNotification(false);
         setShowProcessingErrorNotification(false);
+        setShowCouncilNotSupportedNotification(false);
     };
 
     // Function to retry payment (goes back to section 6)
@@ -638,14 +648,29 @@ export default function Home() {
 
         setTimeout(async () => {
             try {
+                // Use ticketData if available (from OCR), otherwise fall back to formData
+                const actualAmount = ticketData?.amount?.toString() || formData.fineAmount;
+                const actualPcnNumber = ticketData?.pcn_number || formData.pcnNumber;
+                const actualVehicleNumber = ticketData?.plate_number || formData.vehicleNumber;
+                const actualCouncil = ticketData?.council_name || formData.council;
+                
                 const paymentData = {
-                    amount: (Number(formData.fineAmount) + 3).toString(), // Fine amount + £3 service fee
-                    pcnNumber: formData.pcnNumber,
-                    vehicleReg: formData.vehicleNumber,
+                    amount: (Number(actualAmount) + 3).toString(), // Fine amount + £3 service fee
+                    pcnNumber: actualPcnNumber,
+                    vehicleReg: actualVehicleNumber,
                     email: formData.email || "user@example.com", // Use form email or placeholder
                     fullName: "Parking Fine Payer", // Placeholder - consider collecting this in the form
-                    council: formData.council
+                    council: actualCouncil
                 };
+
+                // Debug log to track what data is being sent for payment
+                console.log('Sending payment data:', paymentData);
+                console.log('TicketData used:', {
+                    amount: ticketData?.amount,
+                    pcn_number: ticketData?.pcn_number,
+                    plate_number: ticketData?.plate_number,
+                    council_name: ticketData?.council_name
+                });
 
                 const result = await makePayment(paymentData);
                 
@@ -971,6 +996,16 @@ export default function Home() {
                     type="error"
                     duration={6000}
                     onClose={() => setShowProcessingErrorNotification(false)}
+                />
+            )}
+
+            {/* Council Not Supported Notification */}
+            {showCouncilNotSupportedNotification && (
+                <Notification
+                    message="Council not supported yet!"
+                    type="error"
+                    duration={6000}
+                    onClose={() => setShowCouncilNotSupportedNotification(false)}
                 />
             )}
         </div>

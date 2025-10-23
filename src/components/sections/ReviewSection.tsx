@@ -100,7 +100,7 @@ export default function ReviewSection({
     };
 
     confirmTicketDetails();
-  }, [ticketData?.pcn_number, ticketData?.council_name, confirmTicket, confirmationAttempted]);
+  }, [ticketData?.pcn_number, ticketData?.council_name, confirmationAttempted]);
 
   return (
     <div className="w-full min-h-screen flex flex-col relative">

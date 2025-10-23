@@ -15,7 +15,7 @@ interface ImagePreviewSectionProps {
 export default function ImagePreviewSection({
     snapshot,
     hasError = false,
-    isProcessing = true,
+    isProcessing = false,
     onBack,
     onRetakePhoto,
     onUploadFromGallery
@@ -51,19 +51,23 @@ export default function ImagePreviewSection({
 
             {/* Status Messages with fixed spacing */}
             <div className="h-[125px] flex flex-col justify-center px-[16px]">
-                {isProcessing && !hasError && (
-                    <div className="text-center px-[24px]">
-                        <p className="text-[16px] text-[black] font-inter font-medium leading-[24px] tracking-[0.15%]">Processing your ticket...</p>
-                        <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%]">We&apos;re automatically scanning your ticket for payment details</p>
-                    </div>
-                )}
-                {hasError && (
+                {hasError ? (
                     <div className="px-[24px]">
                         <div className="p-[12px] rounded-full bg-[#F8D3D3] flex justify-center items-center w-fit mx-auto mb-[8px]">
                             <AlertCircle className="w-[24px] h-[24px] text-[#DC2626]" />
                         </div>
                         <p className="text-[16px] text-[#000000] font-inter font-medium leading-[24px] tracking-[0.15%] text-center">We couldn&apos;t read your ticket</p>
                         <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%] text-center">Try again with better lighting and make sure all text are visible</p>
+                    </div>
+                ) : isProcessing === false ? (
+                    <div className="text-center px-[24px]">
+                        <p className="text-[16px] text-[black] font-inter font-medium leading-[24px] tracking-[0.15%]">Ticket processed.</p>
+                        <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%]">Please wait...</p>
+                    </div>
+                ) : (
+                    <div className="text-center px-[24px]">
+                        <p className="text-[16px] text-[black] font-inter font-medium leading-[24px] tracking-[0.15%]">Processing your ticket...</p>
+                        <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%]">We&apos;re automatically scanning your ticket for payment details</p>
                     </div>
                 )}
             </div>

@@ -8,6 +8,16 @@ export async function POST(req: NextRequest) {
 
     const { amount, pcnNumber, vehicleReg, email, fullName, council } = await req.json();
 
+    // Debug log to track what data is being received
+    console.log('Payment creation request data:', {
+        amount,
+        pcnNumber,
+        vehicleReg,
+        email,
+        fullName,
+        council
+    });
+
     if (!amount || !pcnNumber || !vehicleReg || !email || !fullName) {
         return NextResponse.json({
             error: 'Missing required fields: amount, pcnNumber, vehicleReg, email, fullName',

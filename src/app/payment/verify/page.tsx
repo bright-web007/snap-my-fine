@@ -79,15 +79,28 @@ function PaymentVerificationContent() {
     const handleCouncilPayment = async (pcnNumber: string, council: string, amount: string) => {
         try {
             setCouncilPaymentProcessed(true);
-            await payCouncilTicket(pcnNumber, council, amount);
-            // Payment successful, show receipt section after a brief delay
+            const result = await payCouncilTicket(pcnNumber, council, amount);
+            
+            // Check if payment was successful based on the response structure
+            if (result && result.success === true) {
+                // Payment successful, show receipt section after a brief delay
+                setTimeout(() => {
+                    setShowReceiptSection(true);
+                }, 1000);
+            } else {
+                // Payment failed according to the response
+                // Even if council payment fails, user has already paid via GoCardless
+                // So we still proceed to show the email collection for receipt
+                setTimeout(() => {
+                    setShowReceiptSection(true);
+                }, 1000);
+            }
+        } catch (error) {
+            // If there's an API error, still show email collection for receipt
+            // The user has already paid via GoCardless
             setTimeout(() => {
                 setShowReceiptSection(true);
             }, 1000);
-        } catch (error) {
-            console.error('Council payment failed:', error);
-            // If council payment fails, still show the email collection for receipt
-            // The user has already paid via GoCardless
         }
     };
 

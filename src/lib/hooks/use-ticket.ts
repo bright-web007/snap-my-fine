@@ -68,6 +68,10 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
       // Check if the result contains an error message (even with 200 status)
       if (result.error) {
+        // Check for specific error messages that need special handling
+        if (result.error.includes("Council not supported yet!")) {
+          throw new Error("Council not supported yet!");
+        }
         throw new Error(result.error);
       }
 
@@ -263,7 +267,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const payload = {
         pcnNumber,
         councilName: council,
-        amount,
+        amount: parseInt(amount),
       };
       // Create AbortController for timeout
       const controller = new AbortController();
@@ -287,6 +291,17 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       }
 
       const result = await response.json();
+      
+      // Check if the response indicates success
+      if (result && result.success === false) {
+        throw new Error(result.message || "Council payment failed");
+      }
+      
+      // If success field is missing but response is ok, assume success for backwards compatibility
+      if (result && result.success !== false) {
+        return result;
+      }
+      
       return result || null;
 
       //remove the deleted ticket from the ticket list.
