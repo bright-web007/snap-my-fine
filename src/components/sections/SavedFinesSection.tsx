@@ -48,7 +48,6 @@ export default function SavedFinesSection({
       removeSavedTicket(fine.id);
       onDeleteFine(fine.id);
     } catch (error) {
-      console.error('Failed to delete ticket', error);
       alert('Failed to delete ticket. Please try again.');
     }
   };

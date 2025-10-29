@@ -30,6 +30,7 @@ interface ReviewSectionProps {
   onFormSubmit: (e: React.FormEvent) => void;
   onNoOutstandingCharge: () => void;
   onConfirmationError: () => void;
+  onFineNotReady: (pcnNumber: string) => void;
 }
 
 export default function ReviewSection({
@@ -40,7 +41,8 @@ export default function ReviewSection({
   onInputChange,
   onFormSubmit,
   onNoOutstandingCharge,
-  onConfirmationError
+  onConfirmationError,
+  onFineNotReady
 }: ReviewSectionProps) {
   const { ticketData } = useTicketStore();
   const { confirmTicket } = useTicketProcessor();
@@ -82,13 +84,21 @@ export default function ReviewSection({
             }, 500);
           }
         } else {
-          // API returned success: false - redirect to HomeSection with error
-          setTimeout(() => {
-            onConfirmationError();
-          }, 500);
+          // Check if it's a pending status response
+          if (result?.status === "pending_update" && 
+              result?.message?.includes("The ticket has not been updated by the council yet")) {
+            // Handle fine not ready case
+            setTimeout(() => {
+              onFineNotReady(result.pcnNumber || ticketData.pcn_number);
+            }, 500);
+          } else {
+            // API returned success: false - redirect to HomeSection with error
+            setTimeout(() => {
+              onConfirmationError();
+            }, 500);
+          }
         }
       } catch (error) {
-        console.error('Failed to confirm ticket:', error);
         // Network error or exception - redirect to HomeSection with error
         setTimeout(() => {
           onConfirmationError();

@@ -11,6 +11,7 @@ interface UseTicketProcessorReturn {
   payCouncilTicket: (pcnNumber: string, council: string, amount: string) => Promise<any>;
   updateTicketPayment: (pcnNumber: string, paymentId: string) => Promise<any>;
   saveTicket: (email: string, ticket: N8nResponse["output"]) => Promise<void>;
+  callbackPendingTicket: (email: string, phone: string, pcnNumber: string) => Promise<void>;
   processTicket: (imageData: string) => Promise<void>;
   loading: boolean;
   error: string | null;
@@ -210,6 +211,55 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     }
   }, []);
 
+  const callbackPendingTicket = useCallback(async (email: string, phone: string, pcnNumber: string ) => {
+    if (!email) {
+      setError("Email is required");
+      return;
+    }
+    if (!pcnNumber) {
+      setError("PCN number is required");
+      return;
+    }
+    try {
+      const payload = {
+        type: "user",
+        data: {
+          email,
+          phone,
+          pcn_number: pcnNumber
+        },
+      };
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 35000);
+
+      const response = await fetch("/api/ticket/callback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Failed to callback pending ticket: ${response.status} ${response.statusText}. ${errorText}`,
+        );
+      }
+
+      console.log("Ticket callback successfully");
+    } catch (err) {
+      console.error("Error saving ticket:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
+      throw err;
+    }
+  }, []);
+
   const deleteTicket = useCallback(async (email: string, pcnNumber: string): Promise<TicketResponse> => {
     if (!email) {
       setError("Email is required");
@@ -297,7 +347,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       };
       // Create AbortController for timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 35000);
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
 
       const response = await fetch(`/api/ticket/confirm`, {
         method: "POST",
@@ -604,6 +654,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     confirmTicket,
     payCouncilTicket,
     updateTicketPayment,
+    callbackPendingTicket,
     fetchTickets,
     fetchTicket,
     deleteTicket,
