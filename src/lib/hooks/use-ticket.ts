@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { N8nResponseSchema, N8nResponse, TicketResponse } from "@/lib/schema";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 
@@ -8,7 +9,9 @@ interface UseTicketProcessorReturn {
   deleteTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
   confirmTicket: (pcnNumber: string, council: string) => Promise<any>;
   payCouncilTicket: (pcnNumber: string, council: string, amount: string) => Promise<any>;
+  updateTicketPayment: (pcnNumber: string, paymentId: string) => Promise<any>;
   saveTicket: (email: string, ticket: N8nResponse["output"]) => Promise<void>;
+  callbackPendingTicket: (email: string, phone: string, pcnNumber: string) => Promise<void>;
   processTicket: (imageData: string) => Promise<void>;
   loading: boolean;
   error: string | null;
@@ -68,6 +71,28 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
       // Check if the result contains an error message (even with 200 status)
       if (result.error) {
+        console.log('Processing error detected:', result.error);
+        
+        // Capture processing errors returned by the service (even with 200 status)
+        Sentry.captureException(new Error(result.error), {
+          tags: {
+            category: 'processing_service_error',
+            operation: 'image_processing_response',
+            error_type: result.error.includes("Unsupported council:") ? 'unsupported_council' : 'processing_failure'
+          },
+          extra: {
+            serviceError: result.error,
+            imageDataLength: imageData?.length || 0,
+            responseStatus: 200,
+            fullResponse: result
+          }
+        });
+        
+        // Check for specific error messages that need special handling
+        if (result.error.includes("Unsupported council:")) {
+          console.log('Detected unsupported council, throwing custom error');
+          throw new Error("Council not supported yet!");
+        }
         throw new Error(result.error);
       }
 
@@ -77,6 +102,41 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
       if (validationResult.success) {
         validatedData = { ...result["output"] };
+        
+        // Check if the extracted data contains meaningful values
+        const hasValidData = validatedData.pcn_number && 
+                           validatedData.pcn_number.trim() !== '' &&
+                           validatedData.plate_number && 
+                           validatedData.plate_number.trim() !== '' &&
+                           validatedData.council_name && 
+                           validatedData.council_name.trim() !== '' &&
+                           validatedData.amount && 
+                           validatedData.amount > 0;
+
+        if (!hasValidData) {
+          // Log invalid extraction data to Sentry
+          Sentry.captureException(new Error("Invalid ticket data extracted - empty or missing critical fields"), {
+            tags: {
+              category: 'processing_service_error',
+              operation: 'data_validation_failure',
+              error_type: 'invalid_extraction_data'
+            },
+            extra: {
+              extractedData: validatedData,
+              imageDataLength: imageData?.length || 0,
+              responseStatus: 200,
+              fullResponse: result,
+              validationDetails: {
+                hasPcnNumber: !!(validatedData.pcn_number && validatedData.pcn_number.trim()),
+                hasPlateNumber: !!(validatedData.plate_number && validatedData.plate_number.trim()),
+                hasCouncilName: !!(validatedData.council_name && validatedData.council_name.trim()),
+                hasValidAmount: !!(validatedData.amount && validatedData.amount > 0)
+              }
+            }
+          });
+          
+          throw new Error("We couldn't read your ticket. Please try again with better lighting and make sure all text is visible.");
+        }
       } else {
         // If validation fails, throw an error
         throw new Error("Invalid response format from ticket processing service");
@@ -87,6 +147,19 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
+      
+      // Capture ticket processing errors with Sentry
+      Sentry.captureException(err, {
+        tags: {
+          category: 'ticket_processing',
+          operation: 'process_image'
+        },
+        extra: {
+          imageDataLength: imageData?.length || 0,
+          errorMessage
+        }
+      });
+      
       throw err;
     } finally {
       setLoading(false);
@@ -129,6 +202,55 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       }
 
       console.log("Ticket saved successfully");
+    } catch (err) {
+      console.error("Error saving ticket:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
+      throw err;
+    }
+  }, []);
+
+  const callbackPendingTicket = useCallback(async (email: string, phone: string, pcnNumber: string ) => {
+    if (!email) {
+      setError("Email is required");
+      return;
+    }
+    if (!pcnNumber) {
+      setError("PCN number is required");
+      return;
+    }
+    try {
+      const payload = {
+        type: "user",
+        data: {
+          email,
+          phone,
+          pcn_number: pcnNumber
+        },
+      };
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 35000);
+
+      const response = await fetch("/api/ticket/callback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Failed to callback pending ticket: ${response.status} ${response.statusText}. ${errorText}`,
+        );
+      }
+
+      console.log("Ticket callback successfully");
     } catch (err) {
       console.error("Error saving ticket:", err);
       const errorMessage =
@@ -183,10 +305,24 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
 
       //remove the deleted ticket from the ticket list.
     } catch (err) {
-      console.error("Error fetching ticket:", err);
+      console.error("Error deleting ticket:", err);
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
+      
+      // Capture ticket deletion errors with Sentry
+      Sentry.captureException(err, {
+        tags: {
+          category: 'ticket_management',
+          operation: 'delete_ticket'
+        },
+        extra: {
+          email: email.substring(0, 3) + '***', // Partial email for privacy
+          pcnNumber,
+          errorMessage
+        }
+      });
+      
       throw err;
     } finally {
       setLoading(false);
@@ -211,7 +347,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       };
       // Create AbortController for timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 35000);
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
 
       const response = await fetch(`/api/ticket/confirm`, {
         method: "POST",
@@ -239,6 +375,21 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
+      
+      // Capture ticket confirmation errors with Sentry
+      Sentry.captureException(err, {
+        tags: {
+          category: 'council_integration',
+          operation: 'confirm_ticket',
+          council: council || 'unknown'
+        },
+        extra: {
+          pcnNumber,
+          council,
+          errorMessage
+        }
+      });
+      
       throw err;
     } finally {
       setLoading(false);
@@ -263,7 +414,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const payload = {
         pcnNumber,
         councilName: council,
-        amount,
+        amount: parseInt(amount),
       };
       // Create AbortController for timeout
       const controller = new AbortController();
@@ -287,6 +438,17 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       }
 
       const result = await response.json();
+      
+      // Check if the response indicates success
+      if (result && result.success === false) {
+        throw new Error(result.message || "Council payment failed");
+      }
+      
+      // If success field is missing but response is ok, assume success for backwards compatibility
+      if (result && result.success !== false) {
+        return result;
+      }
+      
       return result || null;
 
       //remove the deleted ticket from the ticket list.
@@ -295,6 +457,22 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
+      
+      // Capture council payment errors with Sentry
+      Sentry.captureException(err, {
+        tags: {
+          category: 'council_integration',
+          operation: 'pay_ticket',
+          council: council || 'unknown'
+        },
+        extra: {
+          pcnNumber,
+          council,
+          amount,
+          errorMessage
+        }
+      });
+      
       throw err;
     } finally {
       setLoading(false);
@@ -417,11 +595,66 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     }
   }, [setSavedTickets]);
 
+  const updateTicketPayment = useCallback(async (pcnNumber: string, paymentId: string): Promise<any> => {
+    if (!pcnNumber) {
+      setError("PCN number is required");
+      throw new Error("PCN number is required");
+    }
+    if (!paymentId) {
+      setError("Payment ID is required");
+      throw new Error("Payment ID is required");
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const payload = {
+        pcnNumber,
+        paymentId,
+      };
+
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+      const response = await fetch(`/api/ticket/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Failed to update ticket payment: ${response.status} ${response.statusText}. ${errorText}`,
+        );
+      }
+
+      const result = await response.json();
+      console.log("Ticket payment updated successfully");
+      return result;
+    } catch (err) {
+      console.error("Error updating ticket payment:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   return {
     processTicket,
     confirmTicket,
     payCouncilTicket,
+    updateTicketPayment,
+    callbackPendingTicket,
     fetchTickets,
     fetchTicket,
     deleteTicket,

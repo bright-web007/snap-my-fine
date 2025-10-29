@@ -64,7 +64,6 @@ export default function PaymentStatusSection({
                 alert(result.error || 'Failed to send receipt email');
             }
         } catch (error) {
-            console.error('Error sending receipt:', error);
             alert('An error occurred while sending the receipt. Please try again.');
         }
     };

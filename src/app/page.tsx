@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // Import components
 import HamburgerModal from "@/components/HamburgerModal";
@@ -25,6 +26,10 @@ import {
     PartialPaymentStatusSection
 } from "@/components/sections";
 
+// Import new sections
+import FineNotReady from "@/components/sections/FineNotReadySection";
+import DetailsReceived from "@/components/sections/DetailsReceivedSection";
+
 // Import types
 import type { Transaction, FormData, ValidationErrors } from "@/types";
 
@@ -34,7 +39,8 @@ import { useTicketProcessor } from "@/lib/hooks/use-ticket";
 import { usePayment } from "@/lib/hooks/use-payment";
 
 export default function Home() {
-    const { processTicket, fetchTickets } = useTicketProcessor();
+    const router = useRouter();
+    const { processTicket, fetchTickets, callbackPendingTicket } = useTicketProcessor();
     const { makePayment } = usePayment();
     const [showCamera, setShowCamera] = useState(false);
     const [isVideoVisible, setIsVideoVisible] = useState(false);
@@ -110,6 +116,8 @@ export default function Home() {
     const [showPaymentFailedSection, setShowPaymentFailedSection] = useState(false); // 13th section
     const [showSavedFinesSection, setShowSavedFinesSection] = useState(false); // 14th section
     const [showAllTransactionsSection, setShowAllTransactionsSection] = useState(false); // 15th section
+    const [showFineNotReadySection, setShowFineNotReadySection] = useState(false); // 16th section
+    const [showDetailsReceivedSection, setShowDetailsReceivedSection] = useState(false); // 17th section
 
     // Track if payment section is loaded from a saved fine
     const [isLoadedFromSavedFine, setIsLoadedFromSavedFine] = useState(false);
@@ -124,6 +132,7 @@ export default function Home() {
     const [showNoOutstandingChargeNotification, setShowNoOutstandingChargeNotification] = useState(false);
     const [showConfirmationErrorNotification, setShowConfirmationErrorNotification] = useState(false);
     const [showProcessingErrorNotification, setShowProcessingErrorNotification] = useState(false);
+    const [showCouncilNotSupportedNotification, setShowCouncilNotSupportedNotification] = useState(false);
 
     // Section 16 - Partial Payment state
     const [showPartialPaymentSection, setShowPartialPaymentSection] = useState(false);
@@ -327,13 +336,19 @@ export default function Home() {
             setIsProcessingTicket(false);
             setHasProcessingError(true);
             
-            // Show error notification and return to home section after a delay
-            setTimeout(() => {
+            // Check if it's a council support error
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            const isCouncilNotSupported = errorMessage.includes("Council not supported yet!");
+            
+            // Show appropriate error notification and return to home section
+            if (isCouncilNotSupported) {
+                setShowCouncilNotSupportedNotification(true);
+            } else {
                 setShowProcessingErrorNotification(true);
-                setShowImagePreview(false);
-                setShowCamera(false);
-                setSnapshot(null);
-            }, 1000); // Small delay to show the error state briefly
+            }
+            setShowImagePreview(false);
+            setShowCamera(false);
+            setSnapshot(null);
         }
     };
 
@@ -444,20 +459,16 @@ export default function Home() {
                         const jpegResult = await convertToJPEG(result);
                         console.log('JPEG conversion successful');
 
-                        // Wait a moment for UI to update, then send to n8n
-                        setTimeout(() => {
-                            console.log('Sending converted JPEG to n8n...');
-                            sendToN8n(jpegResult);
-                        }, 1000);
+                        // Send converted JPEG to n8n
+                        console.log('Sending converted JPEG to n8n...');
+                        sendToN8n(jpegResult);
 
                     } catch (conversionError) {
                         console.error('JPEG conversion failed, sending original:', conversionError);
 
                         // Fallback: send original file if conversion fails
-                        setTimeout(() => {
-                            console.log('Sending original file to n8n...');
-                            sendToN8n(result);
-                        }, 1000);
+                        console.log('Sending original file to n8n...');
+                        sendToN8n(result);
                     }
 
                 } catch (error) {
@@ -575,6 +586,39 @@ export default function Home() {
         }
     };
 
+    // Function to handle fine not ready case
+    const handleFineNotReady = (_pcnNumber: string) => {
+        setShowReviewSection(false);
+        setShowFineNotReadySection(true);
+    };
+
+    // Function to handle callback submission
+    const handleCallbackSubmit = async (email: string, phone?: string) => {
+        try {
+            if (!ticketData?.pcn_number) return;
+            
+            await callbackPendingTicket(email, phone || '', ticketData.pcn_number);
+            
+            // Show details received section
+            setShowFineNotReadySection(false);
+            setShowDetailsReceivedSection(true);
+        } catch (error) {
+            console.error('Failed to submit callback:', error);
+            // You could show an error notification here if needed
+        }
+    };
+
+    // Function to handle details received close
+    const handleDetailsReceivedClose = () => {
+        setShowDetailsReceivedSection(false);
+    };
+
+    // Function to handle back to home from details received
+    const handleBackToHomeFromDetailsReceived = () => {
+        setShowDetailsReceivedSection(false);
+        goToHomeSection();
+    };
+
     // Function to go back to section 1
     const goToHomeSection = () => {
         // Add a successful transaction when returning from receipt section
@@ -599,11 +643,14 @@ export default function Home() {
         setShowPaymentFailedSection(false);
         setShowSavedFinesSection(false);
         setShowAllTransactionsSection(false);
+        setShowFineNotReadySection(false);
+        setShowDetailsReceivedSection(false);
         setIsLoadedFromSavedFine(false);
         setCameFromSavedFines(false);
         setShowNoOutstandingChargeNotification(false);
         setShowConfirmationErrorNotification(false);
         setShowProcessingErrorNotification(false);
+        setShowCouncilNotSupportedNotification(false);
     };
 
     // Function to retry payment (goes back to section 6)
@@ -632,20 +679,34 @@ export default function Home() {
 
     // Function to handle payment flow
     const handlePayNow = async () => {
-        // Show RedirectingSection for 800ms first
+        // Show RedirectingSection and start payment process
         setShowPaymentSection(false);
         setShowRedirectingSection(true);
 
-        setTimeout(async () => {
-            try {
+        try {
+            // Use ticketData if available (from OCR), otherwise fall back to formData
+            const actualAmount = ticketData?.amount?.toString() || formData.fineAmount;
+            const actualPcnNumber = ticketData?.pcn_number || formData.pcnNumber;
+            const actualVehicleNumber = ticketData?.plate_number || formData.vehicleNumber;
+            const actualCouncil = ticketData?.council_name || formData.council;
+                
                 const paymentData = {
-                    amount: (Number(formData.fineAmount) + 3).toString(), // Fine amount + £3 service fee
-                    pcnNumber: formData.pcnNumber,
-                    vehicleReg: formData.vehicleNumber,
+                    amount: (Number(actualAmount) + 3).toString(), // Fine amount + £3 service fee
+                    pcnNumber: actualPcnNumber,
+                    vehicleReg: actualVehicleNumber,
                     email: formData.email || "user@example.com", // Use form email or placeholder
                     fullName: "Parking Fine Payer", // Placeholder - consider collecting this in the form
-                    council: formData.council
+                    council: actualCouncil
                 };
+
+                // Debug log to track what data is being sent for payment
+                console.log('Sending payment data:', paymentData);
+                console.log('TicketData used:', {
+                    amount: ticketData?.amount,
+                    pcn_number: ticketData?.pcn_number,
+                    plate_number: ticketData?.plate_number,
+                    council_name: ticketData?.council_name
+                });
 
                 const result = await makePayment(paymentData);
                 
@@ -660,13 +721,12 @@ export default function Home() {
                     setShowRedirectingSection(false);
                     setShowPaymentFailedSection(true);
                 }
-            } catch (error) {
-                console.error('Payment failed:', error);
-                // Show payment failed section
-                setShowRedirectingSection(false);
-                setShowPaymentFailedSection(true);
-            }
-        }, 800);
+        } catch (error) {
+            console.error('Payment failed:', error);
+            // Show payment failed section
+            setShowRedirectingSection(false);
+            setShowPaymentFailedSection(true);
+        }
     };
 
     // Function to show saved fines section
@@ -677,7 +737,7 @@ export default function Home() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-2">
             {/* 1st section */}
-            {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && !showPartialPaymentSection && (
+            {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && !showPartialPaymentSection && !showFineNotReadySection && !showDetailsReceivedSection && (
                 <HomeSection
                     transactions={transactions}
                     onScanTicket={() => setShowCamera(true)}
@@ -751,6 +811,7 @@ export default function Home() {
                         setShowImagePreview(false);
                         setShowConfirmationErrorNotification(true);
                     }}
+                    onFineNotReady={handleFineNotReady}
                 />
             )}
 
@@ -854,6 +915,7 @@ export default function Home() {
                 <PaymentFailedSection
                     onBack={() => setShowCamera(false)}
                     onTryAgain={retryPayment}
+                    onReportIssue={() => router.push('/report-incident')}
                 />
             )}
 
@@ -971,6 +1033,35 @@ export default function Home() {
                     type="error"
                     duration={6000}
                     onClose={() => setShowProcessingErrorNotification(false)}
+                />
+            )}
+
+            {/* Council Not Supported Notification */}
+            {showCouncilNotSupportedNotification && (
+                <Notification
+                    message="Council not supported yet!"
+                    type="error"
+                    duration={6000}
+                    onClose={() => setShowCouncilNotSupportedNotification(false)}
+                />
+            )}
+
+            {/* Fine Not Ready Section */}
+            {showFineNotReadySection && (
+                <FineNotReady
+                    onBack={() => {
+                        setShowFineNotReadySection(false);
+                        setShowReviewSection(true);
+                    }}
+                    onSubmit={handleCallbackSubmit}
+                />
+            )}
+
+            {/* Details Received Section */}
+            {showDetailsReceivedSection && (
+                <DetailsReceived
+                    onClose={handleDetailsReceivedClose}
+                    onBackToHome={handleBackToHomeFromDetailsReceived}
                 />
             )}
         </div>

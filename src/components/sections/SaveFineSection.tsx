@@ -130,7 +130,7 @@ export default function SaveFineSection({
               <Button
                 disabled={!isValidEmail(formData.email)}
                 onClick={handleCreateAccount}
-                className={`text-[14px] w-full h-[41px] transition-colors ${isValidEmail(formData.email)
+                className={`text-[14px] w-full h-[48px] transition-colors ${isValidEmail(formData.email)
                     ? "text-[#FFFFFF] bg-[#105AE2] hover:bg-[#0e4cc7] cursor-pointer"
                     : "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed"
                   }`}

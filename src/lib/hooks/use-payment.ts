@@ -23,6 +23,7 @@ interface PaymentResponse {
     lock_customer_details: boolean;
     redirect_uri: string;
   };
+  paymentId: string;
 }
 
 interface UsePaymentReturn {

@@ -14,10 +14,12 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(payload),
     });
 
+    console.log("Response status from ticket payment API:", {response});
+
     const result = await response.json();
     return NextResponse.json(result, { status: response.status });
   } catch (error) {
-    console.error("Error forwarding to ticket confirmation API:", error);
+    console.error("Error forwarding to ticket payment API:", error);
     return NextResponse.json(
       { error: "Failed to process ticket confirmation" },
       { status: 500 },

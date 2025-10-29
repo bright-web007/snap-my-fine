@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import * as Sentry from "@sentry/nextjs";
 import PaymentStatusSection from "@/components/sections/PaymentStatusSection";
 import ReceiptSection from "@/components/sections/ReceiptSection";
 import { useTicketStore } from "@/lib/stores/ticketStore";
@@ -26,7 +27,7 @@ function PaymentVerificationContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { ticketData, clearTicketData } = useTicketStore();
-    const { payCouncilTicket, loading } = useTicketProcessor();
+    const { payCouncilTicket, updateTicketPayment, loading } = useTicketProcessor();
     
     const [formData, setFormData] = useState<FormData>({
         council: '',
@@ -54,6 +55,7 @@ function PaymentVerificationContent() {
         const urlPcnNumber = searchParams.get('pcn_number');
         const urlVehicleNumber = searchParams.get('vehicle_number');
         const urlFineAmount = searchParams.get('amount');
+        const urlPaymentId = searchParams.get('payment_id');
         
         // Use URL params if available, otherwise fall back to ticketData
         const council = urlCouncil || ticketData?.council_name || '';
@@ -69,25 +71,84 @@ function PaymentVerificationContent() {
             email: ''
         });
 
-        // Automatically make council payment if we have the required data
-        if (council && pcnNumber && fineAmount && !councilPaymentProcessed) {
-            handleCouncilPayment(pcnNumber, council, fineAmount);
+        // Automatically make council payment and update payment record if we have the required data
+        if (council && pcnNumber && fineAmount && urlPaymentId && !councilPaymentProcessed) {
+            handleCouncilPayment(pcnNumber, council, fineAmount, urlPaymentId);
         }
-    }, [searchParams, ticketData, councilPaymentProcessed, payCouncilTicket]);
+    }, [searchParams, ticketData, councilPaymentProcessed, payCouncilTicket, updateTicketPayment]);
 
-    // Handle council payment
-    const handleCouncilPayment = async (pcnNumber: string, council: string, amount: string) => {
+    // Handle council payment and update payment record
+    const handleCouncilPayment = async (pcnNumber: string, council: string, amount: string, paymentId?: string) => {
         try {
             setCouncilPaymentProcessed(true);
-            await payCouncilTicket(pcnNumber, council, amount);
-            // Payment successful, show receipt section after a brief delay
+            
+            // First, update the ticket payment record with the GoCardless payment ID
+            if (paymentId) {
+                try {
+                    await updateTicketPayment(pcnNumber, paymentId);
+                    console.log('Payment record updated successfully');
+                } catch (paymentUpdateError) {
+                    console.error('Failed to update payment record:', paymentUpdateError);
+                    
+                    // Capture payment record update errors with Sentry
+                    Sentry.captureException(paymentUpdateError, {
+                        tags: {
+                            category: 'payment',
+                            operation: 'update_payment_record'
+                        },
+                        extra: {
+                            pcnNumber,
+                            paymentId,
+                            council
+                        }
+                    });
+                    
+                    // Continue with council payment even if payment record update fails
+                }
+            }
+            
+            // Then make the council payment
+            const result = await payCouncilTicket(pcnNumber, council, amount);
+            
+            // Check if payment was successful based on the response structure
+            if (result && result.success === true) {
+                console.log('Council payment successful:', result);
+                // Payment successful, show receipt section after a brief delay
+                setTimeout(() => {
+                    setShowReceiptSection(true);
+                }, 1000);
+            } else {
+                // Payment failed according to the response
+                console.error('Council payment failed:', result?.message || 'Unknown error');
+                // Even if council payment fails, user has already paid via GoCardless
+                // So we still proceed to show the email collection for receipt
+                setTimeout(() => {
+                    setShowReceiptSection(true);
+                }, 1000);
+            }
+        } catch (error) {
+            console.error('Council payment API error:', error);
+            
+            // Capture council payment errors with Sentry
+            Sentry.captureException(error, {
+                tags: {
+                    category: 'council_integration',
+                    operation: 'council_payment',
+                    council: council || 'unknown'
+                },
+                extra: {
+                    pcnNumber,
+                    council,
+                    amount,
+                    paymentId
+                }
+            });
+            
+            // If there's an API error, still show email collection for receipt
+            // The user has already paid via GoCardless
             setTimeout(() => {
                 setShowReceiptSection(true);
             }, 1000);
-        } catch (error) {
-            console.error('Council payment failed:', error);
-            // If council payment fails, still show the email collection for receipt
-            // The user has already paid via GoCardless
         }
     };
 

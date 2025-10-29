@@ -4,7 +4,6 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket";
 import { useEffect, useState } from "react";
-import { Loader } from "@/components/ui/loader";
 
 interface FormData {
   council: string;
@@ -31,6 +30,7 @@ interface ReviewSectionProps {
   onFormSubmit: (e: React.FormEvent) => void;
   onNoOutstandingCharge: () => void;
   onConfirmationError: () => void;
+  onFineNotReady: (pcnNumber: string) => void;
 }
 
 export default function ReviewSection({
@@ -41,7 +41,8 @@ export default function ReviewSection({
   onInputChange,
   onFormSubmit,
   onNoOutstandingCharge,
-  onConfirmationError
+  onConfirmationError,
+  onFineNotReady
 }: ReviewSectionProps) {
   const { ticketData } = useTicketStore();
   const { confirmTicket } = useTicketProcessor();
@@ -83,13 +84,21 @@ export default function ReviewSection({
             }, 500);
           }
         } else {
-          // API returned success: false - redirect to HomeSection with error
-          setTimeout(() => {
-            onConfirmationError();
-          }, 500);
+          // Check if it's a pending status response
+          if (result?.status === "pending_update" && 
+              result?.message?.includes("The ticket has not been updated by the council yet")) {
+            // Handle fine not ready case
+            setTimeout(() => {
+              onFineNotReady(result.pcnNumber || ticketData.pcn_number);
+            }, 500);
+          } else {
+            // API returned success: false - redirect to HomeSection with error
+            setTimeout(() => {
+              onConfirmationError();
+            }, 500);
+          }
         }
       } catch (error) {
-        console.error('Failed to confirm ticket:', error);
         // Network error or exception - redirect to HomeSection with error
         setTimeout(() => {
           onConfirmationError();
@@ -100,25 +109,18 @@ export default function ReviewSection({
     };
 
     confirmTicketDetails();
-  }, [ticketData?.pcn_number, ticketData?.council_name, confirmTicket, confirmationAttempted]);
+  }, [ticketData?.pcn_number, ticketData?.council_name]);
 
   return (
     <div className="w-full min-h-screen flex flex-col relative">
       {/* Loading overlay */}
       {isConfirming && (
         <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-40 flex flex-col items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="flex items-center justify-center h-16 w-16 bg-gray-100 rounded-md">
-              <Loader size={32} className="text-black" />
-            </div>
-            <div className="text-center">
-              {/* <h3 className="text-[16px] font-inter font-semibold text-[#19191A] mb-2">
-                Inputting your ticket details
-              </h3> */}
-              <p className="text-[14px] font-inter text-[#7E8081]">
-                Confirming your payment amount with the council...
-              </p>
-            </div>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#105AE2] mx-auto mb-4"></div>
+            <p className="text-[#19191A] font-inter">
+              Confirming your payment amount with the council...
+            </p>
           </div>
         </div>
       )}
@@ -148,7 +150,7 @@ export default function ReviewSection({
             onSubmit={onFormSubmit}
           >
             {/* Council Name Dropdown */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
                 Council Name
                 {validationErrors.council && <span className="text-red-500">*</span>}
@@ -174,7 +176,7 @@ export default function ReviewSection({
             </div>
 
             {/* PCN Number */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
                 PCN Number
                 {validationErrors.pcnNumber && <span className="text-red-500">*</span>}
@@ -191,7 +193,7 @@ export default function ReviewSection({
             </div>
 
             {/* Vehicle Registration Number */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
                 Vehicle Registration Number
                 {validationErrors.vehicleNumber && <span className="text-red-500">*</span>}
@@ -208,7 +210,7 @@ export default function ReviewSection({
             </div>
 
             {/* Fine Amount */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
                 Fine Amount (£)
                 {validationErrors.fineAmount && <span className="text-red-500">*</span>}
@@ -235,7 +237,7 @@ export default function ReviewSection({
               <Button
                 type="submit"
                 disabled={isConfirming}
-                className={`p-[16px] text-[14px] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2 transition-colors ${
+                className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 transition-colors ${
                   isConfirming 
                     ? "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed" 
                     : "text-white bg-[#105AE2] cursor-pointer hover:bg-[#0e4cc7]"

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,6 +23,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result, { status: response.status });
   } catch (error) {
     console.error("Error forwarding to n8n:", error);
+    
+    // Capture image processing errors with Sentry
+    Sentry.captureException(error, {
+      tags: {
+        category: 'image_processing',
+        operation: 'n8n_webhook',
+        api_route: '/api/ticket/process'
+      },
+      extra: {
+        n8nWebhookUrl: process.env.NEXT_N8N_WEBHOOK_ENDPOINT,
+        //@ts-ignore
+        error: error?.message || error
+      }
+    });
+    
     return NextResponse.json(
       { error: "Failed to process ticket" },
       { status: 500 },

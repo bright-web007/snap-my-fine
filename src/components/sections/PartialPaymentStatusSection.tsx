@@ -105,14 +105,14 @@ export default function PartialPaymentStatusSection({
             <div className="flex flex-col gap-[8px] w-full font-medium font-inter">
                 {/* Pay Now button - shows remaining balance amount */}
                 <Button
-                    className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full"
+                    className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full h-[48px]"
                     onClick={onPayNow}
                 >
                     Pay Now - £{remainingBalance.toFixed(2)}
                 </Button>
                 {!isLoadedFromSavedFine && (
                     <Button
-                        className="p-[12px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full"
+                        className="p-[12px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[48px]"
                         onClick={onPayLater}
                     >
                         Pay Later

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 // import * as gocardless from 'gocardless-nodejs';
 // import * as constants from 'gocardless-nodejs/constants';
 const gocardless = require('gocardless-nodejs');
@@ -7,6 +8,16 @@ const constants = require('gocardless-nodejs/constants');
 export async function POST(req: NextRequest) {
 
     const { amount, pcnNumber, vehicleReg, email, fullName, council } = await req.json();
+
+    // Debug log to track what data is being received
+    console.log('Payment creation request data:', {
+        amount,
+        pcnNumber,
+        vehicleReg,
+        email,
+        fullName,
+        council
+    });
 
     if (!amount || !pcnNumber || !vehicleReg || !email || !fullName) {
         return NextResponse.json({
@@ -37,7 +48,7 @@ export async function POST(req: NextRequest) {
         const billingRequest = await client.billingRequests.create({
             payment_request: {
                 description: "First Payment",
-                amount: `${amount}`,
+                amount: `${amount * 100}`,
                 currency: "GBP",
                 app_fee: `${5}.00`,
             },
@@ -48,6 +59,7 @@ export async function POST(req: NextRequest) {
         redirectUri.searchParams.set('pcn_number', pcnNumber);
         redirectUri.searchParams.set('vehicle_number', vehicleReg);
         redirectUri.searchParams.set('amount', amount);
+        redirectUri.searchParams.set('payment_id', billingRequest.id);
         if (council) {
             redirectUri.searchParams.set('council', council);
         }
@@ -60,11 +72,33 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        return NextResponse.json({ billingRequestFlow }, { status: 200 });
+        console.log('Payment creation successful - Payment ID:', billingRequest.id);
+        
+        return NextResponse.json({ 
+            billingRequestFlow,
+            paymentId: billingRequest.id
+        }, { status: 200 });
 
     } catch (error: unknown) {
         const genericMessage = error instanceof Error ? error.message : 'Unknown error';
-        console.error("Unexpected error:", genericMessage);
+        console.error("Payment creation error:", genericMessage);
+        
+        // Capture payment creation errors with Sentry
+        Sentry.captureException(error, {
+            tags: {
+                category: 'payment',
+                operation: 'create_payment',
+                council: council || 'unknown'
+            },
+            extra: {
+                amount,
+                pcnNumber,
+                vehicleReg,
+                email: email.substring(0, 3) + '***', // Partial email for privacy
+                council
+            }
+        });
+        
         return NextResponse.json({
             error: genericMessage,
         }, { status: 500 });
