@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         const billingRequest = await client.billingRequests.create({
             payment_request: {
                 description: "First Payment",
-                amount: `${amount}`,
+                amount: `${amount * 100}`,
                 currency: "GBP",
                 app_fee: `${5}.00`,
             },
