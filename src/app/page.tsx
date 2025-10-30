@@ -335,11 +335,11 @@ export default function Home() {
             console.error('Error sending to n8n:', error);
             setIsProcessingTicket(false);
             setHasProcessingError(true);
-            
+
             // Check if it's a council support error
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
             const isCouncilNotSupported = errorMessage.includes("Council not supported yet!");
-            
+
             // Show appropriate error notification and return to home section
             if (isCouncilNotSupported) {
                 setShowCouncilNotSupportedNotification(true);
@@ -596,9 +596,9 @@ export default function Home() {
     const handleCallbackSubmit = async (email: string, phone?: string) => {
         try {
             if (!ticketData?.pcn_number) return;
-            
+
             await callbackPendingTicket(email, phone || '', ticketData.pcn_number);
-            
+
             // Show details received section
             setShowFineNotReadySection(false);
             setShowDetailsReceivedSection(true);
@@ -689,38 +689,38 @@ export default function Home() {
             const actualPcnNumber = ticketData?.pcn_number || formData.pcnNumber;
             const actualVehicleNumber = ticketData?.plate_number || formData.vehicleNumber;
             const actualCouncil = ticketData?.council_name || formData.council;
-                
-                const paymentData = {
-                    amount: (Number(actualAmount) + 3).toString(), // Fine amount + £3 service fee
-                    pcnNumber: actualPcnNumber,
-                    vehicleReg: actualVehicleNumber,
-                    email: formData.email || "user@example.com", // Use form email or placeholder
-                    fullName: "Parking Fine Payer", // Placeholder - consider collecting this in the form
-                    council: actualCouncil
-                };
 
-                // Debug log to track what data is being sent for payment
-                console.log('Sending payment data:', paymentData);
-                console.log('TicketData used:', {
-                    amount: ticketData?.amount,
-                    pcn_number: ticketData?.pcn_number,
-                    plate_number: ticketData?.plate_number,
-                    council_name: ticketData?.council_name
-                });
+            const paymentData = {
+                amount: (Number(actualAmount) + 3).toString(), // Fine amount + £3 service fee
+                pcnNumber: actualPcnNumber,
+                vehicleReg: actualVehicleNumber,
+                email: formData.email || "user@example.com", // Use form email or placeholder
+                fullName: "Parking Fine Payer", // Placeholder - consider collecting this in the form
+                council: actualCouncil
+            };
 
-                const result = await makePayment(paymentData);
-                
-                // Redirect to the payment gateway after 1 minute delay
-                if (result.billingRequestFlow?.authorisation_url) {
-                    // Clear ticket data before redirecting as it will be passed via URL params
-                    // Note: We don't clear it here as the verification page needs it
-                    // It will be cleared after successful receipt sending
-                    window.location.href = result.billingRequestFlow.authorisation_url;
-                } else {
-                    // Handle error - redirect failed
-                    setShowRedirectingSection(false);
-                    setShowPaymentFailedSection(true);
-                }
+            // Debug log to track what data is being sent for payment
+            console.log('Sending payment data:', paymentData);
+            console.log('TicketData used:', {
+                amount: ticketData?.amount,
+                pcn_number: ticketData?.pcn_number,
+                plate_number: ticketData?.plate_number,
+                council_name: ticketData?.council_name
+            });
+
+            const result = await makePayment(paymentData);
+
+            // Redirect to the payment gateway after 1 minute delay
+            if (result.billingRequestFlow?.authorisation_url) {
+                // Clear ticket data before redirecting as it will be passed via URL params
+                // Note: We don't clear it here as the verification page needs it
+                // It will be cleared after successful receipt sending
+                window.location.href = result.billingRequestFlow.authorisation_url;
+            } else {
+                // Handle error - redirect failed
+                setShowRedirectingSection(false);
+                setShowPaymentFailedSection(true);
+            }
         } catch (error) {
             console.error('Payment failed:', error);
             // Show payment failed section
@@ -746,7 +746,7 @@ export default function Home() {
                         onShowAllTransactions={() => setShowAllTransactionsSection(true)}
                         onHamburgerClick={() => setShowHamburgerModal(true)}
                     />
-                    
+
                     {/* Hamburger Modal - positioned relative to HomeSection container */}
                     <HamburgerModal
                         isOpen={showHamburgerModal}
