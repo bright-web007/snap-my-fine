@@ -684,8 +684,8 @@ export default function Home() {
         setShowRedirectingSection(true);
 
         try {
-            // Use ticketData if available (from OCR), otherwise fall back to formData
-            const actualAmount = ticketData?.amount?.toString() || formData.fineAmount;
+            // Prioritize form data for amount (as OCR can be inaccurate), fall back to ticketData for other fields
+            const actualAmount = formData.fineAmount || ticketData?.amount?.toString() || '0';
             const actualPcnNumber = ticketData?.pcn_number || formData.pcnNumber;
             const actualVehicleNumber = ticketData?.plate_number || formData.vehicleNumber;
             const actualCouncil = ticketData?.council_name || formData.council;
@@ -710,7 +710,7 @@ export default function Home() {
 
                 const result = await makePayment(paymentData);
                 
-                // Redirect to the payment gateway
+                // Redirect to the payment gateway after 1 minute delay
                 if (result.billingRequestFlow?.authorisation_url) {
                     // Clear ticket data before redirecting as it will be passed via URL params
                     // Note: We don't clear it here as the verification page needs it
