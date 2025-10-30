@@ -31,7 +31,7 @@ export default function HomeSection({
         <div className="w-full max-w-md min-h-screen flex flex-col">
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="flex-1 flex flex-col items-center pt-3">
                 <div className="w-full max-w-md flex flex-col gap-[38px]">
 
                     <div className="relative flex flex-row items-start bg-[#F1F7FE] rounded-2xl shadow-md py-8 pl-8 w-[100%] mx-auto overflow-visible">

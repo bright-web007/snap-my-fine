@@ -738,13 +738,67 @@ export default function Home() {
         <div className="min-h-screen flex flex-col items-center justify-center p-2">
             {/* 1st section */}
             {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && !showPartialPaymentSection && !showFineNotReadySection && !showDetailsReceivedSection && (
-                <HomeSection
-                    transactions={transactions}
-                    onScanTicket={() => setShowCamera(true)}
-                    onUploadFromGallery={handleFileUpload}
-                    onShowAllTransactions={() => setShowAllTransactionsSection(true)}
-                    onHamburgerClick={() => setShowHamburgerModal(true)}
-                />
+                <div className="relative w-full max-w-md">
+                    <HomeSection
+                        transactions={transactions}
+                        onScanTicket={() => setShowCamera(true)}
+                        onUploadFromGallery={handleFileUpload}
+                        onShowAllTransactions={() => setShowAllTransactionsSection(true)}
+                        onHamburgerClick={() => setShowHamburgerModal(true)}
+                    />
+                    
+                    {/* Hamburger Modal - positioned relative to HomeSection container */}
+                    <HamburgerModal
+                        isOpen={showHamburgerModal}
+                        onClose={() => setShowHamburgerModal(false)}
+                        onSavedFines={() => {
+                            setShowSavedFinesSection(true);
+                            // Hide all other sections when navigating to saved fines
+                            setShowCamera(false);
+                            setShowImagePreview(false);
+                            setShowReviewSection(false);
+                            setShowPaymentSection(false);
+                            setShowRedirectingSection(false);
+                            setShowPaymentReceivedSection(false);
+                            setShowProcessingSection(false);
+                            setShowPaymentStatusSection(false);
+                            setShowReceiptSection(false);
+                            setShowSaveFineSection(false);
+                            setShowCheckInboxSection(false);
+                            setShowPaymentFailedSection(false);
+                            setShowAllTransactionsSection(false);
+                            setShowPartialPaymentSection(false);
+                            setShowFineNotReadySection(false);
+                            setShowDetailsReceivedSection(false);
+                            setShowHamburgerModal(false);
+                        }}
+                        onPaymentHistory={() => {
+                            setShowAllTransactionsSection(true);
+                            // Hide all other sections when navigating to payment history
+                            setShowCamera(false);
+                            setShowImagePreview(false);
+                            setShowReviewSection(false);
+                            setShowPaymentSection(false);
+                            setShowRedirectingSection(false);
+                            setShowPaymentReceivedSection(false);
+                            setShowProcessingSection(false);
+                            setShowPaymentStatusSection(false);
+                            setShowReceiptSection(false);
+                            setShowSaveFineSection(false);
+                            setShowCheckInboxSection(false);
+                            setShowPaymentFailedSection(false);
+                            setShowSavedFinesSection(false);
+                            setShowPartialPaymentSection(false);
+                            setShowFineNotReadySection(false);
+                            setShowDetailsReceivedSection(false);
+                            setShowHamburgerModal(false);
+                        }}
+                        onContactUs={() => {
+                            console.log("Contact Us clicked");
+                            setShowHamburgerModal(false);
+                        }}
+                    />
+                </div>
             )}
 
             {/* 2nd section  */}
@@ -950,49 +1004,7 @@ export default function Home() {
                 />
             )}
 
-            {/* Hamburger Modal */}
-            <HamburgerModal
-                isOpen={showHamburgerModal}
-                onClose={() => setShowHamburgerModal(false)}
-                onSavedFines={() => {
-                    setShowSavedFinesSection(true);
-                    // Hide all other sections when navigating to saved fines
-                    setShowCamera(false);
-                    setShowImagePreview(false);
-                    setShowReviewSection(false);
-                    setShowPaymentSection(false);
-                    setShowRedirectingSection(false);
-                    setShowPaymentReceivedSection(false);
-                    setShowProcessingSection(false);
-                    setShowPaymentStatusSection(false);
-                    setShowReceiptSection(false);
-                    setShowSaveFineSection(false);
-                    setShowCheckInboxSection(false);
-                    setShowPaymentFailedSection(false);
-                    setShowAllTransactionsSection(false);
-                }}
-                onPaymentHistory={() => {
-                    setShowAllTransactionsSection(true);
-                    // Hide all other sections when navigating to payment history
-                    setShowCamera(false);
-                    setShowImagePreview(false);
-                    setShowReviewSection(false);
-                    setShowPaymentSection(false);
-                    setShowRedirectingSection(false);
-                    setShowPaymentReceivedSection(false);
-                    setShowProcessingSection(false);
-                    setShowPaymentStatusSection(false);
-                    setShowReceiptSection(false);
-                    setShowSaveFineSection(false);
-                    setShowCheckInboxSection(false);
-                    setShowPaymentFailedSection(false);
-                    setShowSavedFinesSection(false);
-                }}
-                onContactUs={() => {
-                    console.log('Contact Us clicked');
-                    // You can implement contact us functionality here
-                }}
-            />
+
 
             {/* 16th section - Partial Payment Status */}
             {showPartialPaymentSection && (
