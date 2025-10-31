@@ -7,8 +7,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ## Complete User Flow
 
-### 1. **Homepage/Landing (Section 1)**
-**Location:** `HomeSection` component
+### 1. **Homepage/Landing-Page **
 **State:** Default state when app loads
 
 #### User Actions:
@@ -24,8 +23,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 2. **Camera Section (Section 2)**
-**Location:** `CameraSection` component
+### 2. **Camera Section**
 **Trigger:** User clicks "Scan Ticket" from homepage
 
 #### User Actions:
@@ -42,8 +40,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 3. **Image Preview Section (Section 3)**
-**Location:** `ImagePreviewSection` component
+### 3. **Image Preview Section**
 **Trigger:** After taking photo or uploading from gallery
 
 #### API Calls Made:
@@ -66,7 +63,6 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 ---
 
 ### 4. **Review Details Section (Section 4)**
-**Location:** `ReviewSection` component
 **Trigger:** After successful ticket processing
 
 #### API Calls Made:
@@ -92,8 +88,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 5. **Payment Details Section (Section 5)**
-**Location:** `PaymentSection` component
+### 5. **Payment Details Section**
 **Trigger:** After successful ticket confirmation
 
 #### User Actions:
@@ -108,8 +103,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 6. **Redirecting Section (Section 6)**
-**Location:** `RedirectingSection` component  
+### 6. **Redirecting Section**
 **Trigger:** User clicks "Pay Now"
 
 #### API Calls Made:
@@ -123,8 +117,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 7. **Payment Received Section (Section 7)**
-**Location:** `PaymentReceivedSection` component
+### 7. **Payment Received Section**
 **Trigger:** Return from successful payment
 
 #### What Happens:
@@ -134,8 +127,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 8. **Processing Payment Section (Section 8)**
-**Location:** `ProcessingSection` component
+### 8. **Processing Payment Section**
 **Trigger:** After Payment Received section
 
 #### What Happens:
@@ -145,8 +137,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 9. **Payment Status Section (Section 9)**
-**Location:** `PaymentStatusSection` component
+### 9. **Payment Status Section**
 **Trigger:** After Processing section
 
 #### API Calls Made:
@@ -164,8 +155,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 10. **Receipt Section (Section 10)**
-**Location:** `ReceiptSection` component
+### 10. **Receipt Section**
 **Trigger:** User requests receipt
 
 #### User Actions:
@@ -179,8 +169,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 11. **Save Fine Section (Section 11)**
-**Location:** `SaveFineSection` component
+### 11. **Save Fine Section**
 **Trigger:** User clicks "Pay Later" from Payment Section
 
 #### API Calls Made:
@@ -198,8 +187,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 12. **Check Inbox Section (Section 12)**
-**Location:** `CheckInboxSection` component
+### 12. **Check Inbox Section**
 **Trigger:** After requesting email receipt
 
 #### User Actions:
@@ -212,8 +200,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 13. **Payment Failed Section (Section 13)**
-**Location:** `PaymentFailedSection` component
+### 13. **Payment Failed Section**
 **Trigger:** Payment fails or is cancelled
 
 #### User Actions:
@@ -227,8 +214,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 14. **Saved Fines Section (Section 14)**
-**Location:** `SavedFinesSection` component
+### 14. **Saved Fines Section**
 **Trigger:** User has previously saved fines
 
 #### API Calls Made:
@@ -247,8 +233,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 15. **All Transactions Section (Section 15)**
-**Location:** `AllTransactionsSection` component
+### 15. **All Transactions Section**
 **Trigger:** User clicks "Show All" from homepage
 
 #### User Actions:
@@ -261,8 +246,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 16. **Partial Payment Status Section (Section 16)**
-**Location:** `PartialPaymentStatusSection` component
+### 16. **Partial Payment Status Section**
 **Trigger:** When partial payment is detected
 
 #### What Happens:
@@ -272,8 +256,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 17. **Fine Not Ready Section (Section 17)**
-**Location:** `FineNotReadySection` component
+### 17. **Fine Not Ready Section**
 **Trigger:** When council API returns pending status during ticket confirmation
 
 #### API Response Trigger:
@@ -289,12 +272,12 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 #### User Actions:
 - **Enter Email Address** (required)
-- **Enter Phone Number** (optional)
+- **Enter Phone Number** (required)
 - **"Notify me" Button** → Submits callback request
 - **Back Arrow** → Returns to Review Section
 
 #### What Happens:
-- Shows "Fine not payable yet" message with hourglass icon
+- Shows "Fine not payable yet" message.
 - Explains that councils sometimes take up to 24 hours to register new tickets
 - Collects user contact details for notification when fine becomes available
 - **Validation:** Button disabled until email is entered
@@ -302,8 +285,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
-### 18. **Details Received Section (Section 18)**
-**Location:** `DetailsReceivedSection` component
+### 18. **Details Received Section**
 **Trigger:** After successful callback submission from Fine Not Ready section
 
 #### User Actions:
@@ -361,30 +343,3 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 - **Error Recovery:** Any error returns to appropriate previous section
 - **Save/Resume:** Can save fines and resume payment later
 - **History Access:** Can view and manage previous transactions
-
-### Auto-Transitions
-- Image Preview → Review (5 seconds after processing)
-- Payment Received → Processing (30 seconds)
-- Processing → Payment Status (20 seconds)
-
----
-
-## Technical Architecture
-
-### Frontend
-- **Next.js 15** with App Router
-- **React Components** for each section/screen
-- **Zustand** for state management
-- **TypeScript** for type safety
-
-### Backend
-- **Next.js API Routes** for backend functionality
-- **External APIs** for council integration and payment processing
-- **Sentry** for error tracking and monitoring
-
-### Mobile Optimization  
-- **Responsive Design** for mobile-first experience
-- **Camera API** with mobile-specific optimizations
-- **Touch-friendly** interfaces and navigation
-
-This flow ensures a smooth user experience from ticket capture to payment completion, with proper error handling and recovery options at each step.
