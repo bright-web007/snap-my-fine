@@ -77,7 +77,13 @@ export async function POST(req: NextRequest) {
                 data: {
                     linkPaymentId: billingRequest.links.billing_request,
                     referenceId,
-                    
+                    "fine_id": "",
+                    "status": "pending",
+                    "total_amount": amount,
+                    "guestSessionId": null,
+                    "paymentProvider": "gocardless",
+                    "bank_authorisation": null,
+                    "payment_timestamp": null
                 }
             }),
         });
