@@ -48,34 +48,138 @@ function PaymentVerificationContent() {
     const [showReceiptSection, setShowReceiptSection] = useState(false);
     const [councilPaymentProcessed, setCouncilPaymentProcessed] = useState(false);
 
-    // Extract payment data from URL parameters or stored ticket data and initiate council payment
+    // Extract payment data from URL parameters and initiate the complete payment verification flow
     useEffect(() => {
-        // Try to get data from URL parameters first (if GoCardless passes them back)
-        const urlCouncil = searchParams.get('council');
-        const urlPcnNumber = searchParams.get('pcn_number');
-        const urlVehicleNumber = searchParams.get('vehicle_number');
-        const urlFineAmount = searchParams.get('amount');
-        const urlPaymentId = searchParams.get('payment_id');
-        
-        // Use URL params if available, otherwise fall back to ticketData
-        const council = urlCouncil || ticketData?.council_name || '';
-        const pcnNumber = urlPcnNumber || ticketData?.pcn_number || '';
-        const vehicleNumber = urlVehicleNumber || ticketData?.plate_number || '';
-        const fineAmount = urlFineAmount || ticketData?.amount?.toString() || '';
-        
-        setFormData({
-            council,
-            pcnNumber,
-            vehicleNumber,
-            fineAmount,
-            email: ''
-        });
+        const processPaymentVerification = async () => {
+            // Get the reference_id from URL parameters (passed back from GoCardless)
+            const referenceId = searchParams.get('reference_id');
+            
+            if (!referenceId || councilPaymentProcessed) {
+                return;
+            }
 
-        // Automatically make council payment and update payment record if we have the required data
-        if (council && pcnNumber && fineAmount && urlPaymentId && !councilPaymentProcessed) {
-            handleCouncilPayment(pcnNumber, council, fineAmount, urlPaymentId);
-        }
-    }, [searchParams, ticketData, councilPaymentProcessed, payCouncilTicket, updateTicketPayment]);
+            try {
+                setCouncilPaymentProcessed(true);
+                
+                // Step 1: Make request to N8N pipeline to get the paymentId via our API
+                console.log('Step 1: Getting payment ID from N8N for reference:', referenceId);
+                
+                const n8nResponse = await fetch('/api/payment/lookup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        referenceId
+                    }),
+                });
+
+                if (!n8nResponse.ok) {
+                    throw new Error(`N8N lookup failed with status: ${n8nResponse.status}`);
+                }
+
+                const n8nResult = await n8nResponse.json();
+                const paymentId = n8nResult?.paymentId;
+                
+                if (!paymentId) {
+                    throw new Error('Payment ID not found in N8N response');
+                }
+
+                console.log('Step 2: Retrieved payment ID:', paymentId);
+                
+                // Step 2: Get full GoCardless transaction details
+                const goCardlessResponse = await fetch(`/api/payment/${paymentId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!goCardlessResponse.ok) {
+                    throw new Error(`GoCardless API failed with status: ${goCardlessResponse.status}`);
+                }
+
+                const goCardlessResult = await goCardlessResponse.json();
+                const billingRequest = goCardlessResult?.billingRequest;
+                
+                if (!billingRequest) {
+                    throw new Error('Billing request data not found in GoCardless response');
+                }
+
+                console.log('Step 3: Retrieved GoCardless billing request data');
+                
+                // Step 3: Update payment record with complete data
+                const updateResponse = await fetch('/api/payment/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        referenceId,
+                        billingRequestData: billingRequest
+                    })
+                });
+
+                if (!updateResponse.ok) {
+                    throw new Error(`Payment update failed with status: ${updateResponse.status}`);
+                }
+
+                console.log('Step 4: Payment record updated successfully');
+                
+                // Extract data for council payment from the billing request
+                const amount = billingRequest.payment_request?.amount ? 
+                    parseInt(billingRequest.payment_request.amount) / 100 : 0;
+                
+                // Use stored ticket data for council and PCN info
+                const council = ticketData?.council_name || '';
+                const pcnNumber = ticketData?.pcn_number || '';
+                const vehicleNumber = ticketData?.plate_number || '';
+                
+                setFormData({
+                    council,
+                    pcnNumber,
+                    vehicleNumber,
+                    fineAmount: amount.toString(),
+                    email: ''
+                });
+
+                // Step 4: Make council payment if we have the required data
+                if (council && pcnNumber && amount > 0) {
+                    await handleCouncilPayment(pcnNumber, council, amount.toString(), paymentId);
+                } else {
+                    // If missing council data, still show receipt section for email collection
+                    console.warn('Missing council data for payment processing');
+                    setTimeout(() => {
+                        setShowReceiptSection(true);
+                    }, 1000);
+                }
+                
+            } catch (error) {
+                console.error('Payment verification flow error:', error);
+                
+                // Capture payment verification errors with Sentry
+                Sentry.captureException(error, {
+                    tags: {
+                        category: 'payment',
+                        operation: 'payment_verification_flow'
+                    },
+                    extra: {
+                        referenceId,
+                        step: 'payment_verification',
+                        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+                    }
+                });
+                
+                // Still proceed to show receipt section even on error
+                // The user has completed payment, they should get some confirmation
+                setTimeout(() => {
+                    setShowReceiptSection(true);
+                }, 1000);
+            }
+        };
+
+        processPaymentVerification();
+    }, [searchParams, ticketData, councilPaymentProcessed]);
 
     // Handle council payment and update payment record
     const handleCouncilPayment = async (pcnNumber: string, council: string, amount: string, paymentId?: string) => {

@@ -68,25 +68,55 @@ export async function POST(req: NextRequest) {
         console.log('Payment creation successful - Payment ID:', billingRequest.id);
         console.log(billingRequestFlow)
 
-        // Log the billing request flow details to n8n from storing the paymentId
-        await fetch(process.env.NEXT_N8N_WEBHOOK_ENDPOINT!, {
-            method: 'POST',
-            headers: {},
-            body: JSON.stringify({
-                type: 'payment_init',
-                data: {
-                    linkPaymentId: billingRequest.links.billing_request,
+        // Log the billing request flow details to n8n for storing the paymentId
+        try {
+            const n8nResponse = await fetch(process.env.NEXT_N8N_WEBHOOK_ENDPOINT!, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: 'payment_init',
+                    data: {
+                        referenceId,
+                        fine_id: pcnNumber, // Use PCN number as fine_id
+                        linkPaymentId: billingRequest.id,
+                        status: "pending",
+                        total_amount: amount,
+                        guestSessionId: null,
+                        paymentProvider: "gocardless",
+                        bank_authorisation: null,
+                        payment_timestamp: null
+                    }
+                }),
+            });
+
+            if (!n8nResponse.ok) {
+                throw new Error(`N8N webhook failed with status: ${n8nResponse.status}`);
+            }
+
+            console.log('N8N webhook sent successfully');
+        } catch (n8nError) {
+            console.error('N8N webhook error:', n8nError);
+            
+            // Capture N8N webhook errors with Sentry
+            Sentry.captureException(n8nError, {
+                tags: {
+                    category: 'webhook',
+                    operation: 'n8n_payment_init',
+                    council: council || 'unknown'
+                },
+                extra: {
                     referenceId,
-                    "fine_id": "",
-                    "status": "pending",
-                    "total_amount": amount,
-                    "guestSessionId": null,
-                    "paymentProvider": "gocardless",
-                    "bank_authorisation": null,
-                    "payment_timestamp": null
+                    pcnNumber,
+                    amount,
+                    billingRequestId: billingRequest.id
                 }
-            }),
-        });
+            });
+            
+            // Continue execution even if N8N webhook fails
+            // The payment creation should not fail because of webhook issues
+        }
 
         return NextResponse.json({
             billingRequestFlow,
