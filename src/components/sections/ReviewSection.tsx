@@ -237,7 +237,7 @@ export default function ReviewSection({
               <Button
                 type="submit"
                 disabled={isConfirming}
-                className={`p-[16px] text-[14px] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2 transition-colors ${
+                className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 transition-colors ${
                   isConfirming 
                     ? "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed" 
                     : "text-white bg-[#105AE2] cursor-pointer hover:bg-[#0e4cc7]"

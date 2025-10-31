@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // Import components
 import HamburgerModal from "@/components/HamburgerModal";
@@ -38,6 +39,7 @@ import { useTicketProcessor } from "@/lib/hooks/use-ticket";
 import { usePayment } from "@/lib/hooks/use-payment";
 
 export default function Home() {
+    const router = useRouter();
     const { processTicket, fetchTickets, callbackPendingTicket } = useTicketProcessor();
     const { makePayment } = usePayment();
     const [showCamera, setShowCamera] = useState(false);
@@ -333,11 +335,11 @@ export default function Home() {
             console.error('Error sending to n8n:', error);
             setIsProcessingTicket(false);
             setHasProcessingError(true);
-            
+
             // Check if it's a council support error
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
             const isCouncilNotSupported = errorMessage.includes("Council not supported yet!");
-            
+
             // Show appropriate error notification and return to home section
             if (isCouncilNotSupported) {
                 setShowCouncilNotSupportedNotification(true);
@@ -594,9 +596,9 @@ export default function Home() {
     const handleCallbackSubmit = async (email: string, phone?: string) => {
         try {
             if (!ticketData?.pcn_number) return;
-            
+
             await callbackPendingTicket(email, phone || '', ticketData.pcn_number);
-            
+
             // Show details received section
             setShowFineNotReadySection(false);
             setShowDetailsReceivedSection(true);
@@ -682,43 +684,43 @@ export default function Home() {
         setShowRedirectingSection(true);
 
         try {
-            // Use ticketData if available (from OCR), otherwise fall back to formData
-            const actualAmount = ticketData?.amount?.toString() || formData.fineAmount;
+            // Prioritize form data for amount (as OCR can be inaccurate), fall back to ticketData for other fields
+            const actualAmount = formData.fineAmount || ticketData?.amount?.toString() || '0';
             const actualPcnNumber = ticketData?.pcn_number || formData.pcnNumber;
             const actualVehicleNumber = ticketData?.plate_number || formData.vehicleNumber;
             const actualCouncil = ticketData?.council_name || formData.council;
-                
-                const paymentData = {
-                    amount: (Number(actualAmount) + 3).toString(), // Fine amount + £3 service fee
-                    pcnNumber: actualPcnNumber,
-                    vehicleReg: actualVehicleNumber,
-                    email: formData.email || "user@example.com", // Use form email or placeholder
-                    fullName: "Parking Fine Payer", // Placeholder - consider collecting this in the form
-                    council: actualCouncil
-                };
 
-                // Debug log to track what data is being sent for payment
-                console.log('Sending payment data:', paymentData);
-                console.log('TicketData used:', {
-                    amount: ticketData?.amount,
-                    pcn_number: ticketData?.pcn_number,
-                    plate_number: ticketData?.plate_number,
-                    council_name: ticketData?.council_name
-                });
+            const paymentData = {
+                amount: (Number(actualAmount) + 3).toString(), // Fine amount + £3 service fee
+                pcnNumber: actualPcnNumber,
+                vehicleReg: actualVehicleNumber,
+                email: formData.email || "user@example.com", // Use form email or placeholder
+                fullName: "Parking Fine Payer", // Placeholder - consider collecting this in the form
+                council: actualCouncil
+            };
 
-                const result = await makePayment(paymentData);
-                
-                // Redirect to the payment gateway
-                if (result.billingRequestFlow?.authorisation_url) {
-                    // Clear ticket data before redirecting as it will be passed via URL params
-                    // Note: We don't clear it here as the verification page needs it
-                    // It will be cleared after successful receipt sending
-                    window.location.href = result.billingRequestFlow.authorisation_url;
-                } else {
-                    // Handle error - redirect failed
-                    setShowRedirectingSection(false);
-                    setShowPaymentFailedSection(true);
-                }
+            // Debug log to track what data is being sent for payment
+            console.log('Sending payment data:', paymentData);
+            console.log('TicketData used:', {
+                amount: ticketData?.amount,
+                pcn_number: ticketData?.pcn_number,
+                plate_number: ticketData?.plate_number,
+                council_name: ticketData?.council_name
+            });
+
+            const result = await makePayment(paymentData);
+
+            // Redirect to the payment gateway after 1 minute delay
+            if (result.billingRequestFlow?.authorisation_url) {
+                // Clear ticket data before redirecting as it will be passed via URL params
+                // Note: We don't clear it here as the verification page needs it
+                // It will be cleared after successful receipt sending
+                window.location.href = result.billingRequestFlow.authorisation_url;
+            } else {
+                // Handle error - redirect failed
+                setShowRedirectingSection(false);
+                setShowPaymentFailedSection(true);
+            }
         } catch (error) {
             console.error('Payment failed:', error);
             // Show payment failed section
@@ -736,13 +738,67 @@ export default function Home() {
         <div className="min-h-screen flex flex-col items-center justify-center p-2">
             {/* 1st section */}
             {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && !showPartialPaymentSection && !showFineNotReadySection && !showDetailsReceivedSection && (
-                <HomeSection
-                    transactions={transactions}
-                    onScanTicket={() => setShowCamera(true)}
-                    onUploadFromGallery={handleFileUpload}
-                    onShowAllTransactions={() => setShowAllTransactionsSection(true)}
-                    onHamburgerClick={() => setShowHamburgerModal(true)}
-                />
+                <div className="relative w-full max-w-md">
+                    <HomeSection
+                        transactions={transactions}
+                        onScanTicket={() => setShowCamera(true)}
+                        onUploadFromGallery={handleFileUpload}
+                        onShowAllTransactions={() => setShowAllTransactionsSection(true)}
+                        onHamburgerClick={() => setShowHamburgerModal(true)}
+                    />
+
+                    {/* Hamburger Modal - positioned relative to HomeSection container */}
+                    <HamburgerModal
+                        isOpen={showHamburgerModal}
+                        onClose={() => setShowHamburgerModal(false)}
+                        onSavedFines={() => {
+                            setShowSavedFinesSection(true);
+                            // Hide all other sections when navigating to saved fines
+                            setShowCamera(false);
+                            setShowImagePreview(false);
+                            setShowReviewSection(false);
+                            setShowPaymentSection(false);
+                            setShowRedirectingSection(false);
+                            setShowPaymentReceivedSection(false);
+                            setShowProcessingSection(false);
+                            setShowPaymentStatusSection(false);
+                            setShowReceiptSection(false);
+                            setShowSaveFineSection(false);
+                            setShowCheckInboxSection(false);
+                            setShowPaymentFailedSection(false);
+                            setShowAllTransactionsSection(false);
+                            setShowPartialPaymentSection(false);
+                            setShowFineNotReadySection(false);
+                            setShowDetailsReceivedSection(false);
+                            setShowHamburgerModal(false);
+                        }}
+                        onPaymentHistory={() => {
+                            setShowAllTransactionsSection(true);
+                            // Hide all other sections when navigating to payment history
+                            setShowCamera(false);
+                            setShowImagePreview(false);
+                            setShowReviewSection(false);
+                            setShowPaymentSection(false);
+                            setShowRedirectingSection(false);
+                            setShowPaymentReceivedSection(false);
+                            setShowProcessingSection(false);
+                            setShowPaymentStatusSection(false);
+                            setShowReceiptSection(false);
+                            setShowSaveFineSection(false);
+                            setShowCheckInboxSection(false);
+                            setShowPaymentFailedSection(false);
+                            setShowSavedFinesSection(false);
+                            setShowPartialPaymentSection(false);
+                            setShowFineNotReadySection(false);
+                            setShowDetailsReceivedSection(false);
+                            setShowHamburgerModal(false);
+                        }}
+                        onContactUs={() => {
+                            console.log("Contact Us clicked");
+                            setShowHamburgerModal(false);
+                        }}
+                    />
+                </div>
             )}
 
             {/* 2nd section  */}
@@ -913,6 +969,7 @@ export default function Home() {
                 <PaymentFailedSection
                     onBack={() => setShowCamera(false)}
                     onTryAgain={retryPayment}
+                    onReportIssue={() => router.push('/report-incident')}
                 />
             )}
 
@@ -947,49 +1004,7 @@ export default function Home() {
                 />
             )}
 
-            {/* Hamburger Modal */}
-            <HamburgerModal
-                isOpen={showHamburgerModal}
-                onClose={() => setShowHamburgerModal(false)}
-                onSavedFines={() => {
-                    setShowSavedFinesSection(true);
-                    // Hide all other sections when navigating to saved fines
-                    setShowCamera(false);
-                    setShowImagePreview(false);
-                    setShowReviewSection(false);
-                    setShowPaymentSection(false);
-                    setShowRedirectingSection(false);
-                    setShowPaymentReceivedSection(false);
-                    setShowProcessingSection(false);
-                    setShowPaymentStatusSection(false);
-                    setShowReceiptSection(false);
-                    setShowSaveFineSection(false);
-                    setShowCheckInboxSection(false);
-                    setShowPaymentFailedSection(false);
-                    setShowAllTransactionsSection(false);
-                }}
-                onPaymentHistory={() => {
-                    setShowAllTransactionsSection(true);
-                    // Hide all other sections when navigating to payment history
-                    setShowCamera(false);
-                    setShowImagePreview(false);
-                    setShowReviewSection(false);
-                    setShowPaymentSection(false);
-                    setShowRedirectingSection(false);
-                    setShowPaymentReceivedSection(false);
-                    setShowProcessingSection(false);
-                    setShowPaymentStatusSection(false);
-                    setShowReceiptSection(false);
-                    setShowSaveFineSection(false);
-                    setShowCheckInboxSection(false);
-                    setShowPaymentFailedSection(false);
-                    setShowSavedFinesSection(false);
-                }}
-                onContactUs={() => {
-                    console.log('Contact Us clicked');
-                    // You can implement contact us functionality here
-                }}
-            />
+
 
             {/* 16th section - Partial Payment Status */}
             {showPartialPaymentSection && (

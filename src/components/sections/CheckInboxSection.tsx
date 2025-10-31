@@ -55,7 +55,7 @@ export default function CheckInboxSection({
                     <div className="flex flex-col gap-[16px] w-full font-medium font-inter">
                         <Button
                             onClick={onOpenGmail}
-                            className="p-[12px] text-[14px] text-[#FFFFFF] bg-[#105AE2] h-[49px] w-full rounded-[8px] hover:bg-[#0e4cc7] transition-colors"
+                            className="p-[12px] text-[14px] text-[#FFFFFF] bg-[#105AE2] h-[48px] w-full rounded-[8px] hover:bg-[#0e4cc7] transition-colors"
                         >
                             Open Gmail app
                         </Button>

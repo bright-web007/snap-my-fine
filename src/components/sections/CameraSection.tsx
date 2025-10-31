@@ -63,7 +63,7 @@ export default function CameraSection({
                 {/* Capture Ticket button - Visible when video is NOT showing */}
                 <Button
                     onClick={onStartCamera}
-                    className={`cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? 'hidden' : ''}`}
+                    className={`cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? 'hidden' : ''}`}
                 >
                     <Camera className="w-[24px] h-[24px] text-white" />
                     Capture Ticket
@@ -72,14 +72,14 @@ export default function CameraSection({
                 {/* Take Snapshot button - Visible when video IS showing */}
                 <Button
                     onClick={onTakeSnapshot}
-                    className={`cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? '' : 'hidden'}`}
+                    className={`cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? '' : 'hidden'}`}
                 >
                     <Camera className="w-[24px] h-[24px] text-white" />
                     Take Snapshot
                 </Button>
 
                 <Button
-                    className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
+                    className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
                     onClick={onUploadFromGallery}
                 >
                     <Upload className="w-[24px] h-[24px] text-[#323333]" />

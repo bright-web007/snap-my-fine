@@ -1,6 +1,9 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
 import { Camera, Upload, Menu } from "lucide-react";
+import Image from "next/image";
+import logo from "@/assets/images/logo.svg";
+import logo2 from "@/assets/images/logo2.svg";
 
 interface Transaction {
     council: string;
@@ -26,35 +29,52 @@ export default function HomeSection({
 }: HomeSectionProps) {
     return (
         <div className="w-full max-w-md min-h-screen flex flex-col">
-            {/* Header with Hamburger Menu */}
-            {/* <header className="w-full flex justify-end px-4 py-4 bg-white">
-                <button
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    onClick={onHamburgerClick}
-                >
-                    <Menu className="w-[24px] h-[24px] text-[#323333]" />
-                </button>
-            </header> */}
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="flex-1 flex flex-col items-center pt-3">
                 <div className="w-full max-w-md flex flex-col gap-[38px]">
-                    <div className="flex flex-col gap-[4px] text-center">
-                        <h1 className="text-[#105AE2] text-[32px] font-bold leading-[100%]">SnapMyFine</h1>
-                        <p className="text-[#B2B2B3] text-[16px] leading-[24px]">Pay your parking fine in seconds</p>
+
+                    <div className="relative flex flex-row items-start bg-[#F1F7FE] rounded-2xl shadow-md py-8 pl-8 w-[100%] mx-auto overflow-visible">
+                        {/* Left content */}
+                        <div className="space-y-4 flex flex-col gap-[120px] z-10 w-[100%]">
+                            <div className="flex flex-row justify-between items-center w-[100%]">
+                                <Image src={logo} alt="SnapMyFine Logo" className="w-[128px] h-[21px]" />
+
+                                <button
+                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                    onClick={onHamburgerClick}
+                                >
+                                    <Menu className="w-[24px] h-[24px] text-[#323333]" />
+                                </button>
+
+                            </div>
+                            <div className="flex flex-col gap-3 w-[200px]">
+                                <h2 className="text-[30px] font-bold text-[#105AE2] leading-[33px] font-inter">
+                                    Pay your parking fine<br />in seconds
+                                </h2>
+                                <p className="text-[#4A4C4F] text-[12px] font-inter font-regular leading-[16px] tracking-[0.4%]">
+                                    SnapMyFine helps you pay your parking fine instantly – <span className="text-[#19191A] italic">fast, secure, and stress-free.</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Right illustration - positioned absolutely */}
+                        <div className="absolute top-18 -right-12">
+                            <Image src={logo2} alt="Car illustration" className="w-[290px] h-[200px]" />
+                        </div>
                     </div>
 
                     <div className="w-full max-w-md flex flex-col items-center gap-6">
                         <div className="flex flex-col gap-[8px] w-full font-medium font-inter">
                             <Button
-                                className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
+                                className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
                                 onClick={onScanTicket}
                             >
                                 <Camera className="w-[24px] h-[24px] text-white" />
                                 Scan Ticket
                             </Button>
                             <Button
-                                className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
+                                className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
                                 onClick={onUploadFromGallery}
                             >
                                 <Upload className="w-[24px] h-[24px] text-[#323333]" />
@@ -93,7 +113,7 @@ export default function HomeSection({
 
                         <div className="text-[#19191A] bg-[#F1F7FE] p-[16px] w-full">
                             <h2 className="text-[16px] font-medium font-inter leading-[24px]">How it works</h2>
-                            <ol className="text-[12px] font-light font-inter list-decimal list-inside">
+                            <ol className="text-[12px] font-regular font-inter list-decimal list-inside">
                                 <li>Pay us securely through your bank.</li>
                                 <li>We process your payment and take care of all the paperwork.</li>
                                 <li>You receive a confirmation once the payment is made.</li>

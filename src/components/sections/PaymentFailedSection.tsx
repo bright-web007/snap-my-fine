@@ -5,11 +5,13 @@ import { ArrowLeft, AlertCircle } from "lucide-react";
 interface PaymentFailedSectionProps {
     onBack: () => void;
     onTryAgain: () => void;
+    onReportIssue: () => void;
 }
 
 export default function PaymentFailedSection({
     onBack,
-    onTryAgain
+    onTryAgain,
+    onReportIssue
 }: PaymentFailedSectionProps) {
     return (
         <div className="w-full min-h-screen flex flex-col">
@@ -48,9 +50,7 @@ export default function PaymentFailedSection({
 
                     {/* Email section */}
                     <div className="w-full flex flex-col gap-[8px]">
-                        <p className="text-[#7E8081] text-[12px] font-inter font-regular leading-[16px] tracking-[0.25%] text-center">
-                            You can try again now or choose a different payment method.
-                        </p>
+
                         <div className="flex flex-col  gap-[16px] w-full font-medium font-inter">
                             <Button
                                 onClick={onTryAgain}
@@ -59,9 +59,17 @@ export default function PaymentFailedSection({
                                 <p>Try Again</p>
                             </Button>
                         </div>
-                        <p className="text-[#7E8081] text-[12px] font-inter font-regular leading-[16px] tracking-[0.25%] text-center">
-                            if your bank already charged you, don&apos;t worry, we&apos;ll double check and update your receipt soon.
-                        </p>
+                        <div className="flex flex-col gap-[12px]">
+                            <p className="text-[#7E8081] text-[12px] font-inter font-regular leading-[16px] tracking-[0.25%] text-center">
+                                if your bank already charged you, don&apos;t worry, we&apos;ll double check and update your receipt soon.
+                            </p>
+                            <Button
+                                onClick={onReportIssue}
+                                className="text-[14px] w-full h-[48px] text-[#FFFFFF] bg-[#105AE2] rounded-[8px] border-2 border-[#105AE2] hover:bg-[#F1F7FE] cursor-pointer"
+                            >
+                                <p>Report Issue</p>
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

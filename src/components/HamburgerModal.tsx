@@ -41,9 +41,9 @@ export default function HamburgerModal({
 
     return (
         <>
-            {/* Modal - slides in from left without backdrop */}
+            {/* Modal - slides in from left without backdrop, positioned relative to container */}
             <div
-                className={`fixed top-0 left-0 h-full z-50 transition-transform duration-300 ease-in-out ${
+                className={`absolute top-0 left-0 h-full max-w-md z-50 transition-transform duration-300 ease-in-out ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
@@ -90,14 +90,16 @@ export default function HamburgerModal({
                 </div>
             </div>
 
-            {/* Invisible overlay to detect clicks outside modal */}
+            {/* Invisible overlay to detect clicks outside modal - positioned relative to container */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 z-40"
+                    className="absolute inset-0 z-40 max-w-md"
                     onClick={(e) => {
                         // Only close if clicking outside the modal area
                         const clickX = e.clientX;
-                        if (clickX > 330) { // 330px is the modal width
+                        const containerLeft = e.currentTarget.getBoundingClientRect().left;
+                        const relativeClickX = clickX - containerLeft;
+                        if (relativeClickX > 330) { // 330px is the modal width
                             onClose();
                         }
                     }}

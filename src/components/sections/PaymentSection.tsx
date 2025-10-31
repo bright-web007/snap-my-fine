@@ -90,14 +90,14 @@ export default function PaymentSection({
                 {/* Pay Now button - shows dynamic total */}
                 <Button
                     onClick={onPayNow}
-                    className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
+                    className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
                 >
                     Pay Now - £{formData.fineAmount ? (Number(formData.fineAmount) + 3).toFixed(2) : '3.00'}
                 </Button>
                 {!isLoadedFromSavedFine && (
                     <Button
                         onClick={onPayLater}
-                        className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[44px] rounded-[8px] flex items-center justify-center gap-2"
+                        className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
                     >
                         Pay Later
                     </Button>
