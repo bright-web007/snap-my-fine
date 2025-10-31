@@ -31,10 +31,13 @@ import FineNotReady from "@/components/sections/FineNotReadySection";
 import DetailsReceived from "@/components/sections/DetailsReceivedSection";
 
 // Import types
-import type { Transaction, FormData, ValidationErrors } from "@/types";
+// Import types
+import { FormData, ValidationErrors, SavedFine } from "@/types";
+import { Transaction } from "@/lib/stores/transactionStore";
 
 // Import stores and hooks
 import { useTicketStore } from "@/lib/stores/ticketStore";
+import { useTransactionStore } from "@/lib/stores/transactionStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket";
 import { usePayment } from "@/lib/hooks/use-payment";
 
@@ -42,6 +45,7 @@ export default function Home() {
     const router = useRouter();
     const { processTicket, fetchTickets, callbackPendingTicket } = useTicketProcessor();
     const { makePayment } = usePayment();
+    const { addTransaction: addSuccessfulTransaction, getSuccessfulTransactions } = useTransactionStore();
     const [showCamera, setShowCamera] = useState(false);
     const [isVideoVisible, setIsVideoVisible] = useState(false);
     const [showImagePreview, setShowImagePreview] = useState(false);
@@ -100,8 +104,8 @@ export default function Home() {
         email: false
     });
 
-    // Transaction history state
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    // Get successful transactions from store
+    const transactions = getSuccessfulTransactions();
 
     // Section navigation state
     const [showReviewSection, setShowReviewSection] = useState(false); // 4th section
@@ -538,19 +542,21 @@ export default function Home() {
         }
     };
 
-    // Call this after a transaction completes (success or failed)
-    const addTransaction = (status: 'success' | 'failed') => {
-        setTransactions(prev => {
-            const newTransaction = {
-                council: formData.council,
-                pcnNumber: formData.pcnNumber,
-                fineAmount: formData.fineAmount,
-                status,
-            };
+    // Function to add successful council payment to transaction history
+    const addSuccessfulCouncilPayment = (referenceId?: string, paymentId?: string) => {
+        const serviceFee = '3.00'; // Fixed service fee
+        const fineAmount = formData.fineAmount || ticketData?.amount?.toString() || '0';
+        const totalPaid = (parseFloat(fineAmount) + parseFloat(serviceFee)).toFixed(2);
 
-            // Add new transaction at the beginning to keep them in chronological order (newest first)
-            const updatedTransactions = [newTransaction, ...prev];
-            return updatedTransactions; // Keep ALL transactions
+        addSuccessfulTransaction({
+            council: formData.council || ticketData?.council_name || '',
+            pcnNumber: formData.pcnNumber || ticketData?.pcn_number || '',
+            fineAmount,
+            status: 'success',
+            totalPaid,
+            serviceFee,
+            referenceId,
+            paymentId,
         });
     };
 
@@ -621,14 +627,8 @@ export default function Home() {
 
     // Function to go back to section 1
     const goToHomeSection = () => {
-        // Add a successful transaction when returning from receipt section
-        if (showReceiptSection) {
-            addTransaction('success');
-        }
-        // Add a failed transaction when returning from payment failed section
-        if (showPaymentFailedSection) {
-            addTransaction('failed');
-        }
+        // Note: Successful transactions are now added when council payment actually succeeds
+        // in the payment verification flow, not when returning from sections
         setShowReceiptSection(false);
         setShowCamera(false);
         setShowImagePreview(false);

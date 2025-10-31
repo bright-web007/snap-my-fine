@@ -1,13 +1,7 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
 import { ArrowLeft, Clock, Send } from "lucide-react";
-
-interface Transaction {
-    council: string;
-    pcnNumber: string;
-    fineAmount: string;
-    status: 'success' | 'failed';
-}
+import { Transaction } from "@/lib/stores/transactionStore";
 
 interface AllTransactionsSectionProps {
     transactions: Transaction[];
@@ -57,7 +51,7 @@ export default function AllTransactionsSection({
                                             <p className="flex justify-between items-center mb-2">
                                                 <span className="text-[14px] text-[#000000] leading-[16px] font-medium font-inter tracking-[0.4%]">{tx.council}</span>
                                                 <span className="text-[14px] text-[#000000] leading-[16px] font-bold font-inter tracking-[0.4%]">
-                                                    £{tx.fineAmount ? (Number(tx.fineAmount) + 3).toFixed(2) : '3.00'}
+                                                    £{tx.totalPaid || (tx.fineAmount ? (Number(tx.fineAmount) + 3).toFixed(2) : '3.00')}
                                                 </span>
                                             </p>
 
@@ -69,7 +63,9 @@ export default function AllTransactionsSection({
                                             </p>
 
                                             <p className="mb-2">
-                                                <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">{new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                                                <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">
+                                                    {tx.dateCompleted ? new Date(tx.dateCompleted).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                                </span>
                                             </p>
                                         </div>
                                     </div>

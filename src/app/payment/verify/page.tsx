@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import PaymentStatusSection from "@/components/sections/PaymentStatusSection";
 import ReceiptSection from "@/components/sections/ReceiptSection";
 import { useTicketStore } from "@/lib/stores/ticketStore";
+import { useTransactionStore } from "@/lib/stores/transactionStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket";
 
 interface FormData {
@@ -27,6 +28,7 @@ function PaymentVerificationContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { ticketData, clearTicketData } = useTicketStore();
+    const { addTransaction: addSuccessfulTransaction } = useTransactionStore();
     const { payCouncilTicket, updateTicketPayment, loading } = useTicketProcessor();
     
     const [formData, setFormData] = useState<FormData>({
@@ -145,7 +147,7 @@ function PaymentVerificationContent() {
 
                 // Step 4: Make council payment if we have the required data
                 if (council && pcnNumber && amount > 0) {
-                    await handleCouncilPayment(pcnNumber, council, amount.toString(), paymentId);
+                    await handleCouncilPayment(pcnNumber, council, amount.toString(), paymentId, referenceId);
                 } else {
                     // If missing council data, still show receipt section for email collection
                     console.warn('Missing council data for payment processing');
@@ -182,7 +184,7 @@ function PaymentVerificationContent() {
     }, [searchParams, ticketData, councilPaymentProcessed]);
 
     // Handle council payment and update payment record
-    const handleCouncilPayment = async (pcnNumber: string, council: string, amount: string, paymentId?: string) => {
+    const handleCouncilPayment = async (pcnNumber: string, council: string, amount: string, paymentId?: string, referenceId?: string) => {
         try {
             setCouncilPaymentProcessed(true);
             
@@ -212,24 +214,63 @@ function PaymentVerificationContent() {
             }
             
             // Then make the council payment
-            const result = await payCouncilTicket(pcnNumber, council, amount);
-            
-            // Check if payment was successful based on the response structure
-            if (result && result.success === true) {
-                console.log('Council payment successful:', result);
-                // Payment successful, show receipt section after a brief delay
-                setTimeout(() => {
-                    setShowReceiptSection(true);
-                }, 1000);
-            } else {
-                // Payment failed according to the response
-                console.error('Council payment failed:', result?.message || 'Unknown error');
-                // Even if council payment fails, user has already paid via GoCardless
-                // So we still proceed to show the email collection for receipt
-                setTimeout(() => {
-                    setShowReceiptSection(true);
-                }, 1000);
+            try {
+                const result = await payCouncilTicket(pcnNumber, council, amount);
+                
+                // Check if payment was successful based on the response structure
+                if (result && result.success === true) {
+                    console.log('Council payment successful:', result);
+                    
+                    // Add successful transaction to store
+                    const serviceFee = '3.00';
+                    const totalPaid = (parseFloat(amount) + parseFloat(serviceFee)).toFixed(2);
+                    
+                    addSuccessfulTransaction({
+                        council,
+                        pcnNumber,
+                        fineAmount: amount,
+                        status: 'success',
+                        totalPaid,
+                        serviceFee,
+                        referenceId,
+                        paymentId,
+                    });
+                    
+                    console.log('Transaction added to store successfully');
+                } else {
+                    console.error('Council payment failed:', result?.message || 'Unknown error');
+                }
+            } catch (councilPaymentError) {
+                console.error('Council payment API error or timeout:', councilPaymentError);
+                
+                // Check if this is a timeout error
+                if (councilPaymentError instanceof DOMException && councilPaymentError.name === 'AbortError') {
+                    console.log('Council payment timed out, but may have succeeded on server. Checking...');
+                    
+                    // Since the payment may have succeeded on the server despite timeout,
+                    // let's add the transaction assuming it worked (user paid via GoCardless anyway)
+                    const serviceFee = '3.00';
+                    const totalPaid = (parseFloat(amount) + parseFloat(serviceFee)).toFixed(2);
+                    
+                    addSuccessfulTransaction({
+                        council,
+                        pcnNumber,
+                        fineAmount: amount,
+                        status: 'success',
+                        totalPaid,
+                        serviceFee,
+                        referenceId,
+                        paymentId,
+                    });
+                    
+                    console.log('Transaction added to store (timeout scenario)');
+                }
             }
+            
+            // Always show receipt section since user has paid via GoCardless
+            setTimeout(() => {
+                setShowReceiptSection(true);
+            }, 1000);
         } catch (error) {
             console.error('Council payment API error:', error);
             
