@@ -88,6 +88,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
   - "No outstanding charge" → Shows success notification and stays on review
   - "Council not supported" → Shows error notification via dropdown
   - "Failed to confirm" → Shows error notification
+  - "Fine not ready/pending update" → Goes to Fine Not Ready Section
 
 ---
 
@@ -271,11 +272,58 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ---
 
+### 17. **Fine Not Ready Section (Section 17)**
+**Location:** `FineNotReadySection` component
+**Trigger:** When council API returns pending status during ticket confirmation
+
+#### API Response Trigger:
+```json
+{
+    "success": false,
+    "status": "pending_update",
+    "message": "The ticket has not been updated by the council yet. Please retry again in the next 24 hours.",
+    "pcnNumber": "TT60318074",
+    "retryAfter": "24 hours"
+}
+```
+
+#### User Actions:
+- **Enter Email Address** (required)
+- **Enter Phone Number** (optional)
+- **"Notify me" Button** → Submits callback request
+- **Back Arrow** → Returns to Review Section
+
+#### What Happens:
+- Shows "Fine not payable yet" message with hourglass icon
+- Explains that councils sometimes take up to 24 hours to register new tickets
+- Collects user contact details for notification when fine becomes available
+- **Validation:** Button disabled until email is entered
+- **API Call:** Posts user details to `/api/ticket/callback` via `callbackPendingTicket` hook
+
+---
+
+### 18. **Details Received Section (Section 18)**
+**Location:** `DetailsReceivedSection` component
+**Trigger:** After successful callback submission from Fine Not Ready section
+
+#### User Actions:
+- **"Back to Home" Button** → Returns to homepage
+- **Close Button (X)** → Closes modal
+
+#### What Happens:
+- Shows success confirmation with checkmark icon
+- Displays "We've got your details" message
+- Explains that user will be notified when fine is ready for payment
+- Modal overlay design for clear call-to-action
+
+---
+
 ## API Endpoints Summary
 
 ### Ticket Processing
 - **POST `/api/ticket/process`** → OCR extraction of ticket image
 - **POST `/api/ticket/confirm`** → Verify ticket with council
+- **POST `/api/ticket/callback`** → Register user for pending ticket notifications
 - **POST `/api/ticket/save`** → Save ticket for later
 - **GET `/api/ticket/fetch`** → Retrieve saved tickets  
 - **DELETE `/api/ticket/delete`** → Delete saved tickets
@@ -297,6 +345,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 ### Error Handling
 - **Unsupported Council:** Shows dropdown notification, stays on review
 - **Invalid Ticket Image:** Shows error notification, returns to homepage  
+- **Fine Not Ready:** Council hasn't activated ticket yet, collects user details for notification
 - **Payment Failure:** Navigates to Payment Failed section
 - **Network Issues:** Shows appropriate error messages
 
@@ -308,6 +357,7 @@ SnapMyFine is a web application that allows users to pay parking fines quickly b
 
 ### Navigation Patterns
 - **Linear Flow:** Home → Camera → Preview → Review → Payment → Receipt
+- **Pending Flow:** Review → Fine Not Ready → Details Received → Home
 - **Error Recovery:** Any error returns to appropriate previous section
 - **Save/Resume:** Can save fines and resume payment later
 - **History Access:** Can view and manage previous transactions
