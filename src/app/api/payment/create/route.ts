@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
+import { randomUUID } from "crypto";
 // import * as gocardless from 'gocardless-nodejs';
 // import * as constants from 'gocardless-nodejs/constants';
 const gocardless = require('gocardless-nodejs');
 const constants = require('gocardless-nodejs/constants');
 
 export async function POST(req: NextRequest) {
+
+    const referenceId = `pcn-${Date.now()}-${Math.floor(Math.random() * 10000)}_${randomUUID()}`;
 
     const { amount, pcnNumber, vehicleReg, email, fullName, council } = await req.json();
 
@@ -54,18 +57,8 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        // Build redirect URI with ticket data as query parameters
-        const redirectUri = new URL(process.env.NEXT_GO_REDIRECT_URI!);
-        redirectUri.searchParams.set('pcn_number', pcnNumber);
-        redirectUri.searchParams.set('vehicle_number', vehicleReg);
-        redirectUri.searchParams.set('amount', amount);
-        redirectUri.searchParams.set('payment_id', billingRequest.id);
-        if (council) {
-            redirectUri.searchParams.set('council', council);
-        }
-
         const billingRequestFlow = await client.billingRequestFlows.create({
-            redirect_uri: redirectUri.toString(),
+            redirect_uri: `${process.env.NEXT_GO_REDIRECT_URI!}?reference_id=${encodeURIComponent(referenceId)}`,
             exit_uri: process.env.NEXT_GO_EXIT_URI!,
             links: {
                 billing_request: billingRequest.id,
@@ -73,8 +66,23 @@ export async function POST(req: NextRequest) {
         });
 
         console.log('Payment creation successful - Payment ID:', billingRequest.id);
-        
-        return NextResponse.json({ 
+        console.log(billingRequestFlow)
+
+        // Log the billing request flow details to n8n from storing the paymentId
+        await fetch(process.env.NEXT_N8N_WEBHOOK_ENDPOINT!, {
+            method: 'POST',
+            headers: {},
+            body: JSON.stringify({
+                type: 'payment_init',
+                data: {
+                    linkPaymentId: billingRequest.links.billing_request,
+                    referenceId,
+                    
+                }
+            }),
+        });
+
+        return NextResponse.json({
             billingRequestFlow,
             paymentId: billingRequest.id
         }, { status: 200 });
@@ -82,7 +90,7 @@ export async function POST(req: NextRequest) {
     } catch (error: unknown) {
         const genericMessage = error instanceof Error ? error.message : 'Unknown error';
         console.error("Payment creation error:", genericMessage);
-        
+
         // Capture payment creation errors with Sentry
         Sentry.captureException(error, {
             tags: {
@@ -98,7 +106,7 @@ export async function POST(req: NextRequest) {
                 council
             }
         });
-        
+
         return NextResponse.json({
             error: genericMessage,
         }, { status: 500 });
