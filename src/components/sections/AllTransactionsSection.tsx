@@ -55,12 +55,12 @@ export default function AllTransactionsSection({
                                                 </span>
                                             </p>
 
-                                            <p className="flex justify-between">
+                                            <div className="flex justify-between">
                                                 <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">PCN:{tx.pcnNumber}</span>
                                                 <div className="px-[4px] py-[4px] rounded-[12px] flex items-center justify-center bg-[#D2F9E0]">
                                                     <span className="font-regular text-[8px] font-inter leading-[100%] text-[#16A34A]">success</span>
                                                 </div>
-                                            </p>
+                                            </div>
 
                                             <p className="mb-2">
                                                 <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">

@@ -70,7 +70,7 @@ export default function PaymentStatusSection({
     return (
         <div className="w-full min-h-screen flex flex-col">
             {/* Header with arrow and title - positioned at top left */}
-            <div className="w-full">
+            <div className="w-full p-[15px]">
                 <button
                     className="flex items-center gap-[16px] text-gray-700 hover:text-black"
                     onClick={onBack}

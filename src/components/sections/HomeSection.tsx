@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { Button } from "@/component/ui/button/index";
 import { Camera, Upload, Menu } from "lucide-react";
 import Image from "next/image";
@@ -27,6 +28,12 @@ export default function HomeSection({
     onShowAllTransactions,
     onHamburgerClick
 }: HomeSectionProps) {
+    const [isHydrated, setIsHydrated] = useState(false);
+
+    useEffect(() => {
+        setIsHydrated(true);
+    }, []);
+
     return (
         <div className="w-full max-w-md min-h-screen flex flex-col">
 
@@ -83,7 +90,7 @@ export default function HomeSection({
                         </div>
 
                         {/* Recent Transactions Section */}
-                        {transactions.length > 0 && (
+                        {isHydrated && transactions.length > 0 && (
                             <div className="w-full flex flex-col gap-[8px] mt-2">
                                 <div className="flex justify-between">
                                     <p className="text-[#000000] font-inter text-[14px] font-medium leading-[20px] tracking-[0.1%]">Recent</p>
@@ -100,12 +107,12 @@ export default function HomeSection({
                                             <span className="font-medium text-[12px] font-inter leading-[100%] text-[#000000]">{tx.council}</span>
                                             <span className="font-semibold text-[12px] font-inter leading-[100%] text-[#000000]">£{tx.fineAmount ? (Number(tx.fineAmount) + 3).toFixed(2) : '3.00'}</span>
                                         </p>
-                                        <p className="flex justify-between">
+                                        <div className="flex justify-between">
                                             <span className="font-regular text-[12px] font-inter leading-[100%] text-[#4A4A4A]">PCN:{tx.pcnNumber}</span>
                                             <div className={`px-[4px] py-[4px] rounded-[12px] flex items-center justify-center ${tx.status === 'success' ? 'bg-[#D2F9E0]' : 'bg-[#F9D2D2]'}`}>
                                                 <span className={`font-regular text-[8px] font-inter leading-[100%] ${tx.status === 'success' ? 'text-[#16A34A]' : 'text-[#A31616]'}`}>{tx.status}</span>
                                             </div>
-                                        </p>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

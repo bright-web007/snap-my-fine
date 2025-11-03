@@ -30,7 +30,7 @@ function PaymentVerificationContent() {
     const { ticketData, clearTicketData } = useTicketStore();
     const { addTransaction: addSuccessfulTransaction } = useTransactionStore();
     const { payCouncilTicket, updateTicketPayment, loading } = useTicketProcessor();
-    
+
     const [formData, setFormData] = useState<FormData>({
         council: '',
         pcnNumber: '',
@@ -38,7 +38,7 @@ function PaymentVerificationContent() {
         fineAmount: '',
         email: ''
     });
-    
+
     const [validationErrors, setValidationErrors] = useState<ValidationErrors>({
         council: false,
         pcnNumber: false,
@@ -55,17 +55,17 @@ function PaymentVerificationContent() {
         const processPaymentVerification = async () => {
             // Get the reference_id from URL parameters (passed back from GoCardless)
             const referenceId = searchParams.get('reference_id');
-            
+
             if (!referenceId || councilPaymentProcessed) {
                 return;
             }
 
             try {
                 setCouncilPaymentProcessed(true);
-                
+
                 // Step 1: Make request to N8N pipeline to get the paymentId via our API
                 console.log('Step 1: Getting payment ID from N8N for reference:', referenceId);
-                
+
                 const n8nResponse = await fetch('/api/payment/lookup', {
                     method: 'POST',
                     headers: {
@@ -82,13 +82,13 @@ function PaymentVerificationContent() {
 
                 const n8nResult = await n8nResponse.json();
                 const paymentId = n8nResult?.paymentId;
-                
+
                 if (!paymentId) {
                     throw new Error('Payment ID not found in N8N response');
                 }
 
                 console.log('Step 2: Retrieved payment ID:', paymentId);
-                
+
                 // Step 2: Get full GoCardless transaction details
                 const goCardlessResponse = await fetch(`/api/payment/${paymentId}`, {
                     method: 'GET',
@@ -103,13 +103,13 @@ function PaymentVerificationContent() {
 
                 const goCardlessResult = await goCardlessResponse.json();
                 const billingRequest = goCardlessResult?.billingRequest;
-                
+
                 if (!billingRequest) {
                     throw new Error('Billing request data not found in GoCardless response');
                 }
 
                 console.log('Step 3: Retrieved GoCardless billing request data');
-                
+
                 // Step 3: Update payment record with complete data
                 const updateResponse = await fetch('/api/payment/update', {
                     method: 'POST',
@@ -127,16 +127,16 @@ function PaymentVerificationContent() {
                 }
 
                 console.log('Step 4: Payment record updated successfully');
-                
+
                 // Extract data for council payment from the billing request
-                const amount = billingRequest.payment_request?.amount ? 
+                const amount = billingRequest.payment_request?.amount ?
                     parseInt(billingRequest.payment_request.amount) / 100 : 0;
-                
+
                 // Use stored ticket data for council and PCN info
                 const council = ticketData?.council_name || '';
                 const pcnNumber = ticketData?.pcn_number || '';
                 const vehicleNumber = ticketData?.plate_number || '';
-                
+
                 setFormData({
                     council,
                     pcnNumber,
@@ -155,10 +155,10 @@ function PaymentVerificationContent() {
                         setShowReceiptSection(true);
                     }, 1000);
                 }
-                
+
             } catch (error) {
                 console.error('Payment verification flow error:', error);
-                
+
                 // Capture payment verification errors with Sentry
                 Sentry.captureException(error, {
                     tags: {
@@ -171,7 +171,7 @@ function PaymentVerificationContent() {
                         errorMessage: error instanceof Error ? error.message : 'Unknown error'
                     }
                 });
-                
+
                 // Still proceed to show receipt section even on error
                 // The user has completed payment, they should get some confirmation
                 setTimeout(() => {
@@ -187,7 +187,7 @@ function PaymentVerificationContent() {
     const handleCouncilPayment = async (pcnNumber: string, council: string, amount: string, paymentId?: string, referenceId?: string) => {
         try {
             setCouncilPaymentProcessed(true);
-            
+
             // First, update the ticket payment record with the GoCardless payment ID
             if (paymentId) {
                 try {
@@ -195,7 +195,7 @@ function PaymentVerificationContent() {
                     console.log('Payment record updated successfully');
                 } catch (paymentUpdateError) {
                     console.error('Failed to update payment record:', paymentUpdateError);
-                    
+
                     // Capture payment record update errors with Sentry
                     Sentry.captureException(paymentUpdateError, {
                         tags: {
@@ -208,23 +208,23 @@ function PaymentVerificationContent() {
                             council
                         }
                     });
-                    
+
                     // Continue with council payment even if payment record update fails
                 }
             }
-            
+
             // Then make the council payment
             try {
                 const result = await payCouncilTicket(pcnNumber, council, amount);
-                
+
                 // Check if payment was successful based on the response structure
                 if (result && result.success === true) {
                     console.log('Council payment successful:', result);
-                    
+
                     // Add successful transaction to store
                     const serviceFee = '3.00';
                     const totalPaid = (parseFloat(amount) + parseFloat(serviceFee)).toFixed(2);
-                    
+
                     addSuccessfulTransaction({
                         council,
                         pcnNumber,
@@ -235,23 +235,23 @@ function PaymentVerificationContent() {
                         referenceId,
                         paymentId,
                     });
-                    
+
                     console.log('Transaction added to store successfully');
                 } else {
                     console.error('Council payment failed:', result?.message || 'Unknown error');
                 }
             } catch (councilPaymentError) {
                 console.error('Council payment API error or timeout:', councilPaymentError);
-                
+
                 // Check if this is a timeout error
                 if (councilPaymentError instanceof DOMException && councilPaymentError.name === 'AbortError') {
                     console.log('Council payment timed out, but may have succeeded on server. Checking...');
-                    
+
                     // Since the payment may have succeeded on the server despite timeout,
                     // let's add the transaction assuming it worked (user paid via GoCardless anyway)
                     const serviceFee = '3.00';
                     const totalPaid = (parseFloat(amount) + parseFloat(serviceFee)).toFixed(2);
-                    
+
                     addSuccessfulTransaction({
                         council,
                         pcnNumber,
@@ -262,18 +262,18 @@ function PaymentVerificationContent() {
                         referenceId,
                         paymentId,
                     });
-                    
+
                     console.log('Transaction added to store (timeout scenario)');
                 }
             }
-            
+
             // Always show receipt section since user has paid via GoCardless
             setTimeout(() => {
                 setShowReceiptSection(true);
             }, 1000);
         } catch (error) {
             console.error('Council payment API error:', error);
-            
+
             // Capture council payment errors with Sentry
             Sentry.captureException(error, {
                 tags: {
@@ -288,7 +288,7 @@ function PaymentVerificationContent() {
                     paymentId
                 }
             });
-            
+
             // If there's an API error, still show email collection for receipt
             // The user has already paid via GoCardless
             setTimeout(() => {
@@ -323,7 +323,7 @@ function PaymentVerificationContent() {
     const handleReceiptSent = () => {
         // Clear ticket data from store after successful receipt
         clearTicketData();
-        
+
         // Show receipt section for 5 seconds then redirect home
         setShowReceiptSection(true);
         setTimeout(() => {
@@ -363,10 +363,21 @@ function PaymentVerificationContent() {
     // Show receipt section after council payment is processed
     if (showReceiptSection) {
         return (
+            // <div className="min-h-screen">
+            //     <ReceiptSection
+            //         onClose={handleReceiptClose}
+            //         onOpenGmail={openGmailApp}
+            //     />
+            // </div>
+
             <div className="min-h-screen">
-                <ReceiptSection
-                    onClose={handleReceiptClose}
-                    onOpenGmail={openGmailApp}
+                <PaymentStatusSection
+                    formData={formData}
+                    validationErrors={validationErrors}
+                    onBack={handleBack}
+                    onInputChange={handleInputChange}
+                    onSendReceipt={handleReceiptSent}
+                    isValidEmail={isValidEmail}
                 />
             </div>
         );
