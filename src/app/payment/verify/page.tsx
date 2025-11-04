@@ -215,7 +215,9 @@ function PaymentVerificationContent() {
 
             // Then make the council payment
             try {
-                const result = await payCouncilTicket(pcnNumber, council, amount);
+                // Determine vehicle number from ticket data or form data
+                const vehicleNumber = ticketData?.plate_number || formData.vehicleNumber || '';
+                const result = await payCouncilTicket(pcnNumber, council, amount, vehicleNumber);
 
                 // Check if payment was successful based on the response structure
                 if (result && result.success === true) {

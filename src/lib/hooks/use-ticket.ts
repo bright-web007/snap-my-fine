@@ -8,7 +8,7 @@ interface UseTicketProcessorReturn {
   fetchTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
   deleteTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
   confirmTicket: (pcnNumber: string, council: string, vehicleNumber: string) => Promise<any>;
-  payCouncilTicket: (pcnNumber: string, council: string, amount: string) => Promise<any>;
+  payCouncilTicket: (pcnNumber: string, council: string, amount: string, vehicleNumber: string) => Promise<any>;
   updateTicketPayment: (pcnNumber: string, paymentId: string) => Promise<any>;
   saveTicket: (email: string, ticket: N8nResponse["output"]) => Promise<void>;
   callbackPendingTicket: (email: string, phone: string, pcnNumber: string) => Promise<void>;
@@ -400,7 +400,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     }
   }, []);
 
-  const payCouncilTicket = useCallback(async (pcnNumber: string, council: string, amount: string): Promise<TicketResponse> => {
+  const payCouncilTicket = useCallback(async (pcnNumber: string, council: string, amount: string, vehicleNumber: string): Promise<TicketResponse> => {
     if (!council) {
       setError("Council is required");
     }
@@ -409,6 +409,9 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     }
     if (!amount) {
       setError("Amount is required");
+    }
+    if (!vehicleNumber) {
+      setError("Vehicle number is required");
     }
 
     setLoading(true);
@@ -419,6 +422,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
         pcnNumber,
         councilName: council,
         amount: parseInt(amount),
+        vehicleNumber,
       };
       // Create AbortController for timeout - increased for slow council APIs
       const controller = new AbortController();

@@ -2,16 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const payload = await request.json();
-    const ticketApiUrl = process.env.NEXT_TICKET_PAYMENT_API_ENDPOINT!;
-    console.log({ payload });
+  const payload = await request.json();
+  const ticketApiUrl = process.env.NEXT_TICKET_PAYMENT_API_ENDPOINT!;
+  const { pcnNumber, councilName, amount, vehicleNumber } = payload || {};
+  console.log('Forwarding council payment payload:', { pcnNumber, councilName, amount, vehicleNumber });
 
     const response = await fetch(ticketApiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+  body: JSON.stringify({ pcnNumber, councilName, amount, vehicleNumber }),
     });
 
     console.log("Response status from ticket payment API:", response.status, response.statusText);
