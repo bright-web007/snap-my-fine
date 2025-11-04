@@ -63,7 +63,7 @@ export default function Home() {
             try {
                 // You might want to get the user's email from somewhere (e.g., localStorage, auth context, etc.)
                 // For now, I'll use a placeholder - you'll need to replace this with actual user email
-                const userEmail = 'ogwurup@gmail.com'; // Replace with actual user email
+                const userEmail = ''; // Replace with actual user email
                 await fetchTickets(userEmail);
             } catch (error) {
                 console.error('Error fetching saved tickets:', error);
