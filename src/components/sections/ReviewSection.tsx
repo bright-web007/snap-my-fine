@@ -63,7 +63,11 @@ export default function ReviewSection({
       setConfirmationAttempted(true);
 
       try {
-        const result = await confirmTicket(ticketData.pcn_number, ticketData.council_name);
+        const result = await confirmTicket(
+          ticketData.pcn_number,
+          ticketData.council_name,
+          ticketData.plate_number || ''
+        );
         
         if (result?.success) {
           if (result.status === "No Outstanding Charge" || result.paymentRequired === false) {

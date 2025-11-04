@@ -7,7 +7,7 @@ interface UseTicketProcessorReturn {
   fetchTickets: (email: string) => Promise<TicketResponse[]>;
   fetchTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
   deleteTicket: (email: string, pcnNumber: string) => Promise<TicketResponse>;
-  confirmTicket: (pcnNumber: string, council: string) => Promise<any>;
+  confirmTicket: (pcnNumber: string, council: string, vehicleNumber: string) => Promise<any>;
   payCouncilTicket: (pcnNumber: string, council: string, amount: string) => Promise<any>;
   updateTicketPayment: (pcnNumber: string, paymentId: string) => Promise<any>;
   saveTicket: (email: string, ticket: N8nResponse["output"]) => Promise<void>;
@@ -329,12 +329,15 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
     }
   }, []);
 
-  const confirmTicket = useCallback(async (pcnNumber: string, council: string): Promise<TicketResponse> => {
+  const confirmTicket = useCallback(async (pcnNumber: string, council: string, vehicleNumber: string): Promise<TicketResponse> => {
     if (!council) {
       setError("Council is required");
     }
     if (!pcnNumber) {
       setError("PCN number is required");
+    }
+    if (!vehicleNumber) {
+      setError("Vehicle number is required");
     }
 
     setLoading(true);
@@ -344,6 +347,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       const payload = {
         pcnNumber,
         councilName: council,
+        vehicleNumber,
       };
       // Create AbortController for timeout
       const controller = new AbortController();
