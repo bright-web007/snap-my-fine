@@ -58,20 +58,20 @@ export default function Home() {
     const { savedTickets, ticketData, addSavedTicket, removeSavedTicket } = useTicketStore();
 
     // Fetch tickets on component mount
-    useEffect(() => {
-        const fetchSavedTickets = async () => {
-            try {
-                // You might want to get the user's email from somewhere (e.g., localStorage, auth context, etc.)
-                // For now, I'll use a placeholder - you'll need to replace this with actual user email
-                const userEmail = ''; // Replace with actual user email
-                await fetchTickets(userEmail);
-            } catch (error) {
-                console.error('Error fetching saved tickets:', error);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchSavedTickets = async () => {
+    //         try {
+    //             // You might want to get the user's email from somewhere (e.g., localStorage, auth context, etc.)
+    //             // For now, I'll use a placeholder - you'll need to replace this with actual user email
+    //             const userEmail = ''; // Replace with actual user email
+    //             await fetchTickets(userEmail);
+    //         } catch (error) {
+    //             console.error('Error fetching saved tickets:', error);
+    //         }
+    //     };
 
-        fetchSavedTickets();
-    }, [fetchTickets]);
+    //     fetchSavedTickets();
+    // }, [fetchTickets]);
 
     // Sync ticketData to formData when ticketData is available
     useEffect(() => {

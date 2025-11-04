@@ -426,7 +426,7 @@ export const useTicketProcessor = (): UseTicketProcessorReturn => {
       };
       // Create AbortController for timeout - increased for slow council APIs
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 seconds timeout
+      const timeoutId = setTimeout(() => controller.abort(), 300000); // 60 seconds timeout
 
       const response = await fetch(`/api/ticket/pay`, {
         method: "POST",
