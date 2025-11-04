@@ -48,7 +48,8 @@ function PaymentVerificationContent() {
     });
 
     const [showReceiptSection, setShowReceiptSection] = useState(false);
-    const [councilPaymentProcessed, setCouncilPaymentProcessed] = useState(false);
+    const [paymentVerificationStarted, setPaymentVerificationStarted] = useState(false);
+    const [councilPaymentInProgress, setCouncilPaymentInProgress] = useState(false);
 
     // Extract payment data from URL parameters and initiate the complete payment verification flow
     useEffect(() => {
@@ -56,12 +57,12 @@ function PaymentVerificationContent() {
             // Get the reference_id from URL parameters (passed back from GoCardless)
             const referenceId = searchParams.get('reference_id');
 
-            if (!referenceId || councilPaymentProcessed) {
+            if (!referenceId || paymentVerificationStarted) {
                 return;
             }
 
             try {
-                setCouncilPaymentProcessed(true);
+                setPaymentVerificationStarted(true);
 
                 // Step 1: Make request to N8N pipeline to get the paymentId via our API
                 console.log('Step 1: Getting payment ID from N8N for reference:', referenceId);
@@ -181,12 +182,12 @@ function PaymentVerificationContent() {
         };
 
         processPaymentVerification();
-    }, [searchParams, ticketData, councilPaymentProcessed]);
+    }, [searchParams, ticketData, paymentVerificationStarted]);
 
     // Handle council payment and update payment record
     const handleCouncilPayment = async (pcnNumber: string, council: string, amount: string, paymentId?: string, referenceId?: string) => {
         try {
-            setCouncilPaymentProcessed(true);
+            setCouncilPaymentInProgress(true);
 
             // First, update the ticket payment record with the GoCardless payment ID
             if (paymentId) {
@@ -271,6 +272,7 @@ function PaymentVerificationContent() {
 
             // Always show receipt section since user has paid via GoCardless
             setTimeout(() => {
+                setCouncilPaymentInProgress(false);
                 setShowReceiptSection(true);
             }, 1000);
         } catch (error) {
@@ -294,6 +296,7 @@ function PaymentVerificationContent() {
             // If there's an API error, still show email collection for receipt
             // The user has already paid via GoCardless
             setTimeout(() => {
+                setCouncilPaymentInProgress(false);
                 setShowReceiptSection(true);
             }, 1000);
         }
@@ -385,8 +388,8 @@ function PaymentVerificationContent() {
         );
     }
 
-    // Show loading state while processing council payment
-    if (loading || (councilPaymentProcessed && !showReceiptSection)) {
+    // Show loading state while processing payment verification or council payment
+    if (loading || councilPaymentInProgress || (paymentVerificationStarted && !showReceiptSection)) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
