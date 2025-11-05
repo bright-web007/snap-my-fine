@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket";
 import { useEffect, useState } from "react";
+import AmountConfirmation from "@/components/sections/amountConfirmation";
 
 interface FormData {
   council: string;
@@ -119,14 +120,7 @@ export default function ReviewSection({
     <div className="w-full min-h-screen flex flex-col relative">
       {/* Loading overlay */}
       {isConfirming && (
-        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-40 flex flex-col items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#105AE2] mx-auto mb-4"></div>
-            <p className="text-[#19191A] font-inter">
-              Confirming your payment amount with the council...
-            </p>
-          </div>
-        </div>
+        <AmountConfirmation />
       )}
 
 

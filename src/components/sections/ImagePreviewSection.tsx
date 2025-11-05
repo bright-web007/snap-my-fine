@@ -76,16 +76,26 @@ export default function ImagePreviewSection({
             <div className="flex flex-col gap-[8px] w-full font-medium font-inter px-[16px] pt-[10px]">
                 <Button
                     onClick={onRetakePhoto}
-                    className="cursor-pointer p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
+                    disabled={!hasError && (isProcessing || isProcessing === false)}
+                    className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${
+                        !hasError && (isProcessing || isProcessing === false)
+                            ? 'cursor-not-allowed bg-gray-400 text-gray-300' 
+                            : 'cursor-pointer text-white bg-[#105AE2] hover:bg-[#0E4FC1]'
+                    }`}
                 >
-                    <Camera className="w-[24px] h-[24px] text-[white]" />
+                    <Camera className={`w-[24px] h-[24px] ${!hasError && (isProcessing || isProcessing === false) ? 'text-gray-300' : 'text-white'}`} />
                     Retake Photo
                 </Button>
                 <Button
-                    className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
+                    disabled={!hasError && (isProcessing || isProcessing === false)}
+                    className={`p-[16px] text-[14px] border-1 w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${
+                        !hasError && (isProcessing || isProcessing === false)
+                            ? 'cursor-not-allowed bg-gray-100 text-gray-400 border-gray-300' 
+                            : 'cursor-pointer text-[#323333] border-[#7B8084] hover:bg-gray-50'
+                    }`}
                     onClick={onUploadFromGallery}
                 >
-                    <Upload className="w-[24px] h-[24px] text-[#323333]" />
+                    <Upload className={`w-[24px] h-[24px] ${!hasError && (isProcessing || isProcessing === false) ? 'text-gray-400' : 'text-[#323333]'}`} />
                     Upload from Gallery
                 </Button>
             </div>

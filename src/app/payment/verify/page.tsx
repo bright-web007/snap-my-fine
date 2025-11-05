@@ -7,6 +7,7 @@ import ReceiptSection from "@/components/sections/ReceiptSection";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 import { useTransactionStore } from "@/lib/stores/transactionStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket";
+import PaymentReceivedSection from "@/components/sections/PaymentReceivedSection";
 
 interface FormData {
     council: string;
@@ -368,25 +369,13 @@ function PaymentVerificationContent() {
     // Show loading state while processing payment verification or council payment
     if (loading || councilPaymentInProgress || (paymentVerificationStarted && !showReceiptSection)) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#105AE2] mx-auto mb-4"></div>
-                    <p className="text-[#19191A] font-inter">Processing council payment...</p>
-                </div>
-            </div>
+            <PaymentReceivedSection formData={formData} />
         );
     }
 
     // Show receipt section after council payment is processed
     if (showReceiptSection) {
         return (
-            // <div className="min-h-screen">
-            //     <ReceiptSection
-            //         onClose={handleReceiptClose}
-            //         onOpenGmail={openGmailApp}
-            //     />
-            // </div>
-
             <div className="min-h-screen">
                 <PaymentStatusSection
                     formData={formData}
