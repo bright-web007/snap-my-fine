@@ -23,7 +23,7 @@ export default function RedirectingSection({ }: RedirectingSectionProps) {
 
             <div className="flex flex-col gap-[12px]">
                 {/* Heading */}
-                <h1 className="text-[20px] font-inter font-semibold text-[#19191A] leading-[28px] ">
+                <h1 className="text-[20px] font-sora font-semibold text-[#19191A] leading-[28px] ">
                     Redirecting to Payment
                 </h1>
 

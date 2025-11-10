@@ -19,7 +19,7 @@ export default function ReceiptSection({
                     {/* Cancel icon at top right */}
                     <button
                         onClick={onClose}
-                        className="absolute top-[16px] right-[16px] p-[8px] hover:bg-gray-200 rounded-full transition-colors"
+                        className="absolute top-[16px] right-[16px] p-[8px] hover:bg-gray-200 rounded-full transition-colors font-sora font-medium"
                     >
                         <X className="w-[20px] h-[20px] text-[#666]" />
                     </button>
@@ -31,7 +31,7 @@ export default function ReceiptSection({
                         </div>
 
                         <div className="text-center flex flex-col gap-[8px]">
-                            <p className="text-[#000000] text-[20px] font-inter font-semibold leading-[28px] tracking-[0.15%] mb-2">
+                            <p className="text-[#000000] text-[20px] font-sora font-semibold leading-[28px] tracking-[0.15%] mb-2">
                                 Receipt Sent to your Mail
                             </p>
                             <p className="text-[#19191A] text-[14px] font-inter font-regular leading-[24px] tracking-[0.25%]">
@@ -39,10 +39,10 @@ export default function ReceiptSection({
                             </p>
                         </div>
                     </div>
-                    <div className="flex flex-col p-[24px] gap-[16px] w-full font-medium font-inter">
+                    <div className="flex flex-col p-[24px] gap-[16px] w-full font-medium font-sora">
                         <Button
                             onClick={onOpenGmail}
-                            className="p-[12px] text-[14px] text-[#FFFFFF] bg-[#105AE2] w-full h-[48px] rounded-[8px] hover:bg-[#0e4cc7] transition-colors"
+                            className="p-[12px] text-[14px] text-[#FFFFFF] bg-[#0464DD] w-full h-[48px] rounded-[8px] hover:bg-[#0e4cc7] transition-colors font-medium"
                         >
                             Open Gmail app
                         </Button>

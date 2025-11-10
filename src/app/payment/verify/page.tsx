@@ -373,7 +373,7 @@ function PaymentVerificationContent() {
         );
     }
 
-    // Show receipt section after council payment is processed
+    // Show payment status section after council payment is processed
     if (showReceiptSection) {
         return (
             <div className="min-h-screen">
@@ -389,26 +389,26 @@ function PaymentVerificationContent() {
         );
     }
 
-    return (
-        <div className="min-h-screen">
-            <PaymentStatusSection
-                formData={formData}
-                validationErrors={validationErrors}
-                onBack={handleBack}
-                onInputChange={handleInputChange}
-                onSendReceipt={handleReceiptSent}
-                isValidEmail={isValidEmail}
-            />
-        </div>
-    );
+    // return (
+    //     <div className="min-h-screen">
+    //         <PaymentStatusSection
+    //             formData={formData}
+    //             validationErrors={validationErrors}
+    //             onBack={handleBack}
+    //             onInputChange={handleInputChange}
+    //             onSendReceipt={handleReceiptSent}
+    //             isValidEmail={isValidEmail}
+    //         />
+    //     </div>
+    // );
 }
 
 export default function PaymentVerificationPage() {
     return (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#105AE2] mx-auto mb-4"></div>
-                <p className="text-[#19191A] font-inter">Processing your payment...</p>
+                <div className="animate-spin  rounded-full h-12 w-12 border-b-2 border-[#105AE2] mx-auto mb-4"></div>
+                <p className="text-[#19191A] font-sora">Processing your payment...</p>
             </div>
         </div>}>
             <PaymentVerificationContent />

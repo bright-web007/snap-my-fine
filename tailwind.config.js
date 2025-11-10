@@ -15,8 +15,9 @@ module.exports = {
             },
           },
           fontFamily: {
-            'sans': ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
-            'inter': ['var(--font-inter)', 'Inter', 'sans-serif'],
+            'sans': ['Sora', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+            'sora': ['Sora', 'sans-serif'],
+            'inter': ['Inter', 'sans-serif'],
           },
           animation: {
             'slide-vertical': 'slide-vertical 15s linear infinite',

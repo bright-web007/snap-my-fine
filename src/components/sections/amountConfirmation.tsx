@@ -19,12 +19,12 @@ export default function ProcessingSection() {
 
             <div className="flex flex-col gap-[8px]">
                 {/* Heading */}
-                <h1 className="text-[20px] font-inter font-semibold text-[#19191A] leading-[28px] ">
+                <h1 className="text-[20px] font-sora font-semibold text-[#19191A] leading-[28px] ">
                     Please Wait
                 </h1>
 
                 {/* Subtext */}
-                <p className="text-[16px] text-[#4A4C4F] font-regular font-inter leading-[18px] max-w-xs tracking-[0.5%]">
+                <p className="text-[16px] text-[#4A4C4F] font-regular font-sora leading-[18px] max-w-xs tracking-[0.5%]">
                     Confirming your payment amount with the council...
                 </p>
             </div>

@@ -31,8 +31,8 @@ export default function ImagePreviewSection({
                         <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
                     </div>
                     <p className="flex flex-col text-left">
-                        <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">SnapMyFine</span>
-                        <span className="text-[#4A4C4F] text-[16px] leading-[24px] font-inter font-regular">Review your ticket</span>
+                        <span className="text-[#19191A] text-[20px] leading-[28px] font-sora font-semibold">SnapMyFine</span>
+                        <span className="text-[#4A4C4F] text-[16px] leading-[24px] font-sora font-regular">Review your ticket</span>
                     </p>
                 </button> */}
 
@@ -62,7 +62,7 @@ export default function ImagePreviewSection({
                 ) : isProcessing === false ? (
                     <div className="text-center px-[24px]">
                         <p className="text-[14px] text-[black] font-inter font-light leading-[24px] tracking-[0.15%]">Please wait ...</p>
-                        {/* <p className="text-[14px] text-[#7E8081] font-inter font-regular leading-[20px] tracking-[0.25%]">Please wait...</p> */}
+                        {/* <p className="text-[14px] text-[#7E8081] font-sora font-regular leading-[20px] tracking-[0.25%]">Please wait...</p> */}
                     </div>
                 ) : (
                     <div className="text-center px-[24px]">
@@ -73,14 +73,14 @@ export default function ImagePreviewSection({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col gap-[8px] w-full font-medium font-inter px-[16px] pt-[10px]">
+            <div className="flex flex-col gap-[8px] w-full font-medium font-sora px-[16px] pt-[10px]">
                 <Button
                     onClick={onRetakePhoto}
                     disabled={!hasError && (isProcessing || isProcessing === false)}
-                    className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${
+                    className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 font-sora font-medium ${
                         !hasError && (isProcessing || isProcessing === false)
-                            ? 'cursor-not-allowed bg-gray-400 text-gray-300' 
-                            : 'cursor-pointer text-white bg-[#105AE2] hover:bg-[#0E4FC1]'
+                            ? 'cursor-not-allowed bg-[#CDE3FE] text-[#FFFFFF]' 
+                            : 'cursor-pointer text-white bg-[#0464DD] hover:bg-[#0E4FC1]'
                     }`}
                 >
                     <Camera className={`w-[24px] h-[24px] ${!hasError && (isProcessing || isProcessing === false) ? 'text-gray-300' : 'text-white'}`} />
@@ -88,7 +88,7 @@ export default function ImagePreviewSection({
                 </Button>
                 <Button
                     disabled={!hasError && (isProcessing || isProcessing === false)}
-                    className={`p-[16px] text-[14px] border-1 w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${
+                    className={`p-[16px] text-[14px] border-1 w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 font-sora font-medium ${
                         !hasError && (isProcessing || isProcessing === false)
                             ? 'cursor-not-allowed bg-gray-100 text-gray-400 border-gray-300' 
                             : 'cursor-pointer text-[#323333] border-[#7B8084] hover:bg-gray-50'

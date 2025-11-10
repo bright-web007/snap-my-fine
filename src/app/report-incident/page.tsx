@@ -136,7 +136,7 @@ const ReportIssuePage = () => {
               <Loader size={32} className="text-black" />
             </div>
             <div className="text-center">
-              <p className="text-[14px] font-inter text-[#7E8081]">
+              <p className="text-[14px] font-sora text-[#7E8081]">
                 Submitting your report...
               </p>
             </div>
@@ -153,11 +153,11 @@ const ReportIssuePage = () => {
             <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
           </div>
           <p className="flex flex-col text-left">
-            <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">Report Issue</span>
+            <span className="text-[#19191A] text-[20px] leading-[28px] font-sora font-semibold">Report Issue</span>
           </p>
         </button>
 
-        <div className="text-[14px] text-[#DC2626] bg-[#FEF2F2] leading-[20px] font-inter font-light p-[12px] rounded-[8px] border-1 border-[#FECACA]">
+        <div className="text-[14px] text-[#DC2626] bg-[#FEF2F2] leading-[20px] font-sora font-light p-[12px] rounded-[8px] border-1 border-[#FECACA]">
           <p>
             {paymentError === 'gocardless_failed' && 'Your payment to SnapMyFine failed. Please report this issue so we can help resolve it.'}
             {paymentError === 'council_payment_failed' && 'We were unable to process your payment with the council. Please report this issue for assistance.'}
@@ -172,7 +172,7 @@ const ReportIssuePage = () => {
           >
             {/* Full Name */}
             <div className="flex flex-col gap-2">
-              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora tracking-[0.1%] flex items-center gap-1">
                 Fullname
                 {validationErrors.fullname && <span className="text-red-500">*</span>}
               </label>
@@ -188,7 +188,7 @@ const ReportIssuePage = () => {
 
             {/* Email Address */}
             <div className="flex flex-col gap-2">
-              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora tracking-[0.1%] flex items-center gap-1">
                 Email Address
                 {validationErrors.email && <span className="text-red-500">*</span>}
               </label>
@@ -204,7 +204,7 @@ const ReportIssuePage = () => {
 
             {/* Amount Paid */}
             <div className="flex flex-col gap-2">
-              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora tracking-[0.1%] flex items-center gap-1">
                 Amount Paid (£)
                 {validationErrors.amountPaid && <span className="text-red-500">*</span>}
               </label>
@@ -214,13 +214,13 @@ const ReportIssuePage = () => {
                 value={formData.amountPaid}
                 onChange={(e) => handleInputChange('amountPaid', e.target.value)}
                 placeholder="Enter the amount paid"
-                className="border border-[#D1D5DB] rounded-[8px] pl-[16px] pr-[16px] py-[16px] text-[14px] text-[#4A4C4F] outline-none focus:ring-2 focus:ring-[#105AE2] focus:border-[#105AE2]"
+                className="border border-[#D1D5DB] rounded-[8px] pl-[16px] pr-[16px] py-[16px] text-[14px] font-sora text-[#4A4C4F] outline-none focus:ring-2 focus:ring-[#105AE2] focus:border-[#105AE2]"
               />
             </div>
 
             {/* Payment Issue Dropdown */}
             <div className="flex flex-col gap-2">
-              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium  font-sora tracking-[0.1%] flex items-center gap-1">
                 Payment Issue
                 {validationErrors.paymentIssue && <span className="text-red-500">*</span>}
               </label>
@@ -228,7 +228,7 @@ const ReportIssuePage = () => {
                 name="paymentIssue"
                 value={formData.paymentIssue}
                 onChange={(e) => handleInputChange('paymentIssue', e.target.value)}
-                className="appearance-none border border-[#D1D5DB] text-[#4A4C4F] rounded-[8px] pl-[16px] pr-[40px] py-[16px] text-[14px] outline-none focus:ring-2 focus:ring-[#105AE2] focus:border-[#105AE2]"
+                className="appearance-none border border-[#D1D5DB] text-[#4A4C4F] rounded-[8px]  font-sora pl-[16px] pr-[40px] py-[16px] text-[14px] outline-none focus:ring-2 focus:ring-[#105AE2] focus:border-[#105AE2]"
               >
                 <option value="">Select payment issue</option>
                 {paymentIssues.map((issue) => (
@@ -240,7 +240,7 @@ const ReportIssuePage = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="text-[black] w-full font-medium font-inter flex flex-col gap-[8px]">
+            <div className="text-[black] w-full font-medium  font-sora flex flex-col gap-[8px]">
               <Button
                 type="submit"
                 disabled={isSubmitting}
@@ -253,7 +253,7 @@ const ReportIssuePage = () => {
                 {isSubmitting ? "Submitting..." : "Submit Report"} 
                 <ArrowRight className="w-[20px] h-[20px]" />
               </Button>
-              <p className="text-[12px] text-[#7E8081] leading-[16px] font-inter font-regular text-center px-[30px]">
+              <p className="text-[12px] text-[#7E8081] leading-[16px]  font-sora font-regular text-center px-[30px]">
                 We'll review your report and get back to you within 24 hours
               </p>
             </div>

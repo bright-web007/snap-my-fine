@@ -55,14 +55,14 @@ export default function SavedFinesSection({
     <div className="w-full min-h-screen flex flex-col">
       <div className="w-full mt-[16px]">
         <button
-          className="flex items-center gap-[16px] text-gray-700 hover:text-black"
+          className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
           onClick={onBack}
         >
           <div className="p-[12px] rounded-full bg-[#E7EFFD]">
             <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
           </div>
           <p className="flex flex-col text-left">
-            <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">Saved Fines</span>
+            <span className="text-[#19191A] text-[20px] leading-[28px] font-sora font-semibold">Saved Fines</span>
           </p>
         </button>
       </div>
@@ -75,7 +75,7 @@ export default function SavedFinesSection({
             // Empty state
             <div className="text-center py-12">
               <Clock className="w-12 h-12 text-[#B2B2B3] mx-auto mb-4" />
-              <p className="text-[#19191A] text-[16px] font-inter font-medium mb-2">No available saved fine</p>
+              <p className="text-[#19191A] text-[16px] font-sora font-medium mb-2">No available saved fine</p>
               <p className="text-[#7E8081] text-[14px] font-inter font-regular">You haven&apos;t saved any fines yet. Scan a ticket to get started.</p>
             </div>
           ) : (
@@ -86,22 +86,22 @@ export default function SavedFinesSection({
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <p className="flex justify-between items-center mb-2">
-                        <span className="text-[14px] text-[#000000] leading-[16px] font-medium font-inter tracking-[0.4%]">{fine.council}</span>
+                        <span className="text-[14px] text-[#000000] leading-[16px] font-medium font-sora tracking-[0.4%]">{fine.council}</span>
                         <button
                           onClick={() => handleDeleteFine(fine)}
                           disabled={loading}
-                          className="p-1 hover:bg-gray-200 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="p-1 hover:bg-gray-200 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-sora font-medium"
                         >
                           <Trash className="w-[16px] h-[16px] text-[#7E8081]" />
                         </button>
                       </p>
 
                       <p className="mb-1">
-                        <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">PCN: {fine.pcnNumber}</span>
+                        <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-sora tracking-[0.4%]">PCN: {fine.pcnNumber}</span>
                       </p>
 
                       <p className="mb-2">
-                        <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-inter tracking-[0.4%]">Vehicle: {fine.vehicleNumber}</span>
+                        <span className="text-[12px] text-[#4A4C4F] leading-[16px] font-regular font-sora tracking-[0.4%]">Vehicle: {fine.vehicleNumber}</span>
                       </p>
                     </div>
                   </div>
@@ -109,10 +109,10 @@ export default function SavedFinesSection({
                   <div className="flex justify-between items-center">
                     <p className="flex gap-[8px] items-center">
                       <Clock className="w-[16px] h-[16px] text-[#7E8081]" />
-                      <span className="text-[12px] text-[#7E8081] leading-[16px] font-regular font-inter tracking-[0.4%]">Saved on {fine.dateSaved}</span>
+                      <span className="text-[12px] text-[#7E8081] leading-[16px] font-regular font-sora tracking-[0.4%]">Saved on {fine.dateSaved}</span>
                     </p>
 
-                    <p className="text-[16px] font-semibold font-inter leading-[24px] text-[#19191A]">
+                    <p className="text-[16px] font-semibold font-sora leading-[24px] text-[#19191A]">
                       £{fine.fineAmount ? Number(fine.fineAmount).toFixed(2) : '0.00'}
                     </p>
                   </div>
@@ -120,7 +120,7 @@ export default function SavedFinesSection({
                   <hr className="border-1 border-[#E5E7EB] my-2" />
 
                   <Button
-                    className="bg-[#105AE2] text-[#FFFFFF] text-[14px] h-[48px] px-[12px] w-full cursor-pointer"
+                    className="bg-[#105AE2] text-[#FFFFFF] text-[14px] h-[48px] px-[12px] w-full cursor-pointer font-medium"
                     onClick={() => onPayFine(fine)}
                   >
                     Pay Now

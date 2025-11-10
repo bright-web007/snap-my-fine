@@ -14,7 +14,7 @@ export default function DetailsReceived({ onClose, onBackToHome }: DetailsReceiv
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-[16px] right-[16px] p-[8px] hover:bg-gray-100 rounded-full transition-colors"
+                    className="absolute top-[16px] right-[16px] p-[8px] hover:bg-gray-100 rounded-full transition-colors font-sora font-medium"
                 >
                     <X className="w-[20px] h-[20px] text-[#4A4C4F]" />
                 </button>
@@ -28,10 +28,10 @@ export default function DetailsReceived({ onClose, onBackToHome }: DetailsReceiv
 
                     {/* Title and Description */}
                     <div className="flex flex-col gap-[8px] text-center">
-                        <h1 className="text-[20px] font-inter font-semibold text-[#19191A] leading-[28px]">
+                        <h1 className="text-[20px] font-sora font-semibold text-[#19191A] leading-[28px]">
                             We've got your details
                         </h1>
-                        <p className="text-[14px] text-[#4A4C4F] font-inter font-regular leading-[20px] max-w-[280px]">
+                        <p className="text-[14px] text-[#4A4C4F] font-sora font-regular leading-[20px] max-w-[280px]">
                             We'll let you know as soon as your fine is ready for payment. Keep an eye on your inbox, we'll send you a link to complete it once it's active
                         </p>
                     </div>
@@ -39,7 +39,7 @@ export default function DetailsReceived({ onClose, onBackToHome }: DetailsReceiv
                     {/* Back to Home Button */}
                     <Button
                         onClick={onBackToHome}
-                        className="p-[16px] text-[14px] text-white bg-[#105AE2] w-full h-[48px] rounded-[8px] flex items-center justify-center hover:bg-[#0e4cc7]"
+                        className="p-[16px] text-[14px] text-white bg-[#105AE2] font-sora font-medium w-full h-[48px] rounded-[8px] flex items-center justify-center hover:bg-[#0e4cc7]"
                     >
                         Back to Home
                     </Button>

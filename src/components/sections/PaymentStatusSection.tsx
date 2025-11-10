@@ -72,14 +72,14 @@ export default function PaymentStatusSection({
             {/* Header with arrow and title - positioned at top left */}
             <div className="w-full p-[15px]">
                 <button
-                    className="flex items-center gap-[16px] text-gray-700 hover:text-black"
+                    className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
                     onClick={onBack}
                 >
                     <div className="p-[12px] rounded-full bg-[#E7EFFD]">
                         <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
                     </div>
-                    <p className="flex flex-col text-left">
-                        <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">Payment Status</span>
+                    <p className="flex flex-col text-left w-[248px]">
+                        <span className="text-[#19191A] text-[20px] leading-[28px] font-sora font-semibold">Payment Status</span>
                     </p>
                 </button>
             </div>
@@ -94,7 +94,7 @@ export default function PaymentStatusSection({
                         </div>
 
                         <div className="text-center">
-                            <p className="text-[#000000] text-[20px] font-inter font-semibold leading-[28px] tracking-[0.15%] mb-2">
+                            <p className="text-[#000000] text-[20px] font-sora font-semibold leading-[28px] tracking-[0.15%] mb-2">
                                 Payment Processed Successfully!
                             </p>
                             <p className="text-[#19191A] text-[16px] font-inter font-regular leading-[24px] tracking-[0.25%]">
@@ -111,7 +111,7 @@ export default function PaymentStatusSection({
                         <div className="flex flex-col p-[24px] gap-[16px] w-full font-medium font-inter border-1 border-[#CFDFFC] rounded-[16px]">
                             {/* Email */}
                             <div className="flex flex-col gap-[16px]">
-                                <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+                                <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora tracking-[0.1%] flex items-center gap-1">
                                     Email
                                     {validationErrors.email && <span className="text-red-500">*</span>}
                                 </label>
@@ -129,7 +129,7 @@ export default function PaymentStatusSection({
                                 onClick={handleSendReceipt}
                                 className={`text-[14px] w-full h-[48px] transition-colors ${
                                     isValidEmail(formData.email) && !loading && !emailSent
-                                        ? 'text-[#FFFFFF] bg-[#105AE2] hover:bg-[#0e4cc7] cursor-pointer'
+                                        ? 'text-[#FFFFFF] bg-[#0464DD] hover:bg-[#0e4cc1] cursor-pointer'
                                         : 'text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed'
                                     }`}
                             >

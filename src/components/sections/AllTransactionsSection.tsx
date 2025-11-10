@@ -16,14 +16,14 @@ export default function AllTransactionsSection({
         <div className="w-full min-h-screen flex flex-col">
             <div className="w-full mt-[16px]">
                 <button
-                    className="flex items-center gap-[16px] text-gray-700 hover:text-black"
+                    className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
                     onClick={onBack}
                 >
                     <div className="p-[12px] rounded-full bg-[#E7EFFD]">
                         <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
                     </div>
                     <p className="flex flex-col text-left">
-                        <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">Payment Receipts</span>
+                        <span className="text-[#19191A] text-[20px] leading-[28px] font-sora font-semibold">Payment Receipts</span>
                     </p>
                 </button>
             </div>
@@ -36,7 +36,7 @@ export default function AllTransactionsSection({
                     {transactions.length === 0 && (
                         <div className="text-center py-12">
                             <Clock className="w-12 h-12 text-[#B2B2B3] mx-auto mb-4" />
-                            <p className="text-[#19191A] text-[16px] font-inter font-medium mb-2">No Transaction Made</p>
+                            <p className="text-[#19191A] text-[16px] font-sora font-medium mb-2">No Transaction Made</p>
                             <p className="text-[#7E8081] text-[14px] font-inter font-regular">You haven&apos;t made any transaction yet. Scan a ticket to get started.</p>
                         </div>
                     )}
@@ -51,7 +51,7 @@ export default function AllTransactionsSection({
                                             <p className="flex justify-between items-center mb-2">
                                                 <span className="text-[14px] text-[#000000] leading-[16px] font-medium font-inter tracking-[0.4%]">{tx.council}</span>
                                                 <span className="text-[14px] text-[#000000] leading-[16px] font-bold font-inter tracking-[0.4%]">
-                                                    £{tx.totalPaid || (tx.fineAmount ? (Number(tx.fineAmount) + 3).toFixed(2) : '3.00')}
+                                                    £{tx.fineAmount ? (Number(tx.fineAmount) - 3).toFixed(2) : '0.00'}
                                                 </span>
                                             </p>
 
@@ -71,9 +71,9 @@ export default function AllTransactionsSection({
                                     </div>
                                     <div className="flex gap-[8px] w-full">
                                         <Button
-                                            className="bg-[#105AE2] rounded-[12px] text-[#FFFFFF] h-[48px] text-[14px] py-[12px] flex-1 min-w-0 flex items-center justify-center gap-2"
+                                            className="bg-[#0464DD] rounded-[12px] text-[#FFFFFF] h-[48px] text-[14px] py-[12px] flex-1 min-w-0 flex items-center justify-center gap-2 font-sora font-medium"
                                         >
-                                            <Send className="w-[16px] h-[16px] mr-1" />
+                                            <Send className="w-[16px] h-[16px] mr-1 font-sora" />
                                             Resend
                                         </Button>
                                     </div>

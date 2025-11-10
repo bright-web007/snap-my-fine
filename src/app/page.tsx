@@ -328,6 +328,10 @@ export default function Home() {
         setIsProcessingTicket(true);
         setHasProcessingError(false);
 
+        // Clear any existing ticket data before processing new ticket
+        const { clearTicketData } = useTicketStore.getState();
+        clearTicketData();
+
         try {
             // Use the hook to process the ticket which handles the API call and state management
             await processTicket(imgData);
@@ -366,6 +370,19 @@ export default function Home() {
 
     // Function to handle file upload from gallery
     const handleFileUpload = () => {
+        // Clear any previous ticket data when starting a new scan
+        const { clearTicketData } = useTicketStore.getState();
+        clearTicketData();
+        
+        // Clear form data as well
+        setFormData({
+            council: '',
+            pcnNumber: '',
+            vehicleNumber: '',
+            fineAmount: '',
+            email: ''
+        });
+        
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
@@ -741,7 +758,22 @@ export default function Home() {
                 <div className="relative w-full max-w-md">
                     <HomeSection
                         transactions={transactions}
-                        onScanTicket={() => setShowCamera(true)}
+                        onScanTicket={() => {
+                            // Clear any previous ticket data when starting a new scan
+                            const { clearTicketData } = useTicketStore.getState();
+                            clearTicketData();
+                            
+                            // Clear form data as well
+                            setFormData({
+                                council: '',
+                                pcnNumber: '',
+                                vehicleNumber: '',
+                                fineAmount: '',
+                                email: ''
+                            });
+                            
+                            setShowCamera(true);
+                        }}
                         onUploadFromGallery={handleFileUpload}
                         onShowAllTransactions={() => setShowAllTransactionsSection(true)}
                         onHamburgerClick={() => setShowHamburgerModal(true)}

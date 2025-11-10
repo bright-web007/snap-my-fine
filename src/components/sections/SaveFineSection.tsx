@@ -76,14 +76,14 @@ export default function SaveFineSection({
     <div className="w-full min-h-screen flex flex-col">
       <div className="w-full flex flex-col gap-[16px] pt-[20px] px-[16px]">
         <button
-          className="flex items-center gap-[16px] text-gray-700 hover:text-black"
+          className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
           onClick={onBack}
         >
           <div className="p-[12px] rounded-full bg-[#E7EFFD]">
             <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
           </div>
           <p className="flex flex-col text-left">
-            <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">
+            <span className="text-[#19191A] text-[20px] leading-[28px] font-sora font-semibold">
               Save Fine
             </span>
           </p>
@@ -91,7 +91,7 @@ export default function SaveFineSection({
 
         {/* Content aligned from top */}
         <div className="w-full max-w-md mx-auto flex flex-col gap-[16px]">
-          <div className="text-[14px] text-[#0A398F] bg-[#F1F7FE] leading-[20px] font-inter font-light p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
+          <div className="text-[14px] text-[#034496] bg-[#F1F7FE] leading-[20px] font-sora font-medium p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
             <p>
               Note: You need to create an account to allow us save your ticket
               so you can pay when you&apos;re ready. You&apos;ll also receive
@@ -103,7 +103,7 @@ export default function SaveFineSection({
             <div className="flex flex-col gap-[16px] py-[24px] px-[24px] border-1 border-[#CACCCE] rounded-[16px]">
               {/* Email */}
               <div className="flex flex-col gap-[16px]">
-                <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+                <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora tracking-[0.1%] flex items-center gap-1">
                   Email Address
                   {validationErrors.email && (
                     <span className="text-red-500">*</span>
@@ -130,8 +130,8 @@ export default function SaveFineSection({
               <Button
                 disabled={!isValidEmail(formData.email)}
                 onClick={handleCreateAccount}
-                className={`text-[14px] w-full h-[48px] transition-colors ${isValidEmail(formData.email)
-                    ? "text-[#FFFFFF] bg-[#105AE2] hover:bg-[#0e4cc7] cursor-pointer"
+                className={`text-[14px] w-full h-[48px] transition-colors font-sora font-medium ${isValidEmail(formData.email)
+                    ? "text-[#FFFFFF] bg-[#0464DD] hover:bg-[#0e4cc7] cursor-pointer"
                     : "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed"
                   }`}
               >
@@ -140,7 +140,7 @@ export default function SaveFineSection({
             </div>
 
             <div className="flex flex-col gap-[6px] py-[24px] px-[16px] border-1 border-[#CFDFFC] bg-[#F1F7FE] rounded-[16px]">
-              <h3 className="text-[#000000]">What you&apos;e saving</h3>
+              <h3 className="text-[#000000] font-inter font-medium text-[12px]">What you&apos;e saving</h3>
               <p className="flex justify-between">
                 <span className="text-[12px] text-[#000000] leading-[16px] font-regular font-inter tracking-[0.4%] ">
                   Council:

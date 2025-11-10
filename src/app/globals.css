@@ -2,33 +2,77 @@
 
 @layer base {
   * {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   }
 }
 
 @font-face {
-  font-family: 'inter';
+  font-family: 'Sora';
+  src: url('../assets/fonts/Sora/Sora-Medium.ttf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sora';
+  src: url('../assets/fonts/Sora/Sora-Bold.ttf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sora';
+  src: url('../assets/fonts/Sora/Sora-SemiBold.ttf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sora';
+  src: url('../assets/fonts/Sora/Sora-Regular.ttf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Sora';
+  src: url('../assets/fonts/Sora/Sora-Light.ttf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Inter';
   src: url('../assets/fonts/inter/Inter-Medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'inter';
+  font-family: 'Inter';
   src: url('../assets/fonts/inter/Inter-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'inter';
+  font-family: 'Inter';
   src: url('../assets/fonts/inter/Inter-SemiBold.otf') format('opentype');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'inter';
+  font-family: 'Inter';
+  src: url('../assets/fonts/inter/Inter-MediumItalic.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Inter';
   src: url('../assets/fonts/inter/Inter-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
@@ -36,11 +80,12 @@
 
 
 @font-face {
-  font-family: 'inter';
+  font-family: 'Inter';
   src: url('../assets/fonts/inter/Inter-Light-BETA.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
 }
+
 
 :root {
   --background: #ffffff;
@@ -50,7 +95,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-Sora);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -63,5 +108,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
 }

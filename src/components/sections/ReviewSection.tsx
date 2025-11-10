@@ -127,18 +127,18 @@ export default function ReviewSection({
 
       <div className="w-full flex flex-col gap-[16px] pt-[20px] px-[16px]">
         <button
-          className="flex items-center gap-[16px] text-gray-700 hover:text-black"
+          className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
           onClick={onBack}
         >
           <div className="p-[12px] rounded-full bg-[#E7EFFD]">
             <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
           </div>
           <p className="flex flex-col text-left">
-            <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">Review Details</span>
+            <span className="text-[#19191A] text-[20px] leading-[28px] font-sora font-semibold">Review Details</span>
           </p>
         </button>
 
-        <div className="text-[14px] text-[#0A398F] bg-[#F1F7FE] leading-[20px] font-inter font-light p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
+        <div className="text-[14px] text-[#034496] bg-[#F1F7FE] leading-[20px] font-sora font-medium p-[12px] rounded-[8px] border-1 border-[#CFDFFC]">
           <p>Please verify the details below are correct before proceeding to payment.</p>
         </div>
 
@@ -149,7 +149,7 @@ export default function ReviewSection({
           >
             {/* Council Name Dropdown */}
             <div className="flex flex-col gap-1">
-              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora tracking-[0.1%] flex items-center gap-1">
                 Council Name
                 {validationErrors.council && <span className="text-red-500">*</span>}
               </label>
@@ -175,7 +175,7 @@ export default function ReviewSection({
 
             {/* PCN Number */}
             <div className="flex flex-col gap-1">
-              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora tracking-[0.1%] flex items-center gap-1">
                 PCN Number
                 {validationErrors.pcnNumber && <span className="text-red-500">*</span>}
               </label>
@@ -192,7 +192,7 @@ export default function ReviewSection({
 
             {/* Vehicle Registration Number */}
             <div className="flex flex-col gap-1">
-              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora tracking-[0.1%] flex items-center gap-1">
                 Vehicle Registration Number
                 {validationErrors.vehicleNumber && <span className="text-red-500">*</span>}
               </label>
@@ -209,7 +209,7 @@ export default function ReviewSection({
 
             {/* Fine Amount */}
             <div className="flex flex-col gap-1">
-              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter tracking-[0.1%] flex items-center gap-1">
+              <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora tracking-[0.1%] flex items-center gap-1">
                 Fine Amount (£)
                 {validationErrors.fineAmount && <span className="text-red-500">*</span>}
                 {confirmedAmount && !confirmationError && (
@@ -231,20 +231,20 @@ export default function ReviewSection({
             </div>
 
             {/* Continue Button */}
-            <div className="text-[black] w-full font-medium font-inter flex flex-col gap-[8px]">
+            <div className="text-[black] w-full font-medium font-sora flex flex-col gap-[8px]">
               <Button
                 type="submit"
                 disabled={isConfirming}
-                className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 transition-colors ${
-                  isConfirming 
-                    ? "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed" 
-                    : "text-white bg-[#105AE2] cursor-pointer hover:bg-[#0e4cc7]"
+                className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 transition-colors font-medium ${
+                  isConfirming
+                    ? "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed"
+                    : "text-white bg-[#0464DD] cursor-pointer hover:bg-[#0E4FC1]"
                 }`}
               >
                 {isConfirming ? "Confirming..." : "Continue to payment"} 
                 <ArrowRight className="w-[20px] h-[20px]" />
               </Button>
-              <p className="text-[12px] text-[#7E8081] leading-[16px] font-inter font-regular text-center px-[30px]">By continuing, you agree to proceed with secure payment through your bank&apos;s gateway</p>
+              <p className="text-[12px] text-[#7E8081] leading-[16px] font-sora font-regular text-center px-[30px]">By continuing, you agree to proceed with secure payment through your bank&apos;s gateway</p>
             </div>
           </form>
         </div>

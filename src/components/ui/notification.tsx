@@ -55,7 +55,7 @@ export function Notification({ message, type = "info", duration = 5000, onClose 
             setIsVisible(false);
             setTimeout(onClose, 300);
           }}
-          className={`${textColor} hover:opacity-70 transition-opacity`}
+          className={`${textColor} hover:opacity-70 transition-opacity font-sora font-medium`}
         >
           <X className="w-4 h-4" />
         </button>

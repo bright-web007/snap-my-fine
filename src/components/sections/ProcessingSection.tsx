@@ -2,7 +2,7 @@
 
 export default function ProcessingSection() {
     return (
-        <div className="flex flex-col gap-[24px] items-center justify-center min-h-screen bg-white text-center px-[32px]">
+        <div className="flex flex-col gap-[24px] items-center justify-center min-h-screen bg-white text-center px-[15px]">
             {/* Animated spinner */}
             <div className="relative w-[80px] h-[80px] animate-spin">
                 <div
@@ -17,15 +17,13 @@ export default function ProcessingSection() {
                 ></div>
             </div>
 
-            <div className="flex flex-col gap-[8px]">
-                {/* Heading */}
-                <h1 className="text-[20px] font-inter font-semibold text-[#19191A] leading-[28px] ">
-                    Processing Payment
+            <div className="flex flex-col gap-[16px]">
+                {/* Loading message */}
+                <h1 className="text-[20px] font-sora font-semibold text-[#19191A] leading-[28px]">
+                    Please wait...
                 </h1>
-
-                {/* Subtext */}
-                <p className="text-[16px] text-[#4A4C4F] font-regular font-inter leading-[18px] max-w-xs tracking-[0.5%]">
-                    Redirecting to Confirmation...
+                <p className="text-[16px] text-[#4A4C4F] font-sora font-regular leading-[20px] tracking-[0.25%]">
+                    Verifying your payment details.
                 </p>
             </div>
         </div>

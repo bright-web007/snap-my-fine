@@ -29,7 +29,7 @@ export default function CheckInboxSection({
                     {/* Cancel icon at top right */}
                     <button
                         onClick={onClose}
-                        className="absolute top-[16px] right-[16px] p-[8px] hover:bg-gray-200 rounded-full transition-colors"
+                        className="absolute top-[16px] right-[16px] p-[8px] hover:bg-gray-200 rounded-full transition-colors font-sora font-medium"
                     >
                         <X className="w-[20px] h-[20px] text-[#666]" />
                     </button>
@@ -41,21 +41,21 @@ export default function CheckInboxSection({
                         </div>
 
                         <div className="text-center flex flex-col gap-[8px]">
-                            <p className="text-[#000000] text-[20px] font-inter font-semibold leading-[28px] tracking-[0.15%] mb-2">
+                            <p className="text-[#000000] text-[20px] font-sora font-semibold leading-[28px] tracking-[0.15%] mb-2">
                                 Check your inbox
                             </p>
                             <p className="text-[#000000] text-[14px] font-inter font-regular leading-[24px] tracking-[0.25%]">
-                                We&apos;ve sent a verification link to <span className="font-medium">{formData.email}</span>
+                                We&apos;ve sent a verification link to <span className="font-semiBold">{formData.email}</span>
                             </p>
-                            <p className="text-[#7E8081] text-[14px] font-inter font-regular leading-[24px] tracking-[0.25%]">
+                            <p className="text-[#7C8083] text-[14px] font-inter font-regular leading-[24px] tracking-[0.25%]">
                                 Click the link to verify your email and access your saved fines.
                             </p>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-[16px] w-full font-medium font-inter">
+                    <div className="flex flex-col gap-[16px] w-full font-medium font-sora">
                         <Button
                             onClick={onOpenGmail}
-                            className="p-[12px] text-[14px] text-[#FFFFFF] bg-[#105AE2] h-[48px] w-full rounded-[8px] hover:bg-[#0e4cc7] transition-colors"
+                            className="p-[12px] text-[14px] text-[#FFFFFF] bg-[#105AE2] h-[48px] font-sora font-medium w-full rounded-[8px] hover:bg-[#0e4cc7] transition-colors"
                         >
                             Open Gmail app
                         </Button>

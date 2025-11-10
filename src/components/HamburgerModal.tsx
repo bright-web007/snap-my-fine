@@ -61,7 +61,7 @@ export default function HamburgerModal({
                     {/* Menu Items */}
                     <div className="px-8 mt-8">
                         <button
-                            className="w-full text-left py-4 border-b border-gray-300 text-[14px] font-medium text-black hover:text-[#105AE2] transition-colors"
+                            className="w-full text-left py-4 border-b border-gray-300 text-[14px] font-medium font-sora text-black hover:text-[#105AE2] transition-colors"
                             onClick={() => {
                                 onSavedFines();
                                 onClose();
@@ -71,7 +71,7 @@ export default function HamburgerModal({
                         </button>
 
                         <button
-                            className="w-full text-left py-4 border-b border-gray-300 text-[14px] font-medium text-black hover:text-[#105AE2] transition-colors mt-6"
+                            className="w-full text-left py-4 border-b border-gray-300 text-[14px] font-medium font-sora text-black hover:text-[#105AE2] transition-colors mt-6"
                             onClick={() => {
                                 onPaymentHistory();
                                 onClose();
@@ -81,7 +81,7 @@ export default function HamburgerModal({
                         </button>
 
                         <button
-                            className="w-full text-left py-4 border-b border-gray-300 text-[14px] font-medium text-black hover:text-[#105AE2] transition-colors mt-6"
+                            className="w-full text-left py-4 border-b border-gray-300 text-[14px] font-medium font-sora text-black hover:text-[#105AE2] transition-colors mt-6"
                             onClick={onContactUs}
                         >
                             Contact Us

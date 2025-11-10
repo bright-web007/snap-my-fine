@@ -31,14 +31,14 @@ export default function FineNotReady({ onBack, onSubmit }: FineNotReadyProps) {
             <div className="w-full flex flex-col gap-[24px] pt-[20px] px-[16px]">
                 {/* Header */}
                 <button
-                    className="flex items-center gap-[16px] text-gray-700 hover:text-black"
+                    className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
                     onClick={onBack}
                 >
                     <div className="p-[12px] rounded-full bg-[#E7EFFD]">
                         <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
                     </div>
                     <p className="flex flex-col text-left">
-                        <span className="text-[#19191A] text-[20px] leading-[28px] font-inter font-semibold">
+                        <span className="text-[#19191A] text-[20px] leading-[28px] font-sora font-semibold">
                             Fine Not Ready
                         </span>
                     </p>
@@ -55,7 +55,7 @@ export default function FineNotReady({ onBack, onSubmit }: FineNotReadyProps) {
 
                     {/* Title and Description */}
                     <div className="flex flex-col gap-[8px] text-center">
-                        <h1 className="text-[20px] font-inter font-semibold text-[#19191A] leading-[28px]">
+                        <h1 className="text-[20px] font-sora font-semibold text-[#19191A] leading-[28px]">
                             Fine not payable yet
                         </h1>
                         <p className="text-[14px] text-[#4A4C4F] font-inter font-regular leading-[20px]">
@@ -67,15 +67,17 @@ export default function FineNotReady({ onBack, onSubmit }: FineNotReadyProps) {
                     </div>
 
                     {/* Alert Text */}
-                    <p className="text-[14px] text-[#105AE2] font-inter font-medium leading-[20px] text-center max-w-[320px]">
+                    <div className="p-12 border-1 bg-[#F1F7FE] border-[#CFDFFC] rounded-[8px]">
+                    <p className="text-[14px] text-[#034496] font-sora font-medium leading-[20px] text-center max-w-[320px]">
                         Please provide your details so we can alert you as soon as the council activates it.
                     </p>
+                    </div>
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-[20px]">
                         {/* Email Input */}
                         <div className="flex flex-col gap-[8px]">
-                            <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter">
+                            <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora">
                                 Email
                                 {emailError && <span className="text-red-500 ml-1">*</span>}
                             </label>
@@ -92,7 +94,7 @@ export default function FineNotReady({ onBack, onSubmit }: FineNotReadyProps) {
 
                         {/* Phone Input */}
                         <div className="flex flex-col gap-[8px]">
-                            <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-inter">
+                            <label className="text-[#19191A] text-[14px] leading-[20px] font-medium font-sora">
                                 Phone number
                             </label>
                             <input
@@ -109,7 +111,7 @@ export default function FineNotReady({ onBack, onSubmit }: FineNotReadyProps) {
                             <Button
                                 type="submit"
                                 disabled={!email.trim() ||phone.trim() === ""}
-                                className={`p-[16px] text-[14px] text-white w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 transition-colors ${
+                                className={`p-[16px] text-[14px] text-white w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 transition-colors font-sora font-medium ${
                                     !email.trim() 
                                         ? 'bg-[#105AE2]/40 cursor-not-allowed' 
                                         : 'bg-[#105AE2] hover:bg-[#0e4cc7] cursor-pointer'
