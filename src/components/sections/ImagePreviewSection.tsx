@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
-import { Camera, Upload, ArrowLeft, AlertCircle } from "lucide-react";
+import { Camera, Upload, AlertCircle } from "lucide-react";
 import Image from "next/image";
 
 interface ImagePreviewSectionProps {
@@ -16,7 +16,7 @@ export default function ImagePreviewSection({
     snapshot,
     hasError = false,
     isProcessing = false,
-    onBack,
+    // onBack,
     onRetakePhoto,
     onUploadFromGallery
 }: ImagePreviewSectionProps) {

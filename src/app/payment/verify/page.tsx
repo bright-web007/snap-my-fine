@@ -3,7 +3,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import * as Sentry from "@sentry/nextjs";
 import PaymentStatusSection from "@/components/sections/PaymentStatusSection";
-import ReceiptSection from "@/components/sections/ReceiptSection";
+// import ReceiptSection from "@/components/sections/ReceiptSection";
 import { useTicketStore } from "@/lib/stores/ticketStore";
 import { useTransactionStore } from "@/lib/stores/transactionStore";
 import { useTicketProcessor } from "@/lib/hooks/use-ticket";

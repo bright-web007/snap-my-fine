@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/component/ui/button/index";
-import { ArrowLeft, CheckCircle, Mail } from "lucide-react";
+import { CheckCircle, Mail } from "lucide-react";
 import { useMailer } from "@/lib/hooks/use-mailer";
 import { useState } from "react";
 
@@ -32,7 +32,7 @@ interface PaymentStatusSectionProps {
 export default function PaymentStatusSection({
     formData,
     validationErrors,
-    onBack,
+    // onBack,
     onInputChange,
     onSendReceipt,
     isValidEmail
@@ -63,7 +63,7 @@ export default function PaymentStatusSection({
             } else {
                 alert(result.error || 'Failed to send receipt email');
             }
-        } catch (error) {
+        } catch {
             alert('An error occurred while sending the receipt. Please try again.');
         }
     };

@@ -47,7 +47,7 @@ export default function SavedFinesSection({
       await deleteTicket(fine.email, fine.pcnNumber);
       removeSavedTicket(fine.id);
       onDeleteFine(fine.id);
-    } catch (error) {
+    } catch {
       alert('Failed to delete ticket. Please try again.');
     }
   };

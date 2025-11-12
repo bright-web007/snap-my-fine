@@ -24,7 +24,7 @@ const ReportIssuePage = () => {
     const errorType = searchParams.get('error');
     const amount = searchParams.get('amount');
     const email = searchParams.get('email');
-    const pcnNumber = searchParams.get('pcnNumber');
+    // const pcnNumber = searchParams.get('pcnNumber');
     
     // If no error context, redirect back to home
     if (!errorType) {

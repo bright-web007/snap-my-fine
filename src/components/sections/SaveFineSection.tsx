@@ -65,7 +65,7 @@ export default function SaveFineSection({
 
       // Call the original onCreateAccount function to save the fine locally
       onCreateAccount();
-    } catch (error) {
+    } catch {
       alert(
         "An error occurred while saving the fine. Please try again.",
       );
