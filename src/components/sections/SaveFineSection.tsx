@@ -79,7 +79,7 @@ export default function SaveFineSection({
           className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
           onClick={onBack}
         >
-          <div className="p-[12px] rounded-full bg-[#E7EFFD]">
+          <div className="p-[12px] rounded-full bg-[#E7EFFD] active:bg-[#D7E9FE]">
             <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
           </div>
           <p className="flex flex-col text-left">
@@ -131,7 +131,7 @@ export default function SaveFineSection({
                 disabled={!isValidEmail(formData.email)}
                 onClick={handleCreateAccount}
                 className={`text-[14px] w-full h-[48px] transition-colors font-sora font-medium ${isValidEmail(formData.email)
-                    ? "text-[#FFFFFF] bg-[#0464DD] hover:bg-[#0e4cc7] cursor-pointer"
+                    ? "text-[#FFFFFF] bg-[#0464DD] hover:bg-[#0e4cc7] cursor-pointer active:bg-[#045BC8]"
                     : "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed"
                   }`}
               >

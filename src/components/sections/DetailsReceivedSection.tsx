@@ -39,7 +39,7 @@ export default function DetailsReceived({ onClose, onBackToHome }: DetailsReceiv
                     {/* Back to Home Button */}
                     <Button
                         onClick={onBackToHome}
-                        className="p-[16px] text-[14px] text-white bg-[#105AE2] font-sora font-medium w-full h-[48px] rounded-[8px] flex items-center justify-center hover:bg-[#0e4cc7]"
+                        className="p-[16px] text-[14px] text-white bg-[#0464DD] active:bg-[#045BC8] font-sora font-medium w-full h-[48px] rounded-[8px] flex items-center justify-center hover:bg-[#0e4cc7]"
                     >
                         Back to Home
                     </Button>

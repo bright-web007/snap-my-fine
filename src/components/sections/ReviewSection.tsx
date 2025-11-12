@@ -130,7 +130,7 @@ export default function ReviewSection({
           className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
           onClick={onBack}
         >
-          <div className="p-[12px] rounded-full bg-[#E7EFFD]">
+          <div className="p-[12px] rounded-full bg-[#E7EFFD] active:bg-[#D7E9FE]">
             <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
           </div>
           <p className="flex flex-col text-left">
@@ -238,7 +238,7 @@ export default function ReviewSection({
                 className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 transition-colors font-medium ${
                   isConfirming
                     ? "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed"
-                    : "text-white bg-[#0464DD] cursor-pointer hover:bg-[#0E4FC1]"
+                    : "text-white bg-[#0464DD] cursor-pointer hover:bg-[#0E4FC1] active:bg-[#045BC8]"
                 }`}
               >
                 {isConfirming ? "Confirming..." : "Continue to payment"} 

@@ -80,7 +80,7 @@ export default function ImagePreviewSection({
                     className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 font-sora font-medium ${
                         !hasError && (isProcessing || isProcessing === false)
                             ? 'cursor-not-allowed bg-[#CDE3FE] text-[#FFFFFF]' 
-                            : 'cursor-pointer text-white bg-[#0464DD] hover:bg-[#0E4FC1]'
+                            : 'cursor-pointer text-white bg-[#0464DD] hover:bg-[#0E4FC1] active:bg-[#045BC8]'
                     }`}
                 >
                     <Camera className={`w-[24px] h-[24px] ${!hasError && (isProcessing || isProcessing === false) ? 'text-gray-300' : 'text-white'}`} />
@@ -91,7 +91,7 @@ export default function ImagePreviewSection({
                     className={`p-[16px] text-[14px] border-1 w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 font-sora font-medium ${
                         !hasError && (isProcessing || isProcessing === false)
                             ? 'cursor-not-allowed bg-gray-100 text-gray-400 border-gray-300' 
-                            : 'cursor-pointer text-[#323333] border-[#7B8084] hover:bg-gray-50'
+                            : 'cursor-pointer text-[#323333] border-[#7B8084] hover:bg-gray-50 active:bg-[#F2F2F2] '
                     }`}
                     onClick={onUploadFromGallery}
                 >

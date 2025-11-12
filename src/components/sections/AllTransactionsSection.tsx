@@ -19,7 +19,7 @@ export default function AllTransactionsSection({
                     className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
                     onClick={onBack}
                 >
-                    <div className="p-[12px] rounded-full bg-[#E7EFFD]">
+                    <div className="p-[12px] rounded-full bg-[#E7EFFD] active:bg-[#D7E9FE]">
                         <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
                     </div>
                     <p className="flex flex-col text-left">
@@ -71,7 +71,7 @@ export default function AllTransactionsSection({
                                     </div>
                                     <div className="flex gap-[8px] w-full">
                                         <Button
-                                            className="bg-[#0464DD] rounded-[12px] text-[#FFFFFF] h-[48px] text-[14px] py-[12px] flex-1 min-w-0 flex items-center justify-center gap-2 font-sora font-medium"
+                                            className="bg-[#0464DD] active:bg-[#045BC8] rounded-[12px] text-[#FFFFFF] h-[48px] text-[14px] py-[12px] flex-1 min-w-0 flex items-center justify-center gap-2 font-sora font-medium"
                                         >
                                             <Send className="w-[16px] h-[16px] mr-1 font-sora" />
                                             Resend

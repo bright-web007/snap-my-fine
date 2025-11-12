@@ -58,7 +58,7 @@ export default function SavedFinesSection({
           className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
           onClick={onBack}
         >
-          <div className="p-[12px] rounded-full bg-[#E7EFFD]">
+          <div className="p-[12px] rounded-full bg-[#E7EFFD] active:bg-[#D7E9FE]">
             <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
           </div>
           <p className="flex flex-col text-left">

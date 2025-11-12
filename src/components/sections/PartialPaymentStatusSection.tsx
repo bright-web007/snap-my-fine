@@ -34,7 +34,7 @@ export default function PartialPaymentStatusSection({
                     className="flex items-center gap-[20px] text-gray-700 hover:text-black font-sora font-medium"
                     onClick={onBack}
                 >
-                    <div className="p-[12px] rounded-full bg-[#E7EFFD]">
+                    <div className="p-[12px] rounded-full bg-[#E7EFFD] active:bg-[#D7E9FE]">
                         <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
                     </div>
                     <p className="flex flex-col text-left w-[248px]">
@@ -105,7 +105,7 @@ export default function PartialPaymentStatusSection({
             <div className="flex flex-col gap-[8px] w-full font-medium font-sora">
                 {/* Pay Now button - shows remaining balance amount */}
                 <Button
-                    className="p-[12px] text-[14px] text-[white] bg-[#105AE2] w-full h-[48px]"
+                    className="p-[12px] text-[14px] text-[white] bg-[#105AE2] active:bg-[#045BC8] w-full h-[48px]"
                     onClick={onPayNow}
                 >
                     Pay Now - £{remainingBalance.toFixed(2)}

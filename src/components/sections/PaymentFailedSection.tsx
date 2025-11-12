@@ -54,7 +54,7 @@ export default function PaymentFailedSection({
                         <div className="flex flex-col  gap-[16px] w-full font-medium font-sora">
                             <Button
                                 onClick={onTryAgain}
-                                className="text-[14px] w-full h-[48px] text-[#FFFFFF] bg-[#105AE2] hover:bg-[#0e4cc7] cursor-pointer"
+                                className="text-[14px] w-full h-[48px] text-[#FFFFFF] bg-[#105AE2] active:bg-[#045BC8] hover:bg-[#0e4cc7] cursor-pointer"
                             >
                                 <p>Try Again</p>
                             </Button>

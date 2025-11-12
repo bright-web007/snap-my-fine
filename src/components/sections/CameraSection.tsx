@@ -28,7 +28,7 @@ export default function CameraSection({
                     className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
                     onClick={onBack}
                 >
-                    <div className="p-[12px] rounded-full bg-[#E7EFFD]">
+                    <div className="p-[12px] rounded-full bg-[#E7EFFD] active:bg-[#D7E9FE]">
                         <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
                     </div>
                     <p className="flex flex-col text-left">
@@ -63,7 +63,7 @@ export default function CameraSection({
                 {/* Capture Ticket button - Visible when video is NOT showing */}
                 <Button
                     onClick={onStartCamera}
-                    className={`cursor-pointer p-[16px] text-[14px] font-sora font-medium text-white bg-[#0464DD] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? 'hidden' : ''}`}
+                    className={`cursor-pointer p-[16px] text-[14px] font-sora font-medium text-white bg-[#0464DD] active:bg-[#045BC8] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? 'hidden' : ''}`}
                 >
                     <Camera className="w-[24px] h-[24px] text-white" />
                     Capture Ticket
@@ -72,14 +72,14 @@ export default function CameraSection({
                 {/* Take Snapshot button - Visible when video IS showing */}
                 <Button
                     onClick={onTakeSnapshot}
-                    className={`cursor-pointer p-[16px] text-[14px] text-white font-sora font-medium bg-[#0464DD] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? '' : 'hidden'}`}
+                    className={`cursor-pointer p-[16px] text-[14px] text-white font-sora font-medium bg-[#0464DD] active:bg-[#045BC8] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 ${isVideoVisible ? '' : 'hidden'}`}
                 >
                     <Camera className="w-[24px] h-[24px] text-white" />
                     Take Snapshot
                 </Button>
 
                 <Button
-                    className="cursor-pointer p-[16px] text-[14px] text-[#323333] font-sora font-medium border-1 border-[#7B8084] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
+                    className="cursor-pointer p-[16px] text-[14px] text-[#323333] font-sora font-medium border-1 border-[#7B8084] active:bg-[#F2F2F2] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
                     onClick={onUploadFromGallery}
                 >
                     <Upload className="w-[24px] h-[24px] text-[#323333]" />

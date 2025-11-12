@@ -70,7 +70,7 @@ export default function PaymentStatusSection({
     return (
         <div className="w-full min-h-screen flex flex-col">
             {/* Header with arrow and title - positioned at top left */}
-            <div className="w-full p-[15px]">
+            {/* <div className="w-full p-[15px]">
                 <button
                     className="flex items-center gap-[16px] text-gray-700 hover:text-black font-sora font-medium"
                     onClick={onBack}
@@ -82,7 +82,7 @@ export default function PaymentStatusSection({
                         <span className="text-[#19191A] text-[20px] leading-[28px] font-sora font-semibold">Payment Status</span>
                     </p>
                 </button>
-            </div>
+            </div> */}
 
             {/* Centered content */}
             <div className="flex-1 flex flex-col items-center justify-center px-4">
@@ -129,7 +129,7 @@ export default function PaymentStatusSection({
                                 onClick={handleSendReceipt}
                                 className={`text-[14px] w-full h-[48px] transition-colors ${
                                     isValidEmail(formData.email) && !loading && !emailSent
-                                        ? 'text-[#FFFFFF] bg-[#0464DD] hover:bg-[#0e4cc1] cursor-pointer'
+                                        ? 'text-[#FFFFFF] bg-[#0464DD] hover:bg-[#0e4cc1] cursor-pointer active:bg-[#045BC8] '
                                         : 'text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed'
                                     }`}
                             >

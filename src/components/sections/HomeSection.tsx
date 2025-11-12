@@ -74,14 +74,14 @@ export default function HomeSection({
                     <div className="w-full max-w-md flex flex-col items-center gap-6">
                         <div className="flex flex-col gap-[8px] w-full font-medium font-sora">
                             <Button
-                                className="cursor-pointer p-[16px] text-[14px] text-white bg-[#0464DD] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 font-medium font-sora"
+                                className="cursor-pointer p-[16px] text-[14px] text-white bg-[#0464DD] active:bg-[#045BC8] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 font-medium font-sora"
                                 onClick={onScanTicket}
                             >
                                 <Camera className="w-[24px] h-[24px] text-white" />
                                 Scan Ticket
                             </Button>
                             <Button
-                                className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 font-medium font-sora"
+                                className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] active:bg-[#F2F2F2] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 font-medium font-sora"
                                 onClick={onUploadFromGallery}
                             >
                                 <Upload className="w-[24px] h-[24px] text-[#323333]" />

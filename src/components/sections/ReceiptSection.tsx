@@ -42,7 +42,7 @@ export default function ReceiptSection({
                     <div className="flex flex-col p-[24px] gap-[16px] w-full font-medium font-sora">
                         <Button
                             onClick={onOpenGmail}
-                            className="p-[12px] text-[14px] text-[#FFFFFF] bg-[#0464DD] w-full h-[48px] rounded-[8px] hover:bg-[#0e4cc7] transition-colors font-medium"
+                            className="p-[12px] text-[14px] text-[#FFFFFF] bg-[#0464DD] active:bg-[#045BC8]  w-full h-[48px] rounded-[8px] hover:bg-[#0e4cc7] transition-colors font-medium"
                         >
                             Open Gmail app
                         </Button>

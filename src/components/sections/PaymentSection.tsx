@@ -32,7 +32,7 @@ export default function PaymentSection({
                     className="flex items-center gap-[20px] text-gray-700 hover:text-black font-sora font-medium"
                     onClick={onBack}
                 >
-                    <div className="p-[12px] rounded-full bg-[#E7EFFD]">
+                    <div className="p-[12px] rounded-full bg-[#E7EFFD] active:bg-[#D7E9FE]">
                         <ArrowLeft className="w-[24px] h-[24px] text-[#105AE2]" />
                     </div>
                     <p className="flex flex-col text-left">
@@ -92,14 +92,14 @@ export default function PaymentSection({
                 {/* Pay Now button - shows dynamic total */}
                 <Button
                     onClick={onPayNow}
-                    className="cursor-pointer p-[16px] text-[14px] text-white bg-[#0464DD] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
+                    className="cursor-pointer p-[16px] text-[14px] text-white bg-[#0464DD] active:bg-[#045BC8] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
                 >
                     Pay Now - £{formData.fineAmount ? (Number(formData.fineAmount) + 3).toFixed(2) : '3.00'}
                 </Button>
                 {!isLoadedFromSavedFine && (
                     <Button
                         onClick={onPayLater}
-                        className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
+                        className="cursor-pointer p-[16px] text-[14px] text-[#323333] border-1 border-[#7B8084] active:bg-[#E6F1FF] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2"
                     >
                         Pay Later
                     </Button>
