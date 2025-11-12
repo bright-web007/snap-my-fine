@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-  const payload = await request.json();
-  const ticketApiUrl = process.env.NEXT_TICKET_PAYMENT_API_ENDPOINT!;
-  const { pcnNumber, councilName, amount, vehicleNumber } = payload || {};
-  console.log('Forwarding council payment payload:', { pcnNumber, councilName, amount, vehicleNumber });
+    const payload = await request.json();
+    const ticketApiUrl = process.env.NEXT_TICKET_PAYMENT_API_ENDPOINT!;
+    const { pcnNumber, councilName, amount, vehicleNumber } = payload || {};
+    console.log('Forwarding council payment payload:', { pcnNumber, councilName, amount, vehicleNumber });
 
-    const response = await fetch(ticketApiUrl, {
+    const newCouncilName = councilName.toLowerCase().replace(" ", "");
+    const response = await fetch(`${ticketApiUrl}/${newCouncilName}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-  body: JSON.stringify({ pcnNumber, councilName, amount, vehicleNumber }),
+      body: JSON.stringify({ pcnNumber, councilName, amount, vehicleNumber }),
     });
 
     console.log("Response status from ticket payment API:", response.status, response.statusText);
@@ -42,10 +43,10 @@ export async function POST(request: NextRequest) {
     try {
       const responseText = await response.text();
       console.log("Response text length:", responseText.length, "characters");
-      
+
       // Log first 500 characters of response for debugging
       console.log("Response preview:", responseText.substring(0, 500));
-      
+
       result = JSON.parse(responseText);
     } catch (parseError) {
       console.error("JSON parsing error:", parseError);
