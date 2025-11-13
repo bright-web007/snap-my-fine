@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { ArrowLeft } from "lucide-react";
 
 interface FormData {

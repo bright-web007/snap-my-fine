@@ -1,9 +1,9 @@
 "use client";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { ArrowLeft } from "lucide-react";
-import { useMailer } from "@/lib/hooks/use-mailer";
-import { useTicketStore } from "@/lib/stores/ticketStore";
-import { useTicketProcessor } from "@/lib/hooks/use-ticket";
+import { useMailer } from "../../lib/hooks/use-mailer";
+import { useTicketStore } from "../../lib/stores/ticketStore";
+import { useTicketProcessor } from "../../lib/hooks/use-ticket";
 
 interface FormData {
   council: string;

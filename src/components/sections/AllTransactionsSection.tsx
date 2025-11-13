@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { ArrowLeft, Clock, Send } from "lucide-react";
-import { Transaction } from "@/lib/stores/transactionStore";
+import { Transaction } from "../../lib/stores/transactionStore";
 
 interface AllTransactionsSectionProps {
     transactions: Transaction[];

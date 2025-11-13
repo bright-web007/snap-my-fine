@@ -1,8 +1,8 @@
 "use client";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { ArrowLeft, Clock, Trash } from "lucide-react";
-import { useTicketProcessor } from "@/lib/hooks/use-ticket";
-import { useTicketStore } from "@/lib/stores/ticketStore";
+import { useTicketProcessor } from "../../lib/hooks/use-ticket";
+import { useTicketStore } from "../../lib/stores/ticketStore";
 
 interface SavedFine {
   id: string;

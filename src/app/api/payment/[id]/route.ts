@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-const gocardless = require('gocardless-nodejs');
-const constants = require('gocardless-nodejs/constants');
+import * as gocardless from 'gocardless-nodejs';
+import * as constants from 'gocardless-nodejs/constants';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;

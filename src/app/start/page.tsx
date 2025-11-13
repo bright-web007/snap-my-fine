@@ -3,8 +3,10 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // Import components
-import HamburgerModal from "@/components/HamburgerModal";
-import { Notification } from "@/components/ui/notification";
+import HamburgerModal from "../../components/HamburgerModal";
+import { Notification } from "../../components/ui/notification";
+import { DeviceRestriction } from "../../components/landing/DeviceRestriction";
+import { useIsMobile } from "../../components/landing/ui/use-mobile";
 
 // Import section components
 import {
@@ -24,24 +26,25 @@ import {
     SavedFinesSection,
     AllTransactionsSection,
     PartialPaymentStatusSection
-} from "@/components/sections";
+} from "../../components/sections";
 
 // Import new sections
-import FineNotReady from "@/components/sections/FineNotReadySection";
-import DetailsReceived from "@/components/sections/DetailsReceivedSection";
+import FineNotReady from "../../components/sections/FineNotReadySection";
+import DetailsReceived from "../../components/sections/DetailsReceivedSection";
 
 // Import types
 // Import types
-import { FormData, ValidationErrors } from "@/types";
+import { FormData, ValidationErrors } from "../../types";
 
 // Import stores and hooks
-import { useTicketStore } from "@/lib/stores/ticketStore";
-import { useTransactionStore } from "@/lib/stores/transactionStore";
-import { useTicketProcessor } from "@/lib/hooks/use-ticket";
-import { usePayment } from "@/lib/hooks/use-payment";
+import { useTicketStore } from "../../lib/stores/ticketStore";
+import { useTransactionStore } from "../../lib/stores/transactionStore";
+import { useTicketProcessor } from "../../lib/hooks/use-ticket";
+import { usePayment } from "../../lib/hooks/use-payment";
 
 export default function Home() {
     const router = useRouter();
+    const isMobile = useIsMobile();
     const { processTicket, callbackPendingTicket } = useTicketProcessor();
     const { makePayment } = usePayment();
     const { addTransaction: addSuccessfulTransaction, getSuccessfulTransactions } = useTransactionStore();
@@ -752,7 +755,8 @@ export default function Home() {
     // };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-2">
+        <DeviceRestriction>
+            <div className="min-h-screen flex flex-col items-center justify-center p-2">
             {/* 1st section */}
             {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && !showPartialPaymentSection && !showFineNotReadySection && !showDetailsReceivedSection && (
                 <div className="relative w-full max-w-md">
@@ -1108,6 +1112,7 @@ export default function Home() {
                     onBackToHome={handleBackToHomeFromDetailsReceived}
                 />
             )}
-        </div>
+            </div>
+        </DeviceRestriction>
     );
 }

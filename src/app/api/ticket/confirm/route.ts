@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       },
       extra: {
         ticketApiUrl: process.env.NEXT_TICKET_CONFIRMATION_API_ENDPOINT,
-        //@ts-ignore
+        //@ts-expect-error
         error: error?.message || error
       }
     });

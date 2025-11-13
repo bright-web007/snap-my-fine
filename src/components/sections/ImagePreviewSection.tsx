@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { Camera, Upload, AlertCircle } from "lucide-react";
 import Image from "next/image";
 

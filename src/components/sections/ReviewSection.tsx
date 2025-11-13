@@ -1,10 +1,10 @@
 "use client";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useTicketStore } from "@/lib/stores/ticketStore";
-import { useTicketProcessor } from "@/lib/hooks/use-ticket";
+import { useTicketStore } from "../../lib/stores/ticketStore";
+import { useTicketProcessor } from "../../lib/hooks/use-ticket";
 import { useEffect, useState } from "react";
-import AmountConfirmation from "@/components/sections/amountConfirmation";
+import AmountConfirmation from "./amountConfirmation";
 
 interface FormData {
   council: string;

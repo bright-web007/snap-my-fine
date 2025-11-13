@@ -1,6 +1,6 @@
 "use client";
 import { CheckCircle, X } from "lucide-react";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 
 interface DetailsReceivedProps {
     onClose: () => void;
