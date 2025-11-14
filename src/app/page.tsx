@@ -376,54 +376,6 @@ export default function LandingPage() {
                             </h1>
                         </div>
 
-                        {/* <div className="space-y-4 md:space-y-6">
-                            <p
-                                className="text-white/90 max-w-md"
-                                style={{
-                                    fontFamily: "Inter",
-                                    fontWeight: 400,
-                                    fontSize: "16px",
-                                    lineHeight: "22.5px",
-                                    letterSpacing: "0%",
-                                    verticalAlign: "middle",
-                                }}
-                            >
-                                Pay your parking fines in{" "}
-                                <span style={{ fontWeight: 600 }}>
-                                    60 seconds
-                                </span>
-                                . Just take a photo, and SnapMyFine automates
-                                the rest.
-                            </p>
-
-                            <form
-                                onSubmit={handleSubmit}
-                                className="flex flex-col md:flex-row gap-3 md:gap-4 max-w-xl"
-                            >
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Enter your email"
-                                    className="w-full md:flex-1 px-5 py-3.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 transition-all"
-                                    required
-                                />
-                                <button
-                                    type="submit"
-                                    className={`w-full md:w-auto px-8 py-3.5 transition-colors rounded-lg whitespace-nowrap text-center ${email
-                                        ? "bg-white text-[#2563EB] hover:bg-white/90"
-                                        : "bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/10"
-                                        }`}
-                                >
-                                    Join the waitlist
-                                </button>
-                            </form>
-
-                            <p className="text-white/60 text-xs md:text-sm leading-relaxed">
-                                By signing up, you agree to receive updates
-                                about SnapMyFine. Unsubscribe anytime.
-                            </p>
-                        </div> */}
                         <div className="space-y-4 md:space-y-6">
                             <p
                                 className="text-white/90 max-w-md"
@@ -543,7 +495,7 @@ export default function LandingPage() {
                     {/* Right Content - Phone Mockup */}
                     <div className={styles.phoneSection}>
                         {/* Large transparent circle background */}
-                        <div className={styles.circleBackground}></div>
+                        {/* <div className={styles.circleBackground}></div> */}
 
                         {/* Phone Mockup Image */}
                         <div className={styles.phoneContainer}>
