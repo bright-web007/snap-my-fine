@@ -1,6 +1,6 @@
 "use client";
 import { ArrowLeft, Bell, Hourglass } from "lucide-react";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { useState } from "react";
 
 interface FineNotReadyProps {

@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { CheckCircle, Mail } from "lucide-react";
-import { useMailer } from "@/lib/hooks/use-mailer";
+import { useMailer } from "../../lib/hooks/use-mailer";
 import { useState } from "react";
 
 interface FormData {

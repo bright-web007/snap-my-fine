@@ -2,12 +2,12 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import * as Sentry from "@sentry/nextjs";
-import PaymentStatusSection from "@/components/sections/PaymentStatusSection";
+import PaymentStatusSection from "../../../components/sections/PaymentStatusSection";
 // import ReceiptSection from "@/components/sections/ReceiptSection";
-import { useTicketStore } from "@/lib/stores/ticketStore";
-import { useTransactionStore } from "@/lib/stores/transactionStore";
-import { useTicketProcessor } from "@/lib/hooks/use-ticket";
-import PaymentReceivedSection from "@/components/sections/PaymentReceivedSection";
+import { useTicketStore } from "../../../lib/stores/ticketStore";
+import { useTransactionStore } from "../../../lib/stores/transactionStore";
+import { useTicketProcessor } from "../../../lib/hooks/use-ticket";
+import PaymentReceivedSection from "../../../components/sections/PaymentReceivedSection";
 
 interface FormData {
     council: string;

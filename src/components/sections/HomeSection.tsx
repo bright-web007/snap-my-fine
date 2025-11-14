@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { Camera, Upload, Menu } from "lucide-react";
 import Image from "next/image";
 import logo from "@/assets/images/logo.svg";

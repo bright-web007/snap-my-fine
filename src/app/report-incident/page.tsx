@@ -1,11 +1,11 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { Loader } from '@/components/ui/loader';
-import { Button } from '@/component/ui/button';
+import { Loader } from '../../components/ui/loader';
+import { Button } from '../../component/ui/button';
 
-const ReportIssuePage = () => {
+const ReportIssueContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -261,6 +261,14 @@ const ReportIssuePage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const ReportIssuePage = () => {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><Loader /></div>}>
+      <ReportIssueContent />
+    </Suspense>
   );
 };
 

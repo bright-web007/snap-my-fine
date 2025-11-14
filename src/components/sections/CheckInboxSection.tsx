@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { Mail, X } from "lucide-react";
 
 interface FormData {

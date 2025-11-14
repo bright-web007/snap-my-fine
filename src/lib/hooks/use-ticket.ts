@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import * as Sentry from "@sentry/nextjs";
-import { N8nResponseSchema, N8nResponse, TicketResponse } from "@/lib/schema";
-import { useTicketStore } from "@/lib/stores/ticketStore";
+import { N8nResponseSchema, N8nResponse, TicketResponse } from "../schema";
+import { useTicketStore } from "../stores/ticketStore";
 
 interface UseTicketProcessorReturn {
   fetchTickets: (email: string) => Promise<TicketResponse[]>;

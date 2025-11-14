@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import svgPaths from "../lib/landing/svg-im39sd3dvf";
+import { useForms } from "@/lib/hooks/use-forms";
 const heroPhoneMockup = "/landing/hero/right-image.png";
 const patternImage = "/landing/hero/bg-grid-image.png";
 
@@ -26,6 +27,7 @@ const photoCamera = "/landing/whyus/icons/photo_camera.svg";
 const receipts = "/landing/whyus/icons/receipts.svg";
 
 const faqIllustration = "/landing/faq/illustration.png";
+const testimonialQuote = "/landing/testimonial/quotes-icon.svg";
 
 const logoWhite = "/landing/logo/logoWhite.svg";
 const logoColored = "/landing/logo/logoColored.svg";
@@ -34,13 +36,32 @@ import styles from "../components/landing/PhoneMockup.module.css";
 import { VerticalProgress } from "../components/landing/VerticalProgress";
 import { TestimonialColumn } from "../components/landing/TestimonialColumn";
 import { FAQAccordion } from "../components/landing/FAQAccordion";
+import { ClientOnly } from "../components/ui/ClientOnly";
 
 export default function LandingPage() {
     const [email, setEmail] = useState("");
+    const [ctaEmail, setCtaEmail] = useState("");
     const [activeStep, setActiveStep] = useState(1);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [formState, setFormState] = useState<'idle' | 'error' | 'success'>('idle');
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [ctaFormState, setCtaFormState] = useState<'idle' | 'error' | 'success'>('idle');
+
+    // Use forms hook for both hero and CTA forms
+    const heroForm = useForms({
+        onSuccess: () => {
+            setFormState('success');
+            setEmail('');
+        },
+        onError: () => setFormState('error')
+    });
+
+    const ctaForm = useForms({
+        onSuccess: () => {
+            setCtaFormState('success');
+            setCtaEmail('');
+        },
+        onError: () => setCtaFormState('error')
+    });
 
     const validateEmail = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,17 +76,13 @@ export default function LandingPage() {
             return;
         }
 
-        setIsSubmitting(true);
-
-        // Simulate API call - replace with actual API endpoint
         try {
-            // await submitToWaitlist(email);
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated delay
-            setFormState('success');
-        } catch {
-            setFormState('error');
-        } finally {
-            setIsSubmitting(false);
+            await heroForm.submitWaitlist({ 
+                email, 
+                source: 'hero' 
+            });
+        } catch (error) {
+            console.error('Hero form submission failed:', error);
         }
     };
 
@@ -74,6 +91,32 @@ export default function LandingPage() {
         // Reset error state when user starts typing
         if (formState === 'error') {
             setFormState('idle');
+        }
+    };
+
+    const handleCtaSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!validateEmail(ctaEmail)) {
+            setCtaFormState('error');
+            return;
+        }
+
+        try {
+            await ctaForm.submitWaitlist({ 
+                email: ctaEmail, 
+                source: 'cta' 
+            });
+        } catch (error) {
+            console.error('CTA form submission failed:', error);
+        }
+    };
+
+    const handleCtaEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCtaEmail(e.target.value);
+        // Reset error state when user starts typing
+        if (ctaFormState === 'error') {
+            setCtaFormState('idle');
         }
     };
 
@@ -87,20 +130,6 @@ export default function LandingPage() {
                     backgroundRepeat: "repeat",
                 }}
             />
-
-            {/* Background blur circles - COMMENTED OUT to remove shadow under footer */}
-            {/* <div className="absolute top-[-300px] left-[-300px] w-[1295px] h-[1295px] pointer-events-none z-0">
-        <div className="absolute top-[354px] left-[354px] w-[587px] h-[587px] rounded-full bg-[#3182E9] blur-[177px] opacity-80" />
-      </div>
-      <div className="absolute top-[-300px] right-[-300px] w-[1295px] h-[1295px] pointer-events-none z-0">
-        <div className="absolute top-[354px] left-[354px] w-[587px] h-[587px] rounded-full bg-[#3182E9] blur-[177px] opacity-80" />
-      </div>
-      <div className="absolute bottom-[-300px] left-[20%] w-[1295px] h-[1295px] pointer-events-none z-0">
-        <div className="absolute top-[354px] left-[354px] w-[587px] h-[587px] rounded-full bg-[#3182E9] blur-[177px] opacity-80" />
-      </div>
-      <div className="absolute bottom-[-300px] right-[10%] w-[1295px] h-[1295px] pointer-events-none z-0">
-        <div className="absolute top-[354px] left-[354px] w-[587px] h-[587px] rounded-full bg-[#3182E9] blur-[177px] opacity-80" />
-      </div> */}
 
             {/* Header */}
             <header className="relative z-20 px-4 md:px-8 py-6">
@@ -347,54 +376,6 @@ export default function LandingPage() {
                             </h1>
                         </div>
 
-                        {/* <div className="space-y-4 md:space-y-6">
-                            <p
-                                className="text-white/90 max-w-md"
-                                style={{
-                                    fontFamily: "Inter",
-                                    fontWeight: 400,
-                                    fontSize: "16px",
-                                    lineHeight: "22.5px",
-                                    letterSpacing: "0%",
-                                    verticalAlign: "middle",
-                                }}
-                            >
-                                Pay your parking fines in{" "}
-                                <span style={{ fontWeight: 600 }}>
-                                    60 seconds
-                                </span>
-                                . Just take a photo, and SnapMyFine automates
-                                the rest.
-                            </p>
-
-                            <form
-                                onSubmit={handleSubmit}
-                                className="flex flex-col md:flex-row gap-3 md:gap-4 max-w-xl"
-                            >
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Enter your email"
-                                    className="w-full md:flex-1 px-5 py-3.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 transition-all"
-                                    required
-                                />
-                                <button
-                                    type="submit"
-                                    className={`w-full md:w-auto px-8 py-3.5 transition-colors rounded-lg whitespace-nowrap text-center ${email
-                                        ? "bg-white text-[#2563EB] hover:bg-white/90"
-                                        : "bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/10"
-                                        }`}
-                                >
-                                    Join the waitlist
-                                </button>
-                            </form>
-
-                            <p className="text-white/60 text-xs md:text-sm leading-relaxed">
-                                By signing up, you agree to receive updates
-                                about SnapMyFine. Unsubscribe anytime.
-                            </p>
-                        </div> */}
                         <div className="space-y-4 md:space-y-6">
                             <p
                                 className="text-white/90 max-w-md"
@@ -416,24 +397,25 @@ export default function LandingPage() {
                             </p>
 
                             {/* Email Form */}
-                            <form
-                                onSubmit={handleSubmit}
-                                className="flex flex-col space-y-3 max-w-xl"
-                            >
-                                <div className="flex flex-col md:flex-row gap-3 md:gap-4">
-                                    <div className="relative flex-1">
-                                        <input
-                                            type="email"
-                                            value={email}
-                                            onChange={handleEmailChange}
-                                            placeholder="Enter your email"
-                                            className={`w-full px-5 py-3.5 rounded-lg backdrop-blur-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all ${formState === 'success'
-                                                    ? 'bg-white/10 border border-white/30 pr-12'
-                                                    : 'bg-white/10 border border-white/30'
-                                                }`}
-                                            required
-                                            disabled={isSubmitting || formState === 'success'}
-                                        />
+                            <ClientOnly>
+                                <form
+                                    onSubmit={handleSubmit}
+                                    className="flex flex-col space-y-3 max-w-xl"
+                                >
+                                    <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+                                        <div className="relative flex-1">
+                                            <input
+                                                type="email"
+                                                value={email}
+                                                onChange={handleEmailChange}
+                                                placeholder="Enter your email"
+                                                className={`w-full px-5 py-3.5 rounded-lg backdrop-blur-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all ${formState === 'success'
+                                                        ? 'bg-white/10 border border-white/30 pr-12'
+                                                        : 'bg-white/10 border border-white/30'
+                                                    }`}
+                                                required
+                                                disabled={heroForm.isSubmitting || formState === 'success'}
+                                            />
                                         {/* Success checkmark icon */}
                                         {formState === 'success' && (
                                             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -458,13 +440,13 @@ export default function LandingPage() {
                                     </div>
                                     <button
                                         type="submit"
-                                        disabled={isSubmitting || formState === 'success'}
                                         className={`w-full md:w-auto px-8 py-3.5 transition-colors rounded-lg whitespace-nowrap text-center ${email && formState !== 'success'
                                                 ? "bg-white text-[#2563EB] hover:bg-white/90"
                                                 : "bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/10"
-                                            } ${(isSubmitting || formState === 'success') ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            } ${(heroForm.isSubmitting || formState === 'success') ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        disabled={heroForm.isSubmitting || formState === 'success'}
                                     >
-                                        {isSubmitting ? 'Joining...' : 'Join the waitlist'}
+                                        {heroForm.isSubmitting ? 'Joining...' : 'Join the waitlist'}
                                     </button>
                                 </div>
 
@@ -499,20 +481,21 @@ export default function LandingPage() {
                                 )}
                             </form>
 
-                            {/* Agreement Text */}
-                            <p className="text-white/60 text-xs md:text-sm leading-relaxed">
-                                {formState === 'success'
-                                    ? 'By joining the waitlist, you agree to receive updates about SnapMyFine.'
-                                    : 'By signing up, you agree to receive updates about SnapMyFine. Unsubscribe anytime.'
-                                }
-                            </p>
+                                {/* Agreement Text */}
+                                <p className="text-white/60 text-xs md:text-sm leading-relaxed">
+                                    {formState === 'success'
+                                        ? 'By joining the waitlist, you agree to receive updates about SnapMyFine.'
+                                        : 'By signing up, you agree to receive updates about SnapMyFine. Unsubscribe anytime.'
+                                    }
+                                </p>
+                            </ClientOnly>
                         </div>
                     </div>
 
                     {/* Right Content - Phone Mockup */}
                     <div className={styles.phoneSection}>
                         {/* Large transparent circle background */}
-                        <div className={styles.circleBackground}></div>
+                        {/* <div className={styles.circleBackground}></div> */}
 
                         {/* Phone Mockup Image */}
                         <div className={styles.phoneContainer}>
@@ -522,6 +505,7 @@ export default function LandingPage() {
                                 height={602}
                                 alt="SnapMyFine app mockup"
                                 className={styles.heroPhone}
+                                priority
                             />
                         </div>
                     </div>
@@ -922,9 +906,9 @@ export default function LandingPage() {
                                     <div className="flex items-start gap-4 mb-3">
                                         <div className="w-12 h-12 bg-[#F3F4F6] rounded-xl flex items-center justify-center flex-shrink-0">
                                             {activeStep === 3 ? (
-                                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#a)"><path d="M37.1001 5.58333C36.9436 5.40039 36.7493 5.25352 36.5307 5.15282C36.312 5.05212 36.0741 4.99998 35.8334 5H20.8334C20.5967 5.0003 20.3629 5.05099 20.1474 5.1487C19.9318 5.2464 19.7396 5.38889 19.5834 5.56667C19.4268 5.745 19.3101 5.95472 19.2412 6.18179C19.1722 6.40886 19.1525 6.64804 19.1834 6.88333L20.8501 19.3833C20.8785 19.6022 20.9498 19.8133 21.0598 20.0046C21.1699 20.196 21.3165 20.3637 21.4914 20.4984C21.6663 20.633 21.866 20.7319 22.0791 20.7894C22.2922 20.8469 22.5145 20.8618 22.7334 20.8333C22.9523 20.8049 23.1634 20.7336 23.3547 20.6236C23.546 20.5135 23.7138 20.3669 23.8484 20.192C23.9831 20.0171 24.082 19.8174 24.1394 19.6043C24.1969 19.3912 24.2118 19.1689 24.1834 18.95L22.8334 8.8C22.824 8.74307 22.8281 8.68472 22.8455 8.6297C22.8629 8.57467 22.893 8.52453 22.9334 8.48333C22.9684 8.44086 23.0114 8.40574 23.06 8.37999C23.1087 8.35425 23.1619 8.33839 23.2167 8.33333H33.3334C33.3945 8.32992 33.4555 8.34186 33.5108 8.36806C33.5661 8.39426 33.614 8.43389 33.6501 8.48333C33.6908 8.52777 33.7209 8.58084 33.7382 8.63856C33.7555 8.69628 33.7596 8.75716 33.7501 8.81667L31.9334 19.7667C31.8605 20.2087 31.9661 20.6616 32.2271 21.0257C32.4881 21.3899 32.883 21.6354 33.3251 21.7083C33.5439 21.7444 33.7678 21.7371 33.9838 21.6867C34.1998 21.6363 34.4038 21.5439 34.5841 21.4146C34.9482 21.1536 35.1938 20.7587 35.2667 20.3167L37.5001 6.98333C37.5437 6.73492 37.5303 6.47985 37.461 6.23734C37.3917 5.99484 37.2683 5.77122 37.1001 5.58333Z" fill="#105ae2" /><path d="M31.6667 23.3332H21.6667C21.5891 23.336 21.5125 23.3152 21.4471 23.2735C21.3816 23.2319 21.3303 23.1713 21.3 23.0999L19.7 19.9999C19.6395 19.8738 19.5483 19.765 19.4347 19.6834C19.3211 19.6019 19.1888 19.5502 19.05 19.5332C18.9099 19.5171 18.768 19.5361 18.6371 19.5884C18.5062 19.6408 18.3903 19.7249 18.3 19.8332L15.1667 23.6832C14.9089 23.9564 14.558 24.1229 14.1833 24.1499H12.5167C12.4044 24.1476 12.2929 24.1681 12.1887 24.21C12.0846 24.2519 11.99 24.3144 11.9106 24.3938C11.8312 24.4732 11.7687 24.5678 11.7267 24.6719C11.6848 24.7761 11.6644 24.8876 11.6667 24.9999V34.9999C11.6639 35.1297 11.6929 35.2583 11.7509 35.3744C11.809 35.4906 11.8945 35.5908 12 35.6666C15.8333 38.5499 18.8 39.9999 20.8333 39.9999H30.0833C30.809 40.1227 31.554 39.9582 32.1606 39.5414C32.7672 39.1246 33.1878 38.488 33.3333 37.7666C34.1453 33.8288 34.7021 29.8428 35 25.8332C35 24.5832 33.85 23.3332 31.6667 23.3332ZM8.05 22.4999H2.91667C2.80616 22.4999 2.70018 22.5438 2.62204 22.6219C2.5439 22.7001 2.5 22.8061 2.5 22.9166V37.9166C2.5 38.0271 2.5439 38.133 2.62204 38.2112C2.70018 38.2893 2.80616 38.3332 2.91667 38.3332H8.05C8.18938 38.3496 8.33066 38.3365 8.46463 38.2947C8.5986 38.2528 8.72227 38.1833 8.8276 38.0906C8.93292 37.9978 9.01755 37.8839 9.07596 37.7563C9.13438 37.6287 9.16529 37.4902 9.16667 37.3499V23.4832C9.16529 23.3429 9.13438 23.2044 9.07596 23.0768C9.01755 22.9492 8.93292 22.8353 8.8276 22.7426C8.72227 22.6498 8.5986 22.5803 8.46463 22.5385C8.33066 22.4967 8.18938 22.4835 8.05 22.4999ZM25.8333 14.9999C25.8333 15.6629 26.0967 16.2988 26.5656 16.7677C27.0344 17.2365 27.6703 17.4999 28.3333 17.4999C28.9964 17.4999 29.6323 17.2365 30.1011 16.7677C30.5699 16.2988 30.8333 15.6629 30.8333 14.9999C30.8333 14.3369 30.5699 13.701 30.1011 13.2321C29.6323 12.7633 28.9964 12.4999 28.3333 12.4999C27.6703 12.4999 27.0344 12.7633 26.5656 13.2321C26.0967 13.701 25.8333 14.3369 25.8333 14.9999ZM16.6667 18.3332C16.9099 18.3364 17.1509 18.2862 17.3727 18.1863C17.5944 18.0864 17.7917 17.9392 17.9505 17.7549C18.1093 17.5707 18.2259 17.3539 18.292 17.1198C18.3582 16.8857 18.3723 16.64 18.3333 16.3999L16.2167 3.81656C16.1756 3.70924 16.1756 3.59055 16.2167 3.48323C16.2675 3.41543 16.3378 3.36474 16.4182 3.33794C16.4986 3.31114 16.5853 3.3095 16.6667 3.33323H30C30.442 3.33323 30.866 3.15763 31.1785 2.84507C31.4911 2.53251 31.6667 2.10859 31.6667 1.66656C31.6667 1.22453 31.4911 0.80061 31.1785 0.48805C30.866 0.175489 30.442 -0.00010552 30 -0.00010552H14.1667C13.9234 -0.00324261 13.6825 0.0469008 13.4607 0.146804C13.2389 0.246707 13.0417 0.393948 12.8828 0.57819C12.724 0.762431 12.6074 0.979206 12.5413 1.2133C12.4752 1.44738 12.4611 1.69311 12.5 1.93323L15 16.9332C15.0639 17.3276 15.2673 17.6859 15.5732 17.9429C15.8791 18.1998 16.2672 18.3384 16.6667 18.3332Z" fill="#105ae2" /></g><defs><clipPath id="a"><rect width="40" height="40" fill="#fff" /></clipPath></defs></svg>
+                                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><g clipPath="url(#a)"><path d="M37.1001 5.58333C36.9436 5.40039 36.7493 5.25352 36.5307 5.15282C36.312 5.05212 36.0741 4.99998 35.8334 5H20.8334C20.5967 5.0003 20.3629 5.05099 20.1474 5.1487C19.9318 5.2464 19.7396 5.38889 19.5834 5.56667C19.4268 5.745 19.3101 5.95472 19.2412 6.18179C19.1722 6.40886 19.1525 6.64804 19.1834 6.88333L20.8501 19.3833C20.8785 19.6022 20.9498 19.8133 21.0598 20.0046C21.1699 20.196 21.3165 20.3637 21.4914 20.4984C21.6663 20.633 21.866 20.7319 22.0791 20.7894C22.2922 20.8469 22.5145 20.8618 22.7334 20.8333C22.9523 20.8049 23.1634 20.7336 23.3547 20.6236C23.546 20.5135 23.7138 20.3669 23.8484 20.192C23.9831 20.0171 24.082 19.8174 24.1394 19.6043C24.1969 19.3912 24.2118 19.1689 24.1834 18.95L22.8334 8.8C22.824 8.74307 22.8281 8.68472 22.8455 8.6297C22.8629 8.57467 22.893 8.52453 22.9334 8.48333C22.9684 8.44086 23.0114 8.40574 23.06 8.37999C23.1087 8.35425 23.1619 8.33839 23.2167 8.33333H33.3334C33.3945 8.32992 33.4555 8.34186 33.5108 8.36806C33.5661 8.39426 33.614 8.43389 33.6501 8.48333C33.6908 8.52777 33.7209 8.58084 33.7382 8.63856C33.7555 8.69628 33.7596 8.75716 33.7501 8.81667L31.9334 19.7667C31.8605 20.2087 31.9661 20.6616 32.2271 21.0257C32.4881 21.3899 32.883 21.6354 33.3251 21.7083C33.5439 21.7444 33.7678 21.7371 33.9838 21.6867C34.1998 21.6363 34.4038 21.5439 34.5841 21.4146C34.9482 21.1536 35.1938 20.7587 35.2667 20.3167L37.5001 6.98333C37.5437 6.73492 37.5303 6.47985 37.461 6.23734C37.3917 5.99484 37.2683 5.77122 37.1001 5.58333Z" fill="#105ae2" /><path d="M31.6667 23.3332H21.6667C21.5891 23.336 21.5125 23.3152 21.4471 23.2735C21.3816 23.2319 21.3303 23.1713 21.3 23.0999L19.7 19.9999C19.6395 19.8738 19.5483 19.765 19.4347 19.6834C19.3211 19.6019 19.1888 19.5502 19.05 19.5332C18.9099 19.5171 18.768 19.5361 18.6371 19.5884C18.5062 19.6408 18.3903 19.7249 18.3 19.8332L15.1667 23.6832C14.9089 23.9564 14.558 24.1229 14.1833 24.1499H12.5167C12.4044 24.1476 12.2929 24.1681 12.1887 24.21C12.0846 24.2519 11.99 24.3144 11.9106 24.3938C11.8312 24.4732 11.7687 24.5678 11.7267 24.6719C11.6848 24.7761 11.6644 24.8876 11.6667 24.9999V34.9999C11.6639 35.1297 11.6929 35.2583 11.7509 35.3744C11.809 35.4906 11.8945 35.5908 12 35.6666C15.8333 38.5499 18.8 39.9999 20.8333 39.9999H30.0833C30.809 40.1227 31.554 39.9582 32.1606 39.5414C32.7672 39.1246 33.1878 38.488 33.3333 37.7666C34.1453 33.8288 34.7021 29.8428 35 25.8332C35 24.5832 33.85 23.3332 31.6667 23.3332ZM8.05 22.4999H2.91667C2.80616 22.4999 2.70018 22.5438 2.62204 22.6219C2.5439 22.7001 2.5 22.8061 2.5 22.9166V37.9166C2.5 38.0271 2.5439 38.133 2.62204 38.2112C2.70018 38.2893 2.80616 38.3332 2.91667 38.3332H8.05C8.18938 38.3496 8.33066 38.3365 8.46463 38.2947C8.5986 38.2528 8.72227 38.1833 8.8276 38.0906C8.93292 37.9978 9.01755 37.8839 9.07596 37.7563C9.13438 37.6287 9.16529 37.4902 9.16667 37.3499V23.4832C9.16529 23.3429 9.13438 23.2044 9.07596 23.0768C9.01755 22.9492 8.93292 22.8353 8.8276 22.7426C8.72227 22.6498 8.5986 22.5803 8.46463 22.5385C8.33066 22.4967 8.18938 22.4835 8.05 22.4999ZM25.8333 14.9999C25.8333 15.6629 26.0967 16.2988 26.5656 16.7677C27.0344 17.2365 27.6703 17.4999 28.3333 17.4999C28.9964 17.4999 29.6323 17.2365 30.1011 16.7677C30.5699 16.2988 30.8333 15.6629 30.8333 14.9999C30.8333 14.3369 30.5699 13.701 30.1011 13.2321C29.6323 12.7633 28.9964 12.4999 28.3333 12.4999C27.6703 12.4999 27.0344 12.7633 26.5656 13.2321C26.0967 13.701 25.8333 14.3369 25.8333 14.9999ZM16.6667 18.3332C16.9099 18.3364 17.1509 18.2862 17.3727 18.1863C17.5944 18.0864 17.7917 17.9392 17.9505 17.7549C18.1093 17.5707 18.2259 17.3539 18.292 17.1198C18.3582 16.8857 18.3723 16.64 18.3333 16.3999L16.2167 3.81656C16.1756 3.70924 16.1756 3.59055 16.2167 3.48323C16.2675 3.41543 16.3378 3.36474 16.4182 3.33794C16.4986 3.31114 16.5853 3.3095 16.6667 3.33323H30C30.442 3.33323 30.866 3.15763 31.1785 2.84507C31.4911 2.53251 31.6667 2.10859 31.6667 1.66656C31.6667 1.22453 31.4911 0.80061 31.1785 0.48805C30.866 0.175489 30.442 -0.00010552 30 -0.00010552H14.1667C13.9234 -0.00324261 13.6825 0.0469008 13.4607 0.146804C13.2389 0.246707 13.0417 0.393948 12.8828 0.57819C12.724 0.762431 12.6074 0.979206 12.5413 1.2133C12.4752 1.44738 12.4611 1.69311 12.5 1.93323L15 16.9332C15.0639 17.3276 15.2673 17.6859 15.5732 17.9429C15.8791 18.1998 16.2672 18.3384 16.6667 18.3332Z" fill="#105ae2" /></g><defs><clipPath id="a"><rect width="40" height="40" fill="#fff" /></clipPath></defs></svg>
                                             ) : (
-                                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#a)"><path d="M37.1 5.58333C36.9435 5.40039 36.7493 5.25352 36.5306 5.15282C36.3119 5.05212 36.0741 4.99998 35.8333 5H20.8333C20.5967 5.0003 20.3628 5.05099 20.1473 5.1487C19.9318 5.2464 19.7395 5.38889 19.5833 5.56667C19.4268 5.745 19.3101 5.95472 19.2411 6.18179C19.1721 6.40886 19.1524 6.64804 19.1833 6.88333L20.85 19.3833C20.8784 19.6022 20.9497 19.8133 21.0598 20.0046C21.1698 20.196 21.3165 20.3637 21.4914 20.4984C21.6662 20.633 21.8659 20.7319 22.079 20.7894C22.2921 20.8469 22.5145 20.8618 22.7333 20.8333C22.9522 20.8049 23.1633 20.7336 23.3546 20.6236C23.546 20.5135 23.7137 20.3669 23.8484 20.192C23.983 20.0171 24.0819 19.8174 24.1394 19.6043C24.1968 19.3912 24.2118 19.1689 24.1833 18.95L22.8333 8.8C22.8239 8.74307 22.828 8.68472 22.8454 8.6297C22.8628 8.57467 22.8929 8.52453 22.9333 8.48333C22.9683 8.44086 23.0114 8.40574 23.06 8.37999C23.1086 8.35425 23.1619 8.33839 23.2167 8.33333H33.3333C33.3944 8.32992 33.4554 8.34186 33.5107 8.36806C33.566 8.39426 33.6139 8.43389 33.65 8.48333C33.6907 8.52777 33.7208 8.58084 33.7381 8.63856C33.7555 8.69628 33.7595 8.75716 33.75 8.81667L31.9333 19.7667C31.8604 20.2087 31.966 20.6616 32.227 21.0257C32.488 21.3899 32.883 21.6354 33.325 21.7083C33.5439 21.7444 33.7677 21.7371 33.9837 21.6867C34.1998 21.6363 34.4037 21.5439 34.584 21.4146C34.9482 21.1536 35.1937 20.7587 35.2667 20.3167L37.5 6.98333C37.5436 6.73492 37.5302 6.47985 37.461 6.23734C37.3917 5.99484 37.2682 5.77122 37.1 5.58333Z" fill="#caccce" /><path d="M31.6667 23.3332H21.6667C21.5891 23.336 21.5125 23.3152 21.4471 23.2735C21.3816 23.2319 21.3303 23.1713 21.3 23.0999L19.7 19.9999C19.6395 19.8738 19.5483 19.765 19.4347 19.6834C19.3211 19.6019 19.1888 19.5502 19.05 19.5332C18.9099 19.5171 18.768 19.5361 18.6371 19.5884C18.5062 19.6408 18.3903 19.7249 18.3 19.8332L15.1667 23.6832C14.9089 23.9564 14.558 24.1229 14.1833 24.1499H12.5167C12.4044 24.1476 12.2929 24.1681 12.1887 24.21C12.0846 24.2519 11.99 24.3144 11.9106 24.3938C11.8312 24.4732 11.7687 24.5678 11.7267 24.6719C11.6848 24.7761 11.6644 24.8876 11.6667 24.9999V34.9999C11.6639 35.1297 11.6929 35.2583 11.7509 35.3744C11.809 35.4906 11.8945 35.5908 12 35.6666C15.8333 38.5499 18.8 39.9999 20.8333 39.9999H30.0833C30.809 40.1227 31.554 39.9582 32.1606 39.5414C32.7672 39.1246 33.1878 38.488 33.3333 37.7666C34.1453 33.8288 34.7021 29.8428 35 25.8332C35 24.5832 33.85 23.3332 31.6667 23.3332ZM8.05 22.4999H2.91667C2.80616 22.4999 2.70018 22.5438 2.62204 22.6219C2.5439 22.7001 2.5 22.8061 2.5 22.9166V37.9166C2.5 38.0271 2.5439 38.133 2.62204 38.2112C2.70018 38.2893 2.80616 38.3332 2.91667 38.3332H8.05C8.18938 38.3496 8.33066 38.3365 8.46463 38.2947C8.5986 38.2528 8.72227 38.1833 8.8276 38.0906C8.93292 37.9978 9.01755 37.8839 9.07596 37.7563C9.13438 37.6287 9.16529 37.4902 9.16667 37.3499V23.4832C9.16529 23.3429 9.13438 23.2044 9.07596 23.0768C9.01755 22.9492 8.93292 22.8353 8.8276 22.7426C8.72227 22.6498 8.5986 22.5803 8.46463 22.5385C8.33066 22.4967 8.18938 22.4835 8.05 22.4999ZM25.8333 14.9999C25.8333 15.6629 26.0967 16.2988 26.5656 16.7677C27.0344 17.2365 27.6703 17.4999 28.3333 17.4999C28.9964 17.4999 29.6323 17.2365 30.1011 16.7677C30.5699 16.2988 30.8333 15.6629 30.8333 14.9999C30.8333 14.3369 30.5699 13.701 30.1011 13.2321C29.6323 12.7633 28.9964 12.4999 28.3333 12.4999C27.6703 12.4999 27.0344 12.7633 26.5656 13.2321C26.0967 13.701 25.8333 14.3369 25.8333 14.9999ZM16.6667 18.3332C16.9099 18.3364 17.1509 18.2862 17.3727 18.1863C17.5944 18.0864 17.7917 17.9392 17.9505 17.7549C18.1093 17.5707 18.2259 17.3539 18.292 17.1198C18.3582 16.8857 18.3723 16.64 18.3333 16.3999L16.2167 3.81656C16.1756 3.70924 16.1756 3.59055 16.2167 3.48323C16.2675 3.41543 16.3378 3.36474 16.4182 3.33794C16.4986 3.31114 16.5853 3.3095 16.6667 3.33323H30C30.442 3.33323 30.866 3.15763 31.1785 2.84507C31.4911 2.53251 31.6667 2.10859 31.6667 1.66656C31.6667 1.22453 31.4911 0.80061 31.1785 0.48805C30.866 0.175489 30.442 -0.00010552 30 -0.00010552H14.1667C13.9234 -0.00324261 13.6825 0.0469008 13.4607 0.146804C13.2389 0.246707 13.0417 0.393948 12.8828 0.57819C12.724 0.762431 12.6074 0.979206 12.5413 1.2133C12.4752 1.44738 12.4611 1.69311 12.5 1.93323L15 16.9332C15.0639 17.3276 15.2673 17.6859 15.5732 17.9429C15.8791 18.1998 16.2672 18.3384 16.6667 18.3332Z" fill="#caccce" /></g><defs><clipPath id="a"><rect width="40" height="40" fill="#fff" /></clipPath></defs></svg>
+                                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><g clipPath="url(#a)"><path d="M37.1 5.58333C36.9435 5.40039 36.7493 5.25352 36.5306 5.15282C36.3119 5.05212 36.0741 4.99998 35.8333 5H20.8333C20.5967 5.0003 20.3628 5.05099 20.1473 5.1487C19.9318 5.2464 19.7395 5.38889 19.5833 5.56667C19.4268 5.745 19.3101 5.95472 19.2411 6.18179C19.1721 6.40886 19.1524 6.64804 19.1833 6.88333L20.85 19.3833C20.8784 19.6022 20.9497 19.8133 21.0598 20.0046C21.1698 20.196 21.3165 20.3637 21.4914 20.4984C21.6662 20.633 21.8659 20.7319 22.079 20.7894C22.2921 20.8469 22.5145 20.8618 22.7333 20.8333C22.9522 20.8049 23.1633 20.7336 23.3546 20.6236C23.546 20.5135 23.7137 20.3669 23.8484 20.192C23.983 20.0171 24.0819 19.8174 24.1394 19.6043C24.1968 19.3912 24.2118 19.1689 24.1833 18.95L22.8333 8.8C22.8239 8.74307 22.828 8.68472 22.8454 8.6297C22.8628 8.57467 22.8929 8.52453 22.9333 8.48333C22.9683 8.44086 23.0114 8.40574 23.06 8.37999C23.1086 8.35425 23.1619 8.33839 23.2167 8.33333H33.3333C33.3944 8.32992 33.4554 8.34186 33.5107 8.36806C33.566 8.39426 33.6139 8.43389 33.65 8.48333C33.6907 8.52777 33.7208 8.58084 33.7381 8.63856C33.7555 8.69628 33.7595 8.75716 33.75 8.81667L31.9333 19.7667C31.8604 20.2087 31.966 20.6616 32.227 21.0257C32.488 21.3899 32.883 21.6354 33.325 21.7083C33.5439 21.7444 33.7677 21.7371 33.9837 21.6867C34.1998 21.6363 34.4037 21.5439 34.584 21.4146C34.9482 21.1536 35.1937 20.7587 35.2667 20.3167L37.5 6.98333C37.5436 6.73492 37.5302 6.47985 37.461 6.23734C37.3917 5.99484 37.2682 5.77122 37.1 5.58333Z" fill="#caccce" /><path d="M31.6667 23.3332H21.6667C21.5891 23.336 21.5125 23.3152 21.4471 23.2735C21.3816 23.2319 21.3303 23.1713 21.3 23.0999L19.7 19.9999C19.6395 19.8738 19.5483 19.765 19.4347 19.6834C19.3211 19.6019 19.1888 19.5502 19.05 19.5332C18.9099 19.5171 18.768 19.5361 18.6371 19.5884C18.5062 19.6408 18.3903 19.7249 18.3 19.8332L15.1667 23.6832C14.9089 23.9564 14.558 24.1229 14.1833 24.1499H12.5167C12.4044 24.1476 12.2929 24.1681 12.1887 24.21C12.0846 24.2519 11.99 24.3144 11.9106 24.3938C11.8312 24.4732 11.7687 24.5678 11.7267 24.6719C11.6848 24.7761 11.6644 24.8876 11.6667 24.9999V34.9999C11.6639 35.1297 11.6929 35.2583 11.7509 35.3744C11.809 35.4906 11.8945 35.5908 12 35.6666C15.8333 38.5499 18.8 39.9999 20.8333 39.9999H30.0833C30.809 40.1227 31.554 39.9582 32.1606 39.5414C32.7672 39.1246 33.1878 38.488 33.3333 37.7666C34.1453 33.8288 34.7021 29.8428 35 25.8332C35 24.5832 33.85 23.3332 31.6667 23.3332ZM8.05 22.4999H2.91667C2.80616 22.4999 2.70018 22.5438 2.62204 22.6219C2.5439 22.7001 2.5 22.8061 2.5 22.9166V37.9166C2.5 38.0271 2.5439 38.133 2.62204 38.2112C2.70018 38.2893 2.80616 38.3332 2.91667 38.3332H8.05C8.18938 38.3496 8.33066 38.3365 8.46463 38.2947C8.5986 38.2528 8.72227 38.1833 8.8276 38.0906C8.93292 37.9978 9.01755 37.8839 9.07596 37.7563C9.13438 37.6287 9.16529 37.4902 9.16667 37.3499V23.4832C9.16529 23.3429 9.13438 23.2044 9.07596 23.0768C9.01755 22.9492 8.93292 22.8353 8.8276 22.7426C8.72227 22.6498 8.5986 22.5803 8.46463 22.5385C8.33066 22.4967 8.18938 22.4835 8.05 22.4999ZM25.8333 14.9999C25.8333 15.6629 26.0967 16.2988 26.5656 16.7677C27.0344 17.2365 27.6703 17.4999 28.3333 17.4999C28.9964 17.4999 29.6323 17.2365 30.1011 16.7677C30.5699 16.2988 30.8333 15.6629 30.8333 14.9999C30.8333 14.3369 30.5699 13.701 30.1011 13.2321C29.6323 12.7633 28.9964 12.4999 28.3333 12.4999C27.6703 12.4999 27.0344 12.7633 26.5656 13.2321C26.0967 13.701 25.8333 14.3369 25.8333 14.9999ZM16.6667 18.3332C16.9099 18.3364 17.1509 18.2862 17.3727 18.1863C17.5944 18.0864 17.7917 17.9392 17.9505 17.7549C18.1093 17.5707 18.2259 17.3539 18.292 17.1198C18.3582 16.8857 18.3723 16.64 18.3333 16.3999L16.2167 3.81656C16.1756 3.70924 16.1756 3.59055 16.2167 3.48323C16.2675 3.41543 16.3378 3.36474 16.4182 3.33794C16.4986 3.31114 16.5853 3.3095 16.6667 3.33323H30C30.442 3.33323 30.866 3.15763 31.1785 2.84507C31.4911 2.53251 31.6667 2.10859 31.6667 1.66656C31.6667 1.22453 31.4911 0.80061 31.1785 0.48805C30.866 0.175489 30.442 -0.00010552 30 -0.00010552H14.1667C13.9234 -0.00324261 13.6825 0.0469008 13.4607 0.146804C13.2389 0.246707 13.0417 0.393948 12.8828 0.57819C12.724 0.762431 12.6074 0.979206 12.5413 1.2133C12.4752 1.44738 12.4611 1.69311 12.5 1.93323L15 16.9332C15.0639 17.3276 15.2673 17.6859 15.5732 17.9429C15.8791 18.1998 16.2672 18.3384 16.6667 18.3332Z" fill="#caccce" /></g><defs><clipPath id="a"><rect width="40" height="40" fill="#fff" /></clipPath></defs></svg>
                                             )}
                                         </div>
                                     </div>
@@ -1559,30 +1543,7 @@ export default function LandingPage() {
                         <div className="space-y-6">
                             {/* Testimonial 1 */}
                             <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB]">
-                                <svg
-                                    width="32"
-                                    height="32"
-                                    viewBox="0 0 32 32"
-                                    fill="none"
-                                    className="mb-4"
-                                >
-                                    <path
-                                        d="M10 18C10 16.8954 9.10457 16 8 16C6.89543 16 6 16.8954 6 18V22C6 23.1046 6.89543 24 8 24C9.10457 24 10 23.1046 10 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M10 18C10 14.6863 7.31371 12 4 12V10C8.41828 10 12 13.5817 12 18H10Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 16.8954 25.1046 16 24 16C22.8954 16 22 16.8954 22 18V22C22 23.1046 22.8954 24 24 24C25.1046 24 26 23.1046 26 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 14.6863 23.3137 12 20 12V10C24.4183 10 28 13.5817 28 18H26Z"
-                                        fill="#2563EB"
-                                    />
-                                </svg>
+                                <Image src={testimonialQuote} alt="Quote" width={32} height={32} className="flex-shrink-0 mb-2" />
                                 <p
                                     className="text-[#374151] mb-6"
                                     style={{
@@ -1650,30 +1611,7 @@ export default function LandingPage() {
 
                             {/* Testimonial 4 */}
                             <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB]">
-                                <svg
-                                    width="32"
-                                    height="32"
-                                    viewBox="0 0 32 32"
-                                    fill="none"
-                                    className="mb-4"
-                                >
-                                    <path
-                                        d="M10 18C10 16.8954 9.10457 16 8 16C6.89543 16 6 16.8954 6 18V22C6 23.1046 6.89543 24 8 24C9.10457 24 10 23.1046 10 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M10 18C10 14.6863 7.31371 12 4 12V10C8.41828 10 12 13.5817 12 18H10Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 16.8954 25.1046 16 24 16C22.8954 16 22 16.8954 22 18V22C22 23.1046 22.8954 24 24 24C25.1046 24 26 23.1046 26 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 14.6863 23.3137 12 20 12V10C24.4183 10 28 13.5817 28 18H26Z"
-                                        fill="#2563EB"
-                                    />
-                                </svg>
+                                <Image src={testimonialQuote} alt="Quote" width={32} height={32} className="flex-shrink-0 mb-2" />
                                 <p
                                     className="text-[#374151] mb-6"
                                     style={{
@@ -1743,30 +1681,7 @@ export default function LandingPage() {
                         <div className="space-y-6">
                             {/* Testimonial 2 */}
                             <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB]">
-                                <svg
-                                    width="32"
-                                    height="32"
-                                    viewBox="0 0 32 32"
-                                    fill="none"
-                                    className="mb-4"
-                                >
-                                    <path
-                                        d="M10 18C10 16.8954 9.10457 16 8 16C6.89543 16 6 16.8954 6 18V22C6 23.1046 6.89543 24 8 24C9.10457 24 10 23.1046 10 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M10 18C10 14.6863 7.31371 12 4 12V10C8.41828 10 12 13.5817 12 18H10Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 16.8954 25.1046 16 24 16C22.8954 16 22 16.8954 22 18V22C22 23.1046 22.8954 24 24 24C25.1046 24 26 23.1046 26 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 14.6863 23.3137 12 20 12V10C24.4183 10 28 13.5817 28 18H26Z"
-                                        fill="#2563EB"
-                                    />
-                                </svg>
+                                <Image src={testimonialQuote} alt="Quote" width={32} height={32} className="flex-shrink-0 mb-2" />
                                 <p
                                     className="text-[#374151] mb-6"
                                     style={{
@@ -1834,30 +1749,7 @@ export default function LandingPage() {
 
                             {/* Testimonial 5 */}
                             <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB]">
-                                <svg
-                                    width="32"
-                                    height="32"
-                                    viewBox="0 0 32 32"
-                                    fill="none"
-                                    className="mb-4"
-                                >
-                                    <path
-                                        d="M10 18C10 16.8954 9.10457 16 8 16C6.89543 16 6 16.8954 6 18V22C6 23.1046 6.89543 24 8 24C9.10457 24 10 23.1046 10 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M10 18C10 14.6863 7.31371 12 4 12V10C8.41828 10 12 13.5817 12 18H10Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 16.8954 25.1046 16 24 16C22.8954 16 22 16.8954 22 18V22C22 23.1046 22.8954 24 24 24C25.1046 24 26 23.1046 26 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 14.6863 23.3137 12 20 12V10C24.4183 10 28 13.5817 28 18H26Z"
-                                        fill="#2563EB"
-                                    />
-                                </svg>
+                                <Image src={testimonialQuote} alt="Quote" width={32} height={32} className="flex-shrink-0 mb-2" />
                                 <p
                                     className="text-[#374151] mb-6"
                                     style={{
@@ -1925,30 +1817,7 @@ export default function LandingPage() {
 
                             {/* Testimonial 7 */}
                             <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB]">
-                                <svg
-                                    width="32"
-                                    height="32"
-                                    viewBox="0 0 32 32"
-                                    fill="none"
-                                    className="mb-4"
-                                >
-                                    <path
-                                        d="M10 18C10 16.8954 9.10457 16 8 16C6.89543 16 6 16.8954 6 18V22C6 23.1046 6.89543 24 8 24C9.10457 24 10 23.1046 10 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M10 18C10 14.6863 7.31371 12 4 12V10C8.41828 10 12 13.5817 12 18H10Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 16.8954 25.1046 16 24 16C22.8954 16 22 16.8954 22 18V22C22 23.1046 22.8954 24 24 24C25.1046 24 26 23.1046 26 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 14.6863 23.3137 12 20 12V10C24.4183 10 28 13.5817 28 18H26Z"
-                                        fill="#2563EB"
-                                    />
-                                </svg>
+                                <Image src={testimonialQuote} alt="Quote" width={32} height={32} className="flex-shrink-0 mb-2" />
                                 <p
                                     className="text-[#374151] mb-6"
                                     style={{
@@ -2018,30 +1887,7 @@ export default function LandingPage() {
                         <div className="space-y-6">
                             {/* Testimonial 3 */}
                             <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB]">
-                                <svg
-                                    width="32"
-                                    height="32"
-                                    viewBox="0 0 32 32"
-                                    fill="none"
-                                    className="mb-4"
-                                >
-                                    <path
-                                        d="M10 18C10 16.8954 9.10457 16 8 16C6.89543 16 6 16.8954 6 18V22C6 23.1046 6.89543 24 8 24C9.10457 24 10 23.1046 10 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M10 18C10 14.6863 7.31371 12 4 12V10C8.41828 10 12 13.5817 12 18H10Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 16.8954 25.1046 16 24 16C22.8954 16 22 16.8954 22 18V22C22 23.1046 22.8954 24 24 24C25.1046 24 26 23.1046 26 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 14.6863 23.3137 12 20 12V10C24.4183 10 28 13.5817 28 18H26Z"
-                                        fill="#2563EB"
-                                    />
-                                </svg>
+                                <Image src={testimonialQuote} alt="Quote" width={32} height={32} className="flex-shrink-0 mb-2" />
                                 <p
                                     className="text-[#374151] mb-6"
                                     style={{
@@ -2108,30 +1954,7 @@ export default function LandingPage() {
 
                             {/* Testimonial 6 */}
                             <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB]">
-                                <svg
-                                    width="32"
-                                    height="32"
-                                    viewBox="0 0 32 32"
-                                    fill="none"
-                                    className="mb-4"
-                                >
-                                    <path
-                                        d="M10 18C10 16.8954 9.10457 16 8 16C6.89543 16 6 16.8954 6 18V22C6 23.1046 6.89543 24 8 24C9.10457 24 10 23.1046 10 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M10 18C10 14.6863 7.31371 12 4 12V10C8.41828 10 12 13.5817 12 18H10Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 16.8954 25.1046 16 24 16C22.8954 16 22 16.8954 22 18V22C22 23.1046 22.8954 24 24 24C25.1046 24 26 23.1046 26 22V18Z"
-                                        fill="#2563EB"
-                                    />
-                                    <path
-                                        d="M26 18C26 14.6863 23.3137 12 20 12V10C24.4183 10 28 13.5817 28 18H26Z"
-                                        fill="#2563EB"
-                                    />
-                                </svg>
+                                <Image src={testimonialQuote} alt="Quote" width={32} height={32} className="flex-shrink-0 mb-2" />
                                 <p
                                     className="text-[#374151] mb-6"
                                     style={{
@@ -2346,14 +2169,6 @@ export default function LandingPage() {
                             }}
                         />
 
-                        {/* Background blur effects - COMMENTED OUT to remove shadow under footer */}
-                        {/* <div className="absolute top-0 left-0 w-[400px] h-[400px] pointer-events-none z-0">
-              <div className="absolute top-[50px] left-[50px] w-[300px] h-[300px] rounded-full bg-[#3182E9] blur-[100px] opacity-60" />
-            </div>
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] pointer-events-none z-0">
-              <div className="absolute top-[50px] right-[50px] w-[300px] h-[300px] rounded-full bg-[#3182E9] blur-[100px] opacity-60" />
-            </div> */}
-
                         {/* Content */}
                         <div className="relative z-10 px-6 md:px-12 lg:px-16 py-16 md:py-24 lg:py-28">
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -2361,22 +2176,6 @@ export default function LandingPage() {
                                 <div className="space-y-6">
                                     {/* Badge */}
                                     <div className="inline-flex items-center gap-2 px-3 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
-                                        {/* <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                    >
-                      <circle
-                        cx="10"
-                        cy="10"
-                        r="8"
-                        stroke="white"
-                        strokeWidth="1.5"
-                        strokeDasharray="2 2"
-                      />
-                      <circle cx="10" cy="10" r="3" fill="white" />
-                    </svg> */}
                                         <Image src={logoWhite} alt="Logo" width={16} height={16} className="flex-shrink-0" />
                                         <span
                                             className="text-white"
@@ -2425,51 +2224,115 @@ export default function LandingPage() {
                                     </p>
 
                                     {/* Email Form */}
-                                    <form onSubmit={handleSubmit} className="space-y-5">
-                                        <div className="flex flex-col sm:flex-row gap-3">
-                                            <input
-                                                type="email"
-                                                placeholder="Enter your email"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                className="flex-1 px-4 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/40 transition-all"
-                                                style={{
-                                                    fontFamily: "Sora",
-                                                    fontWeight: 400,
-                                                    fontSize: "16px",
-                                                }}
-                                                required
-                                            />
+                                    <ClientOnly>
+                                        <form onSubmit={handleCtaSubmit} className="space-y-5">
+                                            <div className="flex flex-col sm:flex-row gap-3">
+                                                <div className="relative flex-1">
+                                                    <input
+                                                        type="email"
+                                                        value={ctaEmail}
+                                                        onChange={handleCtaEmailChange}
+                                                        placeholder="Enter your email"
+                                                        className={`w-full px-4 py-3.5 backdrop-blur-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/40 transition-all ${
+                                                            ctaFormState === 'success'
+                                                                ? 'bg-white/10 border border-white/20 pr-12'
+                                                                : 'bg-white/10 border border-white/20'
+                                                        } rounded-lg`}
+                                                        style={{
+                                                            fontFamily: "Sora",
+                                                            fontWeight: 400,
+                                                            fontSize: "16px",
+                                                        }}
+                                                        required
+                                                        disabled={ctaForm.isSubmitting || ctaFormState === 'success'}
+                                                    />
+                                                {/* Success checkmark icon */}
+                                                {ctaFormState === 'success' && (
+                                                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                                        <svg
+                                                            width="24"
+                                                            height="24"
+                                                            viewBox="0 0 24 24"
+                                                            fill="none"
+                                                            className="text-green-400"
+                                                        >
+                                                            <circle cx="12" cy="12" r="11" fill="currentColor" />
+                                                            <path
+                                                                d="M7 12L10 15L17 8"
+                                                                stroke="white"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                )}
+                                            </div>
                                             <button
                                                 type="submit"
-                                                className={`px-8 py-3.5 transition-colors rounded-lg whitespace-nowrap text-center ${email
-                                                    ? "bg-white text-[#2563EB] hover:bg-white/90"
-                                                    : "bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/10"
-                                                    }`}
+                                                disabled={ctaForm.isSubmitting || ctaFormState === 'success'}
+                                                className={`px-8 py-3.5 transition-colors rounded-lg whitespace-nowrap text-center ${
+                                                    ctaEmail && ctaFormState !== 'success'
+                                                        ? "bg-white text-[#2563EB] hover:bg-white/90"
+                                                        : "bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/10"
+                                                } ${(ctaForm.isSubmitting || ctaFormState === 'success') ? 'opacity-50 cursor-not-allowed' : ''}`}
                                                 style={{
                                                     fontFamily: "Sora",
                                                     fontWeight: 600,
                                                     fontSize: "16px",
                                                 }}
                                             >
-                                                Join waitlist
+                                                {ctaForm.isSubmitting ? 'Joining...' : 'Join waitlist'}
                                             </button>
                                         </div>
 
-                                        {/* Disclaimer */}
-                                        <p
-                                            className="text-white/70 text-sm"
-                                            style={{
-                                                fontFamily: "Sora",
-                                                fontWeight: 400,
-                                                fontSize: "13px",
-                                                lineHeight: "150%",
-                                            }}
-                                        >
-                                            By joining the waitlist, you agree to receive updates about
-                                            SnapMyFine.
-                                        </p>
-                                    </form>
+                                        {/* Error Message */}
+                                        {ctaFormState === 'error' && (
+                                            <div className="flex items-center gap-2 text-red-400/90">
+                                                <svg
+                                                    width="20"
+                                                    height="20"
+                                                    viewBox="0 0 20 20"
+                                                    fill="none"
+                                                    className="flex-shrink-0"
+                                                >
+                                                    <circle cx="10" cy="10" r="9" fill="currentColor" />
+                                                    <path
+                                                        d="M10 6V10M10 14H10.01"
+                                                        stroke="white"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                                <span className="text-sm">Invalid email format, try again</span>
+                                            </div>
+                                        )}
+
+                                        {/* Success Message */}
+                                        {ctaFormState === 'success' && (
+                                            <p className="text-white/90 text-sm">
+                                                You've been added to the waitlist, you will receive an email.
+                                            </p>
+                                        )}
+
+                                            {/* Disclaimer */}
+                                            <p
+                                                className="text-white/70 text-sm"
+                                                style={{
+                                                    fontFamily: "Sora",
+                                                    fontWeight: 400,
+                                                    fontSize: "13px",
+                                                    lineHeight: "150%",
+                                                }}
+                                            >
+                                                {ctaFormState === 'success'
+                                                    ? 'By joining the waitlist, you agree to receive updates about SnapMyFine.'
+                                                    : 'By joining the waitlist, you agree to receive updates about SnapMyFine. Unsubscribe anytime.'
+                                                }
+                                            </p>
+                                        </form>
+                                    </ClientOnly>
                                 </div>
                             </div>
                         </div>
@@ -2619,6 +2482,7 @@ export default function LandingPage() {
                                 {[
                                     {
                                         name: "Facebook",
+                                        href: "#",
                                         icon: (
                                             <svg
                                                 width="20"
@@ -2635,6 +2499,7 @@ export default function LandingPage() {
                                     },
                                     {
                                         name: "Instagram",
+                                        href: "https://www.instagram.com/snapmyfine",
                                         icon: (
                                             <svg
                                                 width="20"
@@ -2658,7 +2523,8 @@ export default function LandingPage() {
                                         ),
                                     },
                                     {
-                                        name: "Tiktok",
+                                        name: "TikTok",
+                                        href: "https://www.tiktok.com/@snapmyfine?_r=1&_t=ZN-91MXBcSb5Wg",
                                         icon: (
                                             <svg
                                                 width="20"
@@ -2676,7 +2542,9 @@ export default function LandingPage() {
                                 ].map((social) => (
                                     <a
                                         key={social.name}
-                                        href="#"
+                                        href={social.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="flex items-center gap-3 group"
                                     >
                                         <div className="w-10 h-10 rounded-full bg-[#105AE2] flex items-center justify-center group-hover:bg-[#0d4cc4] transition-colors">
@@ -2717,1120 +2585,3 @@ export default function LandingPage() {
         </div>
     );
 }
-
-
-
-
-// "use client";
-// import { useState, useRef, useEffect } from "react";
-// import { useRouter } from "next/navigation";
-
-// // Import components
-// import HamburgerModal from "@/components/HamburgerModal";
-// import { Notification } from "@/components/ui/notification";
-
-// // Import section components
-// import {
-//     HomeSection,
-//     CameraSection,
-//     ImagePreviewSection,
-//     ReviewSection,
-//     PaymentSection,
-//     RedirectingSection,
-//     PaymentReceivedSection,
-//     ProcessingSection,
-//     PaymentStatusSection,
-//     ReceiptSection,
-//     SaveFineSection,
-//     CheckInboxSection,
-//     PaymentFailedSection,
-//     SavedFinesSection,
-//     AllTransactionsSection,
-//     PartialPaymentStatusSection
-// } from "@/components/sections";
-
-// // Import new sections
-// import FineNotReady from "@/components/sections/FineNotReadySection";
-// import DetailsReceived from "@/components/sections/DetailsReceivedSection";
-
-// // Import types
-// // Import types
-// import { FormData, ValidationErrors, SavedFine } from "@/types";
-// import { Transaction } from "@/lib/stores/transactionStore";
-
-// // Import stores and hooks
-// import { useTicketStore } from "@/lib/stores/ticketStore";
-// import { useTransactionStore } from "@/lib/stores/transactionStore";
-// import { useTicketProcessor } from "@/lib/hooks/use-ticket";
-// import { usePayment } from "@/lib/hooks/use-payment";
-
-// export default function Home() {
-//     const router = useRouter();
-//     const { processTicket, fetchTickets, callbackPendingTicket } = useTicketProcessor();
-//     const { makePayment } = usePayment();
-//     const { addTransaction: addSuccessfulTransaction, getSuccessfulTransactions } = useTransactionStore();
-//     const [showCamera, setShowCamera] = useState(false);
-//     const [isVideoVisible, setIsVideoVisible] = useState(false);
-//     const [showImagePreview, setShowImagePreview] = useState(false);
-//     const videoRef = useRef<HTMLVideoElement | null>(null);
-//     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-//     const [snapshot, setSnapshot] = useState<string | null>(null);
-//     const fileInputRef = useRef<HTMLInputElement | null>(null);
-//     const [isProcessingTicket, setIsProcessingTicket] = useState(false);
-//     const [hasProcessingError, setHasProcessingError] = useState(false);
-//     const { savedTickets, ticketData, addSavedTicket, removeSavedTicket } = useTicketStore();
-
-//     // Fetch tickets on component mount
-//     // useEffect(() => {
-//     //     const fetchSavedTickets = async () => {
-//     //         try {
-//     //             // You might want to get the user's email from somewhere (e.g., localStorage, auth context, etc.)
-//     //             // For now, I'll use a placeholder - you'll need to replace this with actual user email
-//     //             const userEmail = ''; // Replace with actual user email
-//     //             await fetchTickets(userEmail);
-//     //         } catch (error) {
-//     //             console.error('Error fetching saved tickets:', error);
-//     //         }
-//     //     };
-
-//     //     fetchSavedTickets();
-//     // }, [fetchTickets]);
-
-//     // Sync ticketData to formData when ticketData is available
-//     useEffect(() => {
-//         if (ticketData) {
-//             setFormData(prev => ({
-//                 ...prev,
-//                 council: prev.council || ticketData.council_name || '',
-//                 pcnNumber: prev.pcnNumber || ticketData.pcn_number || '',
-//                 vehicleNumber: prev.vehicleNumber || ticketData.plate_number || '',
-//                 fineAmount: prev.fineAmount || ticketData.amount?.toString() || ''
-//             }));
-//         }
-//     }, [ticketData]);
-
-
-
-//     // Form validation states
-//     const [formData, setFormData] = useState<FormData>({
-//         council: '',
-//         pcnNumber: '',
-//         vehicleNumber: '',
-//         fineAmount: '',
-//         email: ''
-//     });
-//     const [validationErrors, setValidationErrors] = useState<ValidationErrors>({
-//         council: false,
-//         pcnNumber: false,
-//         vehicleNumber: false,
-//         fineAmount: false,
-//         email: false
-//     });
-
-//     // Get successful transactions from store
-//     const transactions = getSuccessfulTransactions();
-
-//     // Section navigation state
-//     const [showReviewSection, setShowReviewSection] = useState(false); // 4th section
-//     const [showPaymentSection, setShowPaymentSection] = useState(false); // 5th section
-//     const [showRedirectingSection, setShowRedirectingSection] = useState(false); // 6th section
-//     const [showPaymentReceivedSection, setShowPaymentReceivedSection] = useState(false); // 7th section
-//     const [showProcessingSection, setShowProcessingSection] = useState(false); // 8th section
-//     const [showPaymentStatusSection, setShowPaymentStatusSection] = useState(false); // 9th section
-//     const [showReceiptSection, setShowReceiptSection] = useState(false); // 10th section
-//     const [showSaveFineSection, setShowSaveFineSection] = useState(false); // 11th section
-//     const [showCheckInboxSection, setShowCheckInboxSection] = useState(false); // 12th section
-//     const [showPaymentFailedSection, setShowPaymentFailedSection] = useState(false); // 13th section
-//     const [showSavedFinesSection, setShowSavedFinesSection] = useState(false); // 14th section
-//     const [showAllTransactionsSection, setShowAllTransactionsSection] = useState(false); // 15th section
-//     const [showFineNotReadySection, setShowFineNotReadySection] = useState(false); // 16th section
-//     const [showDetailsReceivedSection, setShowDetailsReceivedSection] = useState(false); // 17th section
-
-//     // Track if payment section is loaded from a saved fine
-//     const [isLoadedFromSavedFine, setIsLoadedFromSavedFine] = useState(false);
-
-//     // Track if user arrived at section 5 from section 14
-//     const [cameFromSavedFines, setCameFromSavedFines] = useState(false);  // Use the saved tickets from the store
-
-//     // Hamburger modal state
-//     const [showHamburgerModal, setShowHamburgerModal] = useState(false);
-
-//     // No outstanding charge notification state
-//     const [showNoOutstandingChargeNotification, setShowNoOutstandingChargeNotification] = useState(false);
-//     const [showConfirmationErrorNotification, setShowConfirmationErrorNotification] = useState(false);
-//     const [showProcessingErrorNotification, setShowProcessingErrorNotification] = useState(false);
-//     const [showCouncilNotSupportedNotification, setShowCouncilNotSupportedNotification] = useState(false);
-
-//     // Section 16 - Partial Payment state
-//     const [showPartialPaymentSection, setShowPartialPaymentSection] = useState(false);
-//     const [partialPaymentReceived] = useState<number>(77.00); // Amount user actually paid
-
-//     // Section 6 to Section 7 transition (30 seconds) or failure after 10 seconds
-//     useEffect(() => {
-//         if (showRedirectingSection) {
-//             // Simulate payment failure after 10 seconds (you can adjust this or add real failure logic)
-//             const failureTimer = setTimeout(() => {
-//                 // Simulate random failure (30% chance) - you can replace this with real failure detection
-//                 const shouldFail = Math.random() < 0.3; // 30% chance of failure
-
-//                 if (shouldFail) {
-//                     setShowRedirectingSection(false);
-//                     setShowPaymentFailedSection(true);
-//                 }
-//             }, 10000); // Check for failure after 10 seconds
-
-//             // Normal success transition after 30 seconds
-//             const successTimer = setTimeout(() => {
-//                 setShowRedirectingSection(false);
-//                 setShowPaymentReceivedSection(true);
-//             }, 30000); // 30 seconds
-
-//             return () => {
-//                 clearTimeout(failureTimer);
-//                 clearTimeout(successTimer);
-//             };
-//         }
-//     }, [showRedirectingSection]);
-
-//     // Section 7 to Section 8 transition (30 seconds)
-//     useEffect(() => {
-//         if (showPaymentReceivedSection) {
-//             const timer = setTimeout(() => {
-//                 setShowPaymentReceivedSection(false);
-//                 setShowProcessingSection(true);
-//             }, 30000); // 30 seconds
-
-//             return () => clearTimeout(timer);
-//         }
-//     }, [showPaymentReceivedSection]);
-
-//     // Section 8 to Section 9 transition (20 seconds)
-//     useEffect(() => {
-//         if (showProcessingSection) {
-//             const timer = setTimeout(() => {
-//                 setShowProcessingSection(false);
-//                 setShowPaymentStatusSection(true);
-//             }, 20000); // 20 seconds
-
-//             return () => clearTimeout(timer);
-//         }
-//     }, [showProcessingSection]);
-
-//     // Section 3 to Section 4 transition (5 seconds) - only if still on section 3 and no processing error
-//     useEffect(() => {
-//         if (showImagePreview && !isProcessingTicket) {
-//             const timer = setTimeout(() => {
-//                 // Only transition if still showing image preview, processing is done, and no error occurred
-//                 if (showImagePreview && !hasProcessingError) {
-//                     setShowImagePreview(false);
-//                     setShowCamera(false); // Hide camera section
-//                     setShowReviewSection(true);
-//                 } else if (showImagePreview && hasProcessingError) {
-//                     // If there's an error, go back to home section
-//                     setShowImagePreview(false);
-//                     setShowCamera(false);
-//                     setSnapshot(null);
-//                     setIsProcessingTicket(false);
-//                     setHasProcessingError(false);
-//                 }
-//             }, 5000); // 5 seconds
-
-//             return () => clearTimeout(timer);
-//         }
-//     }, [showImagePreview, isProcessingTicket, hasProcessingError]);
-
-//     const councils = [
-//         "Barking and Dagenham",
-//         "Barnet",
-//         "Bexley",
-//         "Brent",
-//         "Bromley",
-//         "Camden",
-//         "Croydon",
-//         "Ealing",
-//         "Enfield",
-//         "Greenwich",
-//         "Hackney",
-//         "Hammersmith and Fulham",
-//         "Haringey",
-//         "Harrow",
-//         "Havering",
-//         "Hillingdon",
-//         "Hounslow",
-//         "Islington",
-//         "Kensington and Chelsea",
-//         "Kingston upon Thames",
-//         "Lambeth",
-//         "Lewisham",
-//         "Merton",
-//         "Newham",
-//         "Redbridge",
-//         "Richmond upon Thames",
-//         "Southwark",
-//         "Sutton",
-//         "Tower Hamlets",
-//         "Waltham Forest",
-//         "Wandsworth",
-//         "Westminster",
-//     ];
-
-//     const startCamera = async () => {
-//         try {
-//             // Mobile-optimized camera settings
-//             let stream;
-//             try {
-//                 // Try back camera first (ideal for mobile document scanning)
-//                 stream = await navigator.mediaDevices.getUserMedia({
-//                     video: {
-//                         facingMode: 'environment', // Use back camera on mobile
-//                         width: { ideal: 1280 },
-//                         height: { ideal: 720 }
-//                     }
-//                 });
-//             } catch {
-//                 // Fallback to any available camera if back camera fails
-//                 stream = await navigator.mediaDevices.getUserMedia({
-//                     video: {
-//                         width: { ideal: 1280 },
-//                         height: { ideal: 720 }
-//                     }
-//                 });
-//             }
-
-//             if (videoRef.current) {
-//                 videoRef.current.srcObject = stream;
-//                 await videoRef.current.play();
-//                 setIsVideoVisible(true); // Show video, hide position text
-//             }
-//         } catch (error: unknown) {
-//             console.error('Camera access failed:', error);
-//             if (error instanceof Error && error.name === 'NotAllowedError') {
-//                 alert('Camera permission denied. Please allow camera access in your browser settings.');
-//             } else {
-//                 alert('Unable to access camera. Make sure your device has a camera and try again.');
-//             }
-//         }
-//     };
-
-//     const takeSnapshot = async () => {
-//         if (!videoRef.current || !canvasRef.current) return;
-//         const video = videoRef.current;
-//         const canvas = canvasRef.current;
-//         const ctx = canvas.getContext("2d");
-//         if (!ctx) return;
-
-//         canvas.width = video.videoWidth;
-//         canvas.height = video.videoHeight;
-//         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-//         // Create high-quality JPEG for n8n processing (smaller file size, good for OCR)
-//         const imgDataJPEG = canvas.toDataURL("image/jpeg", 0.9); // 90% quality
-//         setSnapshot(imgDataJPEG);
-
-//         // Stop video stream and show 3rd section
-//         if (videoRef.current.srcObject) {
-//             const stream = videoRef.current.srcObject as MediaStream;
-//             stream.getTracks().forEach(track => track.stop());
-//         }
-//         setIsVideoVisible(false);
-//         setShowCamera(false);
-//         setShowImagePreview(true);
-
-//         // Automatically send to n8n after capturing
-//         console.log('Camera capture: sending to n8n...');
-//         await sendToN8n(imgDataJPEG);
-//     };
-
-
-
-//     // Function to send image to n8n for processing
-//     const sendToN8n = async (imageData?: string) => {
-//         const imgData = imageData || snapshot;
-//         if (!imgData) return;
-
-//         setIsProcessingTicket(true);
-//         setHasProcessingError(false);
-
-//         // Clear any existing ticket data before processing new ticket
-//         const { clearTicketData } = useTicketStore.getState();
-//         clearTicketData();
-
-//         try {
-//             // Use the hook to process the ticket which handles the API call and state management
-//             await processTicket(imgData);
-
-//             // Handle the response from n8n (data is now stored in the zustand store)
-//             setIsProcessingTicket(false);
-//             console.log('Ticket processed successfully!');
-//         } catch (error) {
-//             console.error('Error sending to n8n:', error);
-//             setIsProcessingTicket(false);
-//             setHasProcessingError(true);
-
-//             // Check if it's a council support error
-//             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-//             const isCouncilNotSupported = errorMessage.includes("Council not supported yet!");
-
-//             // Show appropriate error notification and return to home section
-//             if (isCouncilNotSupported) {
-//                 setShowCouncilNotSupportedNotification(true);
-//             } else {
-//                 setShowProcessingErrorNotification(true);
-//             }
-//             setShowImagePreview(false);
-//             setShowCamera(false);
-//             setSnapshot(null);
-//         }
-//     };
-
-//     const retakePhoto = () => {
-//         setSnapshot(null);
-//         setShowImagePreview(false);
-//         setShowCamera(true);
-//         setIsProcessingTicket(false);
-//         setHasProcessingError(false);
-//     };
-
-//     // Function to handle file upload from gallery
-//     const handleFileUpload = () => {
-//         // Clear any previous ticket data when starting a new scan
-//         const { clearTicketData } = useTicketStore.getState();
-//         clearTicketData();
-        
-//         // Clear form data as well
-//         setFormData({
-//             council: '',
-//             pcnNumber: '',
-//             vehicleNumber: '',
-//             fineAmount: '',
-//             email: ''
-//         });
-        
-//         if (fileInputRef.current) {
-//             fileInputRef.current.click();
-//         }
-//     };
-
-//     // Function to convert any image to JPEG format (like camera does)
-//     const convertToJPEG = (imageDataURL: string): Promise<string> => {
-//         return new Promise((resolve, reject) => {
-//             const img = document.createElement('img');
-//             img.onload = () => {
-//                 const canvas = document.createElement('canvas');
-//                 const ctx = canvas.getContext('2d');
-//                 if (!ctx) {
-//                     reject(new Error('Could not get canvas context'));
-//                     return;
-//                 }
-
-//                 // Set canvas size to image size
-//                 canvas.width = img.width;
-//                 canvas.height = img.height;
-
-//                 // Draw image to canvas
-//                 ctx.drawImage(img, 0, 0);
-
-//                 // Resize image if too large
-//                 let targetWidth = img.width;
-//                 let targetHeight = img.height;
-
-//                 // If image is very large, resize it down
-//                 const maxDimension = 1024; // Max width or height
-//                 if (img.width > maxDimension || img.height > maxDimension) {
-//                     if (img.width > img.height) {
-//                         targetWidth = maxDimension;
-//                         targetHeight = (img.height * maxDimension) / img.width;
-//                     } else {
-//                         targetHeight = maxDimension;
-//                         targetWidth = (img.width * maxDimension) / img.height;
-//                     }
-//                 }
-
-//                 canvas.width = targetWidth;
-//                 canvas.height = targetHeight;
-
-//                 // Draw resized image to canvas
-//                 ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-
-//                 // Convert to JPEG with lower quality for smaller file size
-//                 let jpegDataURL = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
-
-//                 // If still too large, reduce quality further
-//                 if (jpegDataURL.length > 800000) { // If > 800KB
-//                     jpegDataURL = canvas.toDataURL('image/jpeg', 0.5); // 50% quality
-//                 }
-
-//                 console.log('Converted to JPEG. Original size:', imageDataURL.length, 'New size:', jpegDataURL.length);
-//                 console.log('Image resized from', img.width + 'x' + img.height, 'to', targetWidth + 'x' + targetHeight);
-//                 resolve(jpegDataURL);
-//             };
-
-//             img.onerror = () => {
-//                 reject(new Error('Failed to load image for conversion'));
-//             };
-
-//             img.src = imageDataURL;
-//         });
-//     };
-
-//     // Function to handle file selection
-//     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-//         const file = event.target.files?.[0];
-//         if (file && file.type.startsWith('image/')) {
-//             console.log('Selected file:', file.name, 'Size:', file.size, 'Type:', file.type);
-
-//             const reader = new FileReader();
-//             reader.onload = async (e) => {
-//                 try {
-//                     const result = e.target?.result as string;
-//                     console.log('File read successfully, data URL length:', result.length);
-
-//                     setSnapshot(result);
-//                     setShowImagePreview(true);
-
-//                     // Check file size before processing
-//                     const fileSizeMB = result.length / (1024 * 1024);
-//                     console.log('File size: ', fileSizeMB.toFixed(2), 'MB');
-
-//                     if (fileSizeMB > 5) {
-//                         alert('File is too large (' + fileSizeMB.toFixed(2) + 'MB). Please select a smaller image or use the camera to take a photo.');
-//                         return;
-//                     }
-
-//                     // Try converting to JPEG for consistency with camera
-//                     try {
-//                         console.log('Converting to JPEG format...');
-//                         const jpegResult = await convertToJPEG(result);
-//                         console.log('JPEG conversion successful');
-
-//                         // Send converted JPEG to n8n
-//                         console.log('Sending converted JPEG to n8n...');
-//                         sendToN8n(jpegResult);
-
-//                     } catch (conversionError) {
-//                         console.error('JPEG conversion failed, sending original:', conversionError);
-
-//                         // Fallback: send original file if conversion fails
-//                         console.log('Sending original file to n8n...');
-//                         sendToN8n(result);
-//                     }
-
-//                 } catch (error) {
-//                     console.error('Error processing file:', error);
-//                     alert('Error processing the selected image.');
-//                 }
-//             };
-
-//             reader.onerror = (error) => {
-//                 console.error('FileReader error:', error);
-//                 alert('Error reading the selected file.');
-//             };
-
-//             reader.readAsDataURL(file);
-//         } else {
-//             alert('Please select a valid image file.');
-//         }
-
-//         // Reset the file input so the same file can be selected again
-//         event.target.value = '';
-//     };
-
-//     // Handle form input changes
-//     const handleInputChange = (field: string, value: string) => {
-//         setFormData(prev => ({
-//             ...prev,
-//             [field]: value
-//         }));
-
-//         // Clear validation error when user starts typing
-//         if (validationErrors[field as keyof typeof validationErrors]) {
-//             setValidationErrors(prev => ({
-//                 ...prev,
-//                 [field]: false
-//             }));
-//         }
-//     };
-
-//     // Handle form submission with validation
-//     const handleFormSubmit = (e: React.FormEvent) => {
-//         e.preventDefault();
-
-//         // Check for empty fields, also considering ticketData if formData is empty
-//         const errors = {
-//             council: !(formData.council.trim() || (ticketData?.council_name || '').trim()),
-//             pcnNumber: !(formData.pcnNumber.trim() || (ticketData?.pcn_number || '').trim()),
-//             vehicleNumber: !(formData.vehicleNumber.trim() || (ticketData?.plate_number || '').trim()),
-//             fineAmount: !(formData.fineAmount.trim() || (ticketData?.amount?.toString() || '').trim()),
-//             email: false
-//         };
-
-//         setValidationErrors(errors);
-
-//         // If all fields are filled, proceed to payment section
-//         if (!Object.values(errors).some(error => error)) {
-//             // Ensure formData has the final values before proceeding
-//             setFormData(prev => ({
-//                 ...prev,
-//                 council: prev.council || ticketData?.council_name || '',
-//                 pcnNumber: prev.pcnNumber || ticketData?.pcn_number || '',
-//                 vehicleNumber: prev.vehicleNumber || ticketData?.plate_number || '',
-//                 fineAmount: prev.fineAmount || ticketData?.amount?.toString() || ''
-//             }));
-
-//             setShowReviewSection(false);
-//             setShowPaymentSection(true);
-//         }
-//     };
-
-//     // Function to add successful council payment to transaction history
-//     const addSuccessfulCouncilPayment = (referenceId?: string, paymentId?: string) => {
-//         const serviceFee = '3.00'; // Fixed service fee
-//         const fineAmount = formData.fineAmount || ticketData?.amount?.toString() || '0';
-//         const totalPaid = (parseFloat(fineAmount) + parseFloat(serviceFee)).toFixed(2);
-
-//         addSuccessfulTransaction({
-//             council: formData.council || ticketData?.council_name || '',
-//             pcnNumber: formData.pcnNumber || ticketData?.pcn_number || '',
-//             fineAmount,
-//             status: 'success',
-//             totalPaid,
-//             serviceFee,
-//             referenceId,
-//             paymentId,
-//         });
-//     };
-
-//     // Email validation function
-//     const isValidEmail = (email: string) => {
-//         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//         return emailRegex.test(email);
-//     };
-
-//     // Function to open Gmail app
-//     const openGmailApp = () => {
-//         const userAgent = navigator.userAgent || navigator.vendor;
-
-//         // Check if it's a mobile device
-//         const isMobile = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
-
-//         if (isMobile) {
-//             // For mobile devices, try to open Gmail app
-//             if (/android/i.test(userAgent)) {
-//                 // Android - try Gmail app first, fallback to web
-//                 window.location.href = 'intent://mail.google.com#Intent;scheme=https;package=com.google.android.gm;end';
-//             } else if (/iphone|ipad|ipod/i.test(userAgent)) {
-//                 // iOS - try Gmail app, fallback to web
-//                 window.location.href = 'googlegmail://';
-//                 // Fallback after a short delay
-//                 setTimeout(() => {
-//                     window.open('https://mail.google.com', '_blank');
-//                 }, 1000);
-//             }
-//         } else {
-//             // For desktop, open Gmail in new tab
-//             window.open('https://mail.google.com', '_blank');
-//         }
-//     };
-
-//     // Function to handle fine not ready case
-//     const handleFineNotReady = (_pcnNumber: string) => {
-//         setShowReviewSection(false);
-//         setShowFineNotReadySection(true);
-//     };
-
-//     // Function to handle callback submission
-//     const handleCallbackSubmit = async (email: string, phone?: string) => {
-//         try {
-//             if (!ticketData?.pcn_number) return;
-
-//             await callbackPendingTicket(email, phone || '', ticketData.pcn_number);
-
-//             // Show details received section
-//             setShowFineNotReadySection(false);
-//             setShowDetailsReceivedSection(true);
-//         } catch (error) {
-//             console.error('Failed to submit callback:', error);
-//             // You could show an error notification here if needed
-//         }
-//     };
-
-//     // Function to handle details received close
-//     const handleDetailsReceivedClose = () => {
-//         setShowDetailsReceivedSection(false);
-//     };
-
-//     // Function to handle back to home from details received
-//     const handleBackToHomeFromDetailsReceived = () => {
-//         setShowDetailsReceivedSection(false);
-//         goToHomeSection();
-//     };
-
-//     // Function to go back to section 1
-//     const goToHomeSection = () => {
-//         // Note: Successful transactions are now added when council payment actually succeeds
-//         // in the payment verification flow, not when returning from sections
-//         setShowReceiptSection(false);
-//         setShowCamera(false);
-//         setShowImagePreview(false);
-//         setShowReviewSection(false);
-//         setShowPaymentSection(false);
-//         setShowSaveFineSection(false);
-//         setShowCheckInboxSection(false);
-//         setShowRedirectingSection(false);
-//         setShowPaymentReceivedSection(false);
-//         setShowProcessingSection(false);
-//         setShowPaymentStatusSection(false);
-//         setShowPaymentFailedSection(false);
-//         setShowSavedFinesSection(false);
-//         setShowAllTransactionsSection(false);
-//         setShowFineNotReadySection(false);
-//         setShowDetailsReceivedSection(false);
-//         setIsLoadedFromSavedFine(false);
-//         setCameFromSavedFines(false);
-//         setShowNoOutstandingChargeNotification(false);
-//         setShowConfirmationErrorNotification(false);
-//         setShowProcessingErrorNotification(false);
-//         setShowCouncilNotSupportedNotification(false);
-//     };
-
-//     // Function to retry payment (goes back to section 6)
-//     const retryPayment = () => {
-//         setShowPaymentFailedSection(false);
-//         setShowRedirectingSection(true);
-//     };
-
-//     // Function to save fine to saved list
-//     const saveFineToList = () => {
-//         const newSavedFine = {
-//             council: formData.council,
-//             pcnNumber: formData.pcnNumber,
-//             vehicleNumber: formData.vehicleNumber,
-//             fineAmount: formData.fineAmount,
-//             email: formData.email,
-//         };
-
-//         addSavedTicket(newSavedFine); // Add to store
-//     };
-
-//     // Function to delete saved fine
-//     const deleteSavedFine = (fineId: string) => {
-//         removeSavedTicket(fineId);
-//     };
-
-//     // Function to handle payment flow
-//     const handlePayNow = async () => {
-//         // Show RedirectingSection and start payment process
-//         setShowPaymentSection(false);
-//         setShowRedirectingSection(true);
-
-//         try {
-//             // Prioritize form data for amount (as OCR can be inaccurate), fall back to ticketData for other fields
-//             const actualAmount = formData.fineAmount || ticketData?.amount?.toString() || '0';
-//             const actualPcnNumber = ticketData?.pcn_number || formData.pcnNumber;
-//             const actualVehicleNumber = ticketData?.plate_number || formData.vehicleNumber;
-//             const actualCouncil = ticketData?.council_name || formData.council;
-
-//             const paymentData = {
-//                 amount: (Number(actualAmount) + 3).toString(), // Fine amount + £3 service fee
-//                 pcnNumber: actualPcnNumber,
-//                 vehicleReg: actualVehicleNumber,
-//                 email: formData.email || "user@example.com", // Use form email or placeholder
-//                 fullName: "Parking Fine Payer", // Placeholder - consider collecting this in the form
-//                 council: actualCouncil
-//             };
-
-//             // Debug log to track what data is being sent for payment
-//             console.log('Sending payment data:', paymentData);
-//             console.log('TicketData used:', {
-//                 amount: ticketData?.amount,
-//                 pcn_number: ticketData?.pcn_number,
-//                 plate_number: ticketData?.plate_number,
-//                 council_name: ticketData?.council_name
-//             });
-
-//             const result = await makePayment(paymentData);
-
-//             // Redirect to the payment gateway after 1 minute delay
-//             if (result.billingRequestFlow?.authorisation_url) {
-//                 // Clear ticket data before redirecting as it will be passed via URL params
-//                 // Note: We don't clear it here as the verification page needs it
-//                 // It will be cleared after successful receipt sending
-//                 window.location.href = result.billingRequestFlow.authorisation_url;
-//             } else {
-//                 // Handle error - redirect failed
-//                 setShowRedirectingSection(false);
-//                 setShowPaymentFailedSection(true);
-//             }
-//         } catch (error) {
-//             console.error('Payment failed:', error);
-//             // Show payment failed section
-//             setShowRedirectingSection(false);
-//             setShowPaymentFailedSection(true);
-//         }
-//     };
-
-//     // Function to show saved fines section
-//     // const showSavedFines = () => {
-//     //   setShowSavedFinesSection(true);
-//     // };
-
-//     return (
-//         <div className="min-h-screen flex flex-col items-center justify-center p-2">
-//             {/* 1st section */}
-//             {!showCamera && !showImagePreview && !showReviewSection && !showPaymentSection && !showRedirectingSection && !showPaymentReceivedSection && !showProcessingSection && !showPaymentStatusSection && !showReceiptSection && !showSaveFineSection && !showCheckInboxSection && !showPaymentFailedSection && !showSavedFinesSection && !showAllTransactionsSection && !showPartialPaymentSection && !showFineNotReadySection && !showDetailsReceivedSection && (
-//                 <div className="relative w-full max-w-md">
-//                     <HomeSection
-//                         transactions={transactions}
-//                         onScanTicket={() => {
-//                             // Clear any previous ticket data when starting a new scan
-//                             const { clearTicketData } = useTicketStore.getState();
-//                             clearTicketData();
-                            
-//                             // Clear form data as well
-//                             setFormData({
-//                                 council: '',
-//                                 pcnNumber: '',
-//                                 vehicleNumber: '',
-//                                 fineAmount: '',
-//                                 email: ''
-//                             });
-                            
-//                             setShowCamera(true);
-//                         }}
-//                         onUploadFromGallery={handleFileUpload}
-//                         onShowAllTransactions={() => setShowAllTransactionsSection(true)}
-//                         onHamburgerClick={() => setShowHamburgerModal(true)}
-//                     />
-
-//                     {/* Hamburger Modal - positioned relative to HomeSection container */}
-//                     <HamburgerModal
-//                         isOpen={showHamburgerModal}
-//                         onClose={() => setShowHamburgerModal(false)}
-//                         onSavedFines={() => {
-//                             setShowSavedFinesSection(true);
-//                             // Hide all other sections when navigating to saved fines
-//                             setShowCamera(false);
-//                             setShowImagePreview(false);
-//                             setShowReviewSection(false);
-//                             setShowPaymentSection(false);
-//                             setShowRedirectingSection(false);
-//                             setShowPaymentReceivedSection(false);
-//                             setShowProcessingSection(false);
-//                             setShowPaymentStatusSection(false);
-//                             setShowReceiptSection(false);
-//                             setShowSaveFineSection(false);
-//                             setShowCheckInboxSection(false);
-//                             setShowPaymentFailedSection(false);
-//                             setShowAllTransactionsSection(false);
-//                             setShowPartialPaymentSection(false);
-//                             setShowFineNotReadySection(false);
-//                             setShowDetailsReceivedSection(false);
-//                             setShowHamburgerModal(false);
-//                         }}
-//                         onPaymentHistory={() => {
-//                             setShowAllTransactionsSection(true);
-//                             // Hide all other sections when navigating to payment history
-//                             setShowCamera(false);
-//                             setShowImagePreview(false);
-//                             setShowReviewSection(false);
-//                             setShowPaymentSection(false);
-//                             setShowRedirectingSection(false);
-//                             setShowPaymentReceivedSection(false);
-//                             setShowProcessingSection(false);
-//                             setShowPaymentStatusSection(false);
-//                             setShowReceiptSection(false);
-//                             setShowSaveFineSection(false);
-//                             setShowCheckInboxSection(false);
-//                             setShowPaymentFailedSection(false);
-//                             setShowSavedFinesSection(false);
-//                             setShowPartialPaymentSection(false);
-//                             setShowFineNotReadySection(false);
-//                             setShowDetailsReceivedSection(false);
-//                             setShowHamburgerModal(false);
-//                         }}
-//                         onContactUs={() => {
-//                             console.log("Contact Us clicked");
-//                             setShowHamburgerModal(false);
-//                         }}
-//                     />
-//                 </div>
-//             )}
-
-//             {/* 2nd section  */}
-//             {showCamera && !showImagePreview && (
-//                 <CameraSection
-//                     isVideoVisible={isVideoVisible}
-//                     videoRef={videoRef}
-//                     canvasRef={canvasRef}
-//                     onBack={() => setShowCamera(false)}
-//                     onStartCamera={startCamera}
-//                     onTakeSnapshot={takeSnapshot}
-//                     onUploadFromGallery={handleFileUpload}
-//                 />
-//             )}
-
-
-//             {/* 3rd section - Image Preview */}
-//             {showImagePreview && snapshot && (
-//                 <ImagePreviewSection
-//                     snapshot={snapshot}
-//                     isProcessing={isProcessingTicket}
-//                     hasError={hasProcessingError}
-//                     onBack={() => {
-//                         setShowImagePreview(false);
-//                         setShowCamera(true);
-//                         setIsProcessingTicket(false);
-//                         setHasProcessingError(false);
-//                     }}
-//                     onRetakePhoto={retakePhoto}
-//                     onUploadFromGallery={handleFileUpload}
-//                 />
-//             )}
-
-//             {/* Hidden file input for gallery upload */}
-//             <input
-//                 type="file"
-//                 ref={fileInputRef}
-//                 onChange={handleFileSelect}
-//                 accept="image/*"
-//                 style={{ display: 'none' }}
-//             />
-
-//             {/* 4th section - Review Details */}
-//             {showReviewSection && (
-//                 <ReviewSection
-//                     formData={formData}
-//                     validationErrors={validationErrors}
-//                     councils={councils}
-//                     onBack={() => {
-//                         setShowReviewSection(false);
-//                         setShowCamera(true);
-//                     }}
-//                     onInputChange={handleInputChange}
-//                     onFormSubmit={handleFormSubmit}
-//                     onNoOutstandingCharge={() => {
-//                         setShowReviewSection(false);
-//                         setShowCamera(false);
-//                         setShowImagePreview(false);
-//                         setShowNoOutstandingChargeNotification(true);
-//                     }}
-//                     onConfirmationError={() => {
-//                         setShowReviewSection(false);
-//                         setShowCamera(false);
-//                         setShowImagePreview(false);
-//                         setShowConfirmationErrorNotification(true);
-//                     }}
-//                     onFineNotReady={handleFineNotReady}
-//                 />
-//             )}
-
-//             {/* 5th section - Payment Details */}
-//             {showPaymentSection && (
-//                 <PaymentSection
-//                     formData={formData}
-//                     isLoadedFromSavedFine={isLoadedFromSavedFine}
-//                     onBack={() => {
-//                         if (cameFromSavedFines) {
-//                             setShowPaymentSection(false);
-//                             setShowSavedFinesSection(true);
-//                             setCameFromSavedFines(false);
-//                         } else {
-//                             setShowPaymentSection(false);
-//                             setShowReviewSection(true);
-//                         }
-//                     }}
-//                     onPayNow={handlePayNow}
-//                     onPayLater={() => {
-//                         setShowPaymentSection(false);
-//                         setShowSaveFineSection(true);
-//                     }}
-//                 />
-//             )}
-
-
-
-//             {/* 6th section - Redirecting to Payment */}
-//             {showRedirectingSection && (
-//                 <RedirectingSection />
-//             )}
-
-//             {/* 7th section - Payment Received */}
-//             {showPaymentReceivedSection && (
-//                 <PaymentReceivedSection formData={formData} />
-//             )}
-
-//             {/* 8th section - Processing Payment */}
-//             {showProcessingSection && (
-//                 <ProcessingSection />
-//             )}
-
-//             {/* 9th section - Payment Status */}
-//             {showPaymentStatusSection && (
-//                 <PaymentStatusSection
-//                     formData={formData}
-//                     validationErrors={validationErrors}
-//                     onBack={() => setShowCamera(false)}
-//                     onInputChange={handleInputChange}
-//                     onSendReceipt={() => {
-//                         if (isValidEmail(formData.email)) {
-//                             setShowPaymentStatusSection(false);
-//                             setShowReceiptSection(true);
-//                         }
-//                     }}
-//                     isValidEmail={isValidEmail}
-//                 />
-//             )}
-
-//             {/* 10th section */}
-//             {showReceiptSection && (
-//                 <ReceiptSection
-//                     onClose={goToHomeSection}
-//                     onOpenGmail={openGmailApp}
-//                 />
-//             )}
-
-//             {/* 11th section */}
-//             {showSaveFineSection && (
-//                 <SaveFineSection
-//                     formData={formData}
-//                     validationErrors={validationErrors}
-//                     onBack={() => {
-//                         setShowSaveFineSection(false);
-//                         setShowPaymentSection(true);
-//                     }}
-//                     onInputChange={handleInputChange}
-//                     onCreateAccount={() => {
-//                         if (isValidEmail(formData.email)) {
-//                             saveFineToList();
-//                             setShowSaveFineSection(false);
-//                             setShowCheckInboxSection(true);
-//                         }
-//                     }}
-//                     isValidEmail={isValidEmail}
-//                 />
-//             )}
-
-//             {/* 12th section-input email to get reciept */}
-//             {showCheckInboxSection && (
-//                 <CheckInboxSection
-//                     formData={formData}
-//                     onClose={goToHomeSection}
-//                     onOpenGmail={openGmailApp}
-//                 />
-//             )}
-
-//             {/* 13th section - Error Payment Status */}
-//             {showPaymentFailedSection && (
-//                 <PaymentFailedSection
-//                     onBack={() => setShowCamera(false)}
-//                     onTryAgain={retryPayment}
-//                     onReportIssue={() => router.push('/report-incident')}
-//                 />
-//             )}
-
-
-//             {/* 14th section - Saved Fines */}
-//             {showSavedFinesSection && (
-//                 <SavedFinesSection
-//                     savedFines={savedTickets}
-//                     onBack={goToHomeSection}
-//                     onDeleteFine={deleteSavedFine}
-//                     onPayFine={(fine) => {
-//                         setFormData({
-//                             council: fine.council,
-//                             pcnNumber: fine.pcnNumber,
-//                             vehicleNumber: fine.vehicleNumber,
-//                             fineAmount: fine.fineAmount,
-//                             email: fine.email
-//                         });
-//                         setShowSavedFinesSection(false);
-//                         setShowPaymentSection(true);
-//                         setIsLoadedFromSavedFine(true);
-//                         setCameFromSavedFines(true);
-//                     }}
-//                 />
-//             )}
-
-//             {/* 15th section -payment reciept  */}
-//             {showAllTransactionsSection && (
-//                 <AllTransactionsSection
-//                     transactions={transactions}
-//                     onBack={goToHomeSection}
-//                 />
-//             )}
-
-
-
-//             {/* 16th section - Partial Payment Status */}
-//             {showPartialPaymentSection && (
-//                 <PartialPaymentStatusSection
-//                     partialPaymentReceived={partialPaymentReceived}
-//                     formData={formData}
-//                     isLoadedFromSavedFine={isLoadedFromSavedFine}
-//                     onBack={() => setShowPartialPaymentSection(false)}
-//                     onPayNow={() => setShowPaymentSection(true)}
-//                     onPayLater={() => setShowSaveFineSection(true)}
-//                 />
-//             )}
-
-//             {/* No Outstanding Charge Notification */}
-//             {showNoOutstandingChargeNotification && (
-//                 <Notification
-//                     message="Great news! There is no outstanding charge on this PCN"
-//                     type="success"
-//                     duration={6000}
-//                     onClose={() => setShowNoOutstandingChargeNotification(false)}
-//                 />
-//             )}
-
-//             {/* Confirmation Error Notification */}
-//             {showConfirmationErrorNotification && (
-//                 <Notification
-//                     message="Failed to confirm payment amount with council"
-//                     type="error"
-//                     duration={6000}
-//                     onClose={() => setShowConfirmationErrorNotification(false)}
-//                 />
-//             )}
-
-//             {/* Processing Error Notification */}
-//             {showProcessingErrorNotification && (
-//                 <Notification
-//                     message="Failed to process ticket"
-//                     type="error"
-//                     duration={6000}
-//                     onClose={() => setShowProcessingErrorNotification(false)}
-//                 />
-//             )}
-
-//             {/* Council Not Supported Notification */}
-//             {showCouncilNotSupportedNotification && (
-//                 <Notification
-//                     message="Council not supported yet!"
-//                     type="error"
-//                     duration={6000}
-//                     onClose={() => setShowCouncilNotSupportedNotification(false)}
-//                 />
-//             )}
-
-//             {/* Fine Not Ready Section */}
-//             {showFineNotReadySection && (
-//                 <FineNotReady
-//                     onBack={() => {
-//                         setShowFineNotReadySection(false);
-//                         setShowReviewSection(true);
-//                     }}
-//                     onSubmit={handleCallbackSubmit}
-//                 />
-//             )}
-
-//             {/* Details Received Section */}
-//             {showDetailsReceivedSection && (
-//                 <DetailsReceived
-//                     onClose={handleDetailsReceivedClose}
-//                     onBackToHome={handleBackToHomeFromDetailsReceived}
-//                 />
-//             )}
-//         </div>
-//     );
-// }

@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { randomUUID } from "crypto";
-// import * as gocardless from 'gocardless-nodejs';
-// import * as constants from 'gocardless-nodejs/constants';
-const gocardless = require('gocardless-nodejs');
-const constants = require('gocardless-nodejs/constants');
+import * as gocardless from 'gocardless-nodejs';
+import * as constants from 'gocardless-nodejs/constants';
 
 export async function POST(req: NextRequest) {
 

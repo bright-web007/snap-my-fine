@@ -1,10 +1,10 @@
 "use client";
-import { Button } from "@/component/ui/button/index";
+import { Button } from "../../component/ui/button/index";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useTicketStore } from "@/lib/stores/ticketStore";
-import { useTicketProcessor } from "@/lib/hooks/use-ticket";
+import { useTicketStore } from "../../lib/stores/ticketStore";
+import { useTicketProcessor } from "../../lib/hooks/use-ticket";
 import { useEffect, useState } from "react";
-import AmountConfirmation from "@/components/sections/amountConfirmation";
+import AmountConfirmation from "./amountConfirmation";
 
 interface FormData {
   council: string;
@@ -69,42 +69,39 @@ export default function ReviewSection({
           ticketData.council_name,
           ticketData.plate_number || ''
         );
-        
-        if (result?.success) {
+
+        // Handle new API: status: "No outstanding fine available", success: false
+        if (
+          (result.status && result.status.toLowerCase().includes("no outstanding fine")) ||
+          (result.message && result.message.toLowerCase().includes("no outstanding fine"))
+        ) {
+          setTimeout(() => {
+            onNoOutstandingCharge();
+          }, 500);
+        } else if (result?.success) {
           if (result.status === "No Outstanding Charge" || result.paymentRequired === false) {
-            // Redirect to HomeSection and trigger notification there
             setTimeout(() => {
               onNoOutstandingCharge();
-            }, 500); // Small delay to complete the loading animation
+            }, 500);
           } else if (result.status === "Payment required" && result.amount) {
-            // Update with confirmed amount (remove £ symbol if present)
             const cleanAmount = result.amount.replace(/[£,]/g, '');
             setConfirmedAmount(cleanAmount);
-            // Update the form data with confirmed amount
             onInputChange('fineAmount', cleanAmount);
           } else {
-            // Fallback if we can't determine status clearly - redirect with error
             setTimeout(() => {
               onConfirmationError();
             }, 500);
           }
+        } else if (result?.status === "pending_update" && result?.message?.includes("The ticket has not been updated by the council yet")) {
+          setTimeout(() => {
+            onFineNotReady(result.pcnNumber || ticketData.pcn_number);
+          }, 500);
         } else {
-          // Check if it's a pending status response
-          if (result?.status === "pending_update" && 
-              result?.message?.includes("The ticket has not been updated by the council yet")) {
-            // Handle fine not ready case
-            setTimeout(() => {
-              onFineNotReady(result.pcnNumber || ticketData.pcn_number);
-            }, 500);
-          } else {
-            // API returned success: false - redirect to HomeSection with error
-            setTimeout(() => {
-              onConfirmationError();
-            }, 500);
-          }
+          setTimeout(() => {
+            onConfirmationError();
+          }, 500);
         }
       } catch (error) {
-        // Network error or exception - redirect to HomeSection with error
         setTimeout(() => {
           onConfirmationError();
         }, 500);
@@ -235,13 +232,12 @@ export default function ReviewSection({
               <Button
                 type="submit"
                 disabled={isConfirming}
-                className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 transition-colors font-medium ${
-                  isConfirming
+                className={`p-[16px] text-[14px] w-full h-[48px] rounded-[8px] flex items-center justify-center gap-2 transition-colors font-medium ${isConfirming
                     ? "text-[#ffffff] bg-[#CFDFFC] cursor-not-allowed"
                     : "text-white bg-[#0464DD] cursor-pointer hover:bg-[#0E4FC1] active:bg-[#045BC8]"
-                }`}
+                  }`}
               >
-                {isConfirming ? "Confirming..." : "Continue to payment"} 
+                {isConfirming ? "Confirming..." : "Continue to payment"}
                 <ArrowRight className="w-[20px] h-[20px]" />
               </Button>
               <p className="text-[12px] text-[#7E8081] leading-[16px] font-sora font-regular text-center px-[30px]">By continuing, you agree to proceed with secure payment through your bank&apos;s gateway</p>

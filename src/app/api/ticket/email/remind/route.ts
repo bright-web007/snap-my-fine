@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { TicketResponse } from "@/lib/schema";
+import { TicketResponse } from "../../../../../lib/schema";
 
 export async function POST(request: NextRequest) {
   try {

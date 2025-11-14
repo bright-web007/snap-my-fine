@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from "zustand/middleware";
-import { N8nResponse } from '@/lib/schema';
-import { SavedFine } from '@/types';
+import { N8nResponse } from '../schema';
+import { SavedFine } from '../../types';
 
 interface TicketStore {
   ticketData: N8nResponse['output'] | null;

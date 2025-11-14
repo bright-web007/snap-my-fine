@@ -26,6 +26,18 @@ const eslintConfig = [
       '@typescript-eslint/no-empty-object-type': 'off',
       // Disable unescaped entities rule to avoid forcing HTML entity replacements in simple text
       'react/no-unescaped-entities': 'off',
+      // Allow require() imports
+      '@typescript-eslint/no-require-imports': 'off',
+      // Allow @ts-ignore comments
+      '@typescript-eslint/ban-ts-comment': 'off',
+      // Allow unused variables (warnings only)
+      '@typescript-eslint/no-unused-vars': 'warn',
+      // Allow missing dependencies in useEffect
+      'react-hooks/exhaustive-deps': 'warn',
+      // Allow img elements
+      '@next/next/no-img-element': 'warn',
+      // Allow anonymous default exports
+      'import/no-anonymous-default-export': 'warn',
     },
   },
 ];

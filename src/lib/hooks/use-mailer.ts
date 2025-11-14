@@ -1,4 +1,4 @@
-import { TicketDetailsInterface } from '@/lib/schema';
+import { TicketDetailsInterface } from '../schema';
 
 interface UseMailerReturn {
   sendPayLaterEmail: (input: TicketDetailsInterface) => Promise<{ success: boolean; message?: string; error?: string }>;

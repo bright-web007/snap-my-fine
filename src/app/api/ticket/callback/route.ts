@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
             },
             extra: {
                 n8nWebhookUrl: process.env.NEXT_N8N_WEBHOOK_ENDPOINT,
-                //@ts-ignore
+                //@ts-expect-error
                 error: error?.message || error
             }
         });
