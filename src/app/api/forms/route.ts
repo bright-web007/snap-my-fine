@@ -11,45 +11,48 @@ interface FormSubmissionRequest {
   data: WaitlistSubmissionData;
 }
 
-// Prometheus GraphQL endpoint
-const PROMETHEUS_ENDPOINT = process.env.PROMETHEUS_GRAPHQL_ENDPOINT!;
+// Prometheus GraphQL endpoint - using localhost for local development
+const PROMETHEUS_ENDPOINT = process.env.PROMETHEUS_GRAPHQL_ENDPOINT || 'http://localhost:3000/graphql';
 
-// Form configuration - Set these environment variables with your actual form/question IDs
-const WAITLIST_FORM_ID = process.env.WAITLIST_FORM_ID!;
-const WAITLIST_EMAIL_QUESTION_ID = process.env.WAITLIST_EMAIL_QUESTION_ID!;
-const WAITLIST_SOURCE_QUESTION_ID = process.env.WAITLIST_SOURCE_QUESTION_ID; // Optional
+// Form configuration - update these with actual values from Prometheus
+const WAITLIST_FORM_CONFIG = {
+  formId: process.env.WAITLIST_FORM_ID || 'your-form-id-here',
+  emailQuestionId: process.env.WAITLIST_EMAIL_QUESTION_ID || 'your-email-question-id-here',
+};
 
 async function submitToPrometheus(email: string, source: string) {
   const mutation = `
-    mutation CreateResponse($input: CreateResponseInput!) {
-      createResponse(input: $input) {
-        data {
-          uuid
-          response
-          created_at
-          updated_at
+    mutation SubmitWaitlistResponse($input: SubmitResponseInput!) {
+      submitResponse(input: $input) {
+        id
+        submittedAt
+        answers {
+          questionId
+          value
         }
-        submission_text
       }
     }
   `;
 
-  // Create response object with question answers
-  const response: Record<string, string> = {
-    [WAITLIST_EMAIL_QUESTION_ID]: email
-  };
-  
-  // Add source answer if we have a source question configured
-  if (WAITLIST_SOURCE_QUESTION_ID && source) {
-    response[WAITLIST_SOURCE_QUESTION_ID] = source;
-  }
-
   const variables = {
     input: {
-      form_uuid: WAITLIST_FORM_ID,
-      response: response
+      formId: WAITLIST_FORM_CONFIG.formId,
+      answers: [
+        {
+          questionId: WAITLIST_FORM_CONFIG.emailQuestionId,
+          value: email,
+        },
+      ],
     },
   };
+
+  console.log('Submitting to Prometheus:', {
+    endpoint: PROMETHEUS_ENDPOINT,
+    formId: WAITLIST_FORM_CONFIG.formId,
+    questionId: WAITLIST_FORM_CONFIG.emailQuestionId,
+    email,
+    source
+  });
 
   try {
     const response = await fetch(PROMETHEUS_ENDPOINT, {
@@ -63,19 +66,29 @@ async function submitToPrometheus(email: string, source: string) {
       }),
     });
 
+    console.log('Prometheus response status:', response.status);
+    
+    const responseText = await response.text();
+    console.log('Prometheus raw response:', responseText);
+
     if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`Prometheus API error: ${response.status} ${response.statusText} - ${text}`);
+      throw new Error(`Prometheus API error: ${response.status} ${response.statusText} - ${responseText}`);
     }
 
-    const result = await response.json();
+    const result = JSON.parse(responseText);
 
-    if (result.errors) {
-      console.error('Prometheus GraphQL errors:', result.errors);
-      throw new Error(result.errors[0]?.message || 'GraphQL error occurred');
+    if (result.errors && result.errors.length > 0) {
+      console.error('Prometheus GraphQL errors:', JSON.stringify(result.errors, null, 2));
+      throw new Error(`GraphQL error: ${result.errors[0]?.message || 'Unknown GraphQL error'}`);
     }
 
-    return result.data.createResponse;
+    if (!result.data || !result.data.submitResponse) {
+      console.error('No data returned from Prometheus:', result);
+      throw new Error('No response data returned from Prometheus');
+    }
+
+    console.log('Prometheus success:', result.data.submitResponse);
+    return result.data.submitResponse;
   } catch (error) {
     console.error('Error submitting to Prometheus:', error);
     throw error;
@@ -104,17 +117,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if required environment variables are set
-    if (!WAITLIST_FORM_ID || !WAITLIST_EMAIL_QUESTION_ID) {
-      return NextResponse.json(
-        { 
-          error: 'Server configuration error: Missing form or question IDs',
-          details: 'Please set WAITLIST_FORM_ID and WAITLIST_EMAIL_QUESTION_ID environment variables'
-        },
-        { status: 500 }
-      );
-    }
-
     // Submit to Prometheus
     const prometheusResponse = await submitToPrometheus(email, source);
 
@@ -123,9 +125,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: prometheusResponse.submission_text || 'Successfully joined the waitlist!',
-      submissionId: prometheusResponse.data.uuid,
-      submittedAt: prometheusResponse.data.created_at,
+      message: 'Successfully joined the waitlist!',
+      submissionId: prometheusResponse.id,
+      submittedAt: prometheusResponse.submittedAt,
     });
 
   } catch (error) {
@@ -146,14 +148,9 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   return NextResponse.json(
     { 
-      message: 'Waitlist API endpoint',
+      message: 'Forms API endpoint',
       endpoints: {
-        'POST /api/forms': 'Submit waitlist signup to Prometheus'
-      },
-      configuration: {
-        formId: WAITLIST_FORM_ID || 'Not configured',
-        emailQuestionId: WAITLIST_EMAIL_QUESTION_ID || 'Not configured',
-        sourceQuestionId: WAITLIST_SOURCE_QUESTION_ID || 'Not configured (optional)'
+        'POST /api/forms': 'Submit form data to Prometheus'
       }
     },
     { status: 200 }
