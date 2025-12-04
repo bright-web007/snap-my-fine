@@ -20,7 +20,7 @@ const WAITLIST_FORM_CONFIG = {
   emailQuestionId: process.env.WAITLIST_EMAIL_QUESTION_ID || 'your-email-question-id-here',
 };
 
-async function submitToPrometheus(email: string, source: string) {
+async function submitToPrometheus(email: string, source: string, projectToken: string) {
   const mutation = `
     mutation SubmitWaitlistResponse($input: SubmitResponseInput!) {
       submitResponse(input: $input) {
@@ -59,6 +59,7 @@ async function submitToPrometheus(email: string, source: string) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-project-token': projectToken,
       },
       body: JSON.stringify({
         query: mutation,
@@ -117,8 +118,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get project token from headers (required)
+    const projectToken = request.headers.get('x-project-token');
+
+    if (!projectToken) {
+      return NextResponse.json(
+        { error: 'Project token is required' },
+        { status: 401 }
+      );
+    }
+
     // Submit to Prometheus
-    const prometheusResponse = await submitToPrometheus(email, source);
+    const prometheusResponse = await submitToPrometheus(email, source, projectToken);
 
     // Log successful submission
     console.log(`Waitlist submission successful: ${email} from ${source}`);

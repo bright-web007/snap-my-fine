@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from '@next/third-parties/google';
+import { Providers } from '@/lib/providers';
 
 export const metadata: Metadata = {
   title: "SnapMyFine - Pay Parking Fines Fast",
@@ -29,9 +30,11 @@ export default function RootLayout({
             gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
           `}
         </Script> */}
-        <div className="mobile-wrapper">
-          {children}
-        </div>
+        <Providers>
+          <div className="mobile-wrapper">
+            {children}
+          </div>
+        </Providers>
         {/* Alternative: Using Next.js third-party package (uncomment to use) */}
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
       </body>

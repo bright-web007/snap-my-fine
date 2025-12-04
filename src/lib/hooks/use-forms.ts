@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMercuryProjectToken } from './use-token';
 
 interface UseFormsOptions {
   onSuccess?: (data: any) => void;
@@ -15,17 +16,37 @@ export const useForms = (options?: UseFormsOptions) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  // Get cached token from Mercury
+  const { data: tokenData, error: tokenError, isLoading: tokenLoading } = useMercuryProjectToken();
+
   const submitWaitlist = async (data: SubmitWaitlistData) => {
     setIsSubmitting(true);
     setError(null);
     setSuccess(false);
 
     try {
+      // Check if token is available
+      if (tokenLoading) {
+        throw new Error('Token is still loading, please wait...');
+      }
+
+      if (tokenError) {
+        throw new Error(`Token error: ${tokenError.message || 'Failed to get project token'}`);
+      }
+
+      if (!tokenData?.token) {
+        throw new Error('Project token is not available');
+      }
+
+      // Prepare headers with required token
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'x-project-token': tokenData.token,
+      };
+
       const response = await fetch('/api/forms', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           type: 'waitlist',
           data: {
