@@ -77,6 +77,9 @@ export async function POST(req: NextRequest) {
                     type: 'payment_init',
                     data: {
                         referenceId,
+                        email,
+                        council,
+                        plate_number: vehicleReg,
                         fine_id: pcnNumber, // Use PCN number as fine_id
                         linkPaymentId: billingRequest.id,
                         status: "pending",
