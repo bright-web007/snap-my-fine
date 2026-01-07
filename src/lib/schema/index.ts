@@ -71,3 +71,47 @@ export interface TicketDetailsInterface {
   convtravention_time_to?: string | null;
 }
 
+// Kafka Fine Reminder Event Schema
+export const FineReminderEventSchema = z.object({
+  user_email: z.string().email("Invalid email address"),
+  council: z.string().min(1, "Council is required"),
+  council_name: z.string().optional(),
+  pcn_number: z.string().min(1, "PCN Number is required"),
+  plate_number: z.string().min(1, "Plate number is required"),
+  amount: z.number().positive("Amount must be positive"),
+  discount_amount: z.number().optional(),
+  discount_expires_at: z.string().optional(),
+  enforcement_date: z.string().optional(),
+  service_date_notice: z.string().optional(),
+  issued_by: z.string().optional(),
+  convtravention_time_from: z.string().optional(),
+  convtravention_time_to: z.string().optional(),
+  event_type: z.enum([
+    'fine.discount.week_left',
+    'fine.discount.3days',
+    'fine.discount.tomorrow',
+    'fine.discount.final_hours',
+    'fine.full.discount_expired',
+    'fine.full.5days_left',
+    'fine.full.final_day',
+    'fine.enforcement.started',
+    'fine.enforcement.overdue'
+  ]),
+  timestamp: z.string().optional(),
+  project_uuid: z.string().optional().default("HIVEDECK")
+});
+
+export type FineReminderEvent = z.infer<typeof FineReminderEventSchema>;
+
+// Kafka Consumer Status Schema
+export const ConsumerStatusSchema = z.object({
+  isConnected: z.boolean(),
+  isConsuming: z.boolean(),
+  messagesProcessed: z.number(),
+  lastMessageAt: z.string().optional(),
+  errors: z.array(z.string()).optional(),
+  consumerLag: z.number().optional()
+});
+
+export type ConsumerStatus = z.infer<typeof ConsumerStatusSchema>;
+

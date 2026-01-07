@@ -3,6 +3,7 @@ import Script from "next/script";
 import type { Metadata } from "next";
 import { Providers } from '@/lib/providers';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import ServiceInitializer from '@/components/service-initializer';
 
 export const metadata: Metadata = {
   title: "SnapMyFine - Pay Parking Fines Fast",
@@ -70,6 +71,7 @@ export default function RootLayout({
           `}
         </Script> */}
         <Providers>
+          <ServiceInitializer />
           <div className="mobile-wrapper">
             {children}
           </div>
