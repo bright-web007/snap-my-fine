@@ -9,7 +9,11 @@
     "start": "next start",
     "lint": "eslint",
     "kafka:consumer": "node scripts/kafka-consumer.js",
-    "kafka:consumer:dev": "ts-node scripts/kafka-consumer.ts"
+    "kafka:consumer:dev": "ts-node scripts/kafka-consumer.ts",
+    "health": "node scripts/health-check.js --public",
+    "health:detailed": "node scripts/health-check.js --detailed",
+    "health:live": "node scripts/health-check.js --live",
+    "health:ready": "node scripts/health-check.js --ready"
   },
   "dependencies": {
     "@apollo/client": "^3.13.9",
@@ -60,6 +64,7 @@
     "react-hook-form": "^7.55.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "^2.15.2",
+    "redis": "^5.10.0",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.3.1",
     "truelayer-signing": "^0.1.8",
