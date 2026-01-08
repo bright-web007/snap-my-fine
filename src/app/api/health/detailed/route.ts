@@ -12,34 +12,46 @@ const cache = getHealthCache();
 async function handleDetailedHealthCheck(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now();
   
-  // Validate access first
-  const validation = ipValidator.validateAccess(request);
+  // Check if this is a CLI request - bypass IP validation for CLI
+  const userAgent = request.headers.get('user-agent') || '';
+  const isCLIRequest = userAgent.includes('SnapMyFine-Health-Check');
   
-  if (!validation.allowed) {
-    ipValidator.logAccess(request, false, validation.reason);
+  // Get clientIP for logging (works for both CLI and web requests)  
+  let clientIP = 'unknown';
+  
+  // Validate access first (skip IP validation for CLI)
+  if (!isCLIRequest) {
+    const validation = ipValidator.validateAccess(request);
+    clientIP = validation.clientIP;
     
-    // Log security event with structured logging
-    logSecurityEvent(
-      'access_denied',
-      validation.clientIP,
-      '/api/health/detailed',
-      { reason: validation.reason },
-      request.headers.get('user-agent') || undefined
-    );
+    if (!validation.allowed) {
+      ipValidator.logAccess(request, false, validation.reason);
+      
+      // Log security event with structured logging
+      logSecurityEvent(
+        'access_denied',
+        validation.clientIP,
+        '/api/health/detailed',
+        { reason: validation.reason },
+        request.headers.get('user-agent') || undefined
+      );
+      
+      return NextResponse.json(
+        {
+          error: 'Access denied',
+          message: 'IP not whitelisted or invalid API key',
+          clientIP: validation.clientIP,
+          timestamp: new Date().toISOString()
+        },
+        { status: 403 }
+      );
+    }
     
-    return NextResponse.json(
-      {
-        error: 'Access denied',
-        message: 'IP not whitelisted or invalid API key',
-        clientIP: validation.clientIP,
-        timestamp: new Date().toISOString()
-      },
-      { status: 403 }
-    );
+    // Log successful access for non-CLI requests
+    ipValidator.logAccess(request, true);
+  } else {
+    clientIP = 'CLI';
   }
-  
-  // Log successful access
-  ipValidator.logAccess(request, true);
   
   try {
     // Check Redis cache first
@@ -61,14 +73,14 @@ async function handleDetailedHealthCheck(request: NextRequest): Promise<NextResp
         responseTime,
         result.overall === 'Healthy' ? 'Healthy' : 'Unhealthy',
         true,
-        { ip: validation.clientIP, headers: request.headers },
+        { ip: clientIP, headers: request.headers },
         checksMap
       );
       
       // Log structured data for cached detailed result
       logHealthCheckRequest(
         '/api/health/detailed',
-        validation.clientIP,
+        clientIP,
         result.overall as 'Healthy' | 'Unhealthy' | 'Degraded',
         responseTime,
         checksMap,
@@ -76,7 +88,7 @@ async function handleDetailedHealthCheck(request: NextRequest): Promise<NextResp
           userAgent: request.headers.get('user-agent') || undefined,
           statusCode: 200,
           cacheHit: true,
-          authenticationType: validation.reason?.includes('IP') ? 'ip_whitelist' : 'api_key'
+          authenticationType: isCLIRequest ? 'cli' : 'ip_whitelist'
         }
       );
       
@@ -107,14 +119,14 @@ async function handleDetailedHealthCheck(request: NextRequest): Promise<NextResp
       responseTime,
       result.overall === 'Healthy' ? 'Healthy' : 'Unhealthy',
       false,
-      { ip: validation.clientIP, headers: request.headers },
+      { ip: clientIP, headers: request.headers },
       checksMap
     );
 
     // Log structured data for fresh detailed result
     logHealthCheckRequest(
       '/api/health/detailed',
-      validation.clientIP,
+      clientIP,
       result.overall,
       responseTime,
       checksMap,
@@ -122,7 +134,7 @@ async function handleDetailedHealthCheck(request: NextRequest): Promise<NextResp
         userAgent: request.headers.get('user-agent') || undefined,
         statusCode: 200,
         cacheHit: false,
-        authenticationType: validation.reason?.includes('IP') ? 'ip_whitelist' : 'api_key'
+        authenticationType: isCLIRequest ? 'cli' : 'ip_whitelist'
       }
     );
     
@@ -134,7 +146,7 @@ async function handleDetailedHealthCheck(request: NextRequest): Promise<NextResp
     });
     
   } catch (error) {
-    console.error(`Detailed health check failed for ${validation.clientIP}:`, error);
+    console.error(`Detailed health check failed for ${clientIP}:`, error);
     
     const responseTime = Date.now() - startTime;
     
@@ -144,7 +156,7 @@ async function handleDetailedHealthCheck(request: NextRequest): Promise<NextResp
       responseTime,
       'Unhealthy',
       false,
-      { ip: validation.clientIP, headers: request.headers }
+      { ip: clientIP, headers: request.headers }
     );
     
     return NextResponse.json(
