@@ -4,12 +4,19 @@ import type { Metadata } from "next";
 import { Providers } from '@/lib/providers';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import ServiceInitializer from '@/components/service-initializer';
+import { Roboto } from 'next/font/google';
 
 export const metadata: Metadata = {
   title: "SnapMyFine - Pay Parking Fines Fast",
   description: "Pay your parking fine in seconds with SnapMyFine",
   viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
 };
+
+const roboto = Roboto({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-roboto',
+})
 
 export default function RootLayout({
   children,
@@ -18,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body className={`antialiased ${roboto.variable}`}>
         {/* Meta Pixel Code */}
         <Script id="meta-pixel" strategy="afterInteractive">
           {`

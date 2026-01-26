@@ -142,3 +142,8 @@ body {
   mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
 }
+
+@theme inline{
+  --breakpoint-xxs: 370px;
+  --font-roboto: var(--font-roboto);
+}
