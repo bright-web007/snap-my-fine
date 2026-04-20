@@ -20,7 +20,7 @@ export function VerticalProgress({
     >
       {/* Step Badge */}
       <div
-        className="inline-flex items-center gap-[6px] px-3 py-2 rounded-full border transition-colors"
+        className="inline-flex items-center gap-[6px] px-3 py-2 rounded-full border transition-colors shrink-0 w-fit"
         style={{
           backgroundColor: isActive ? "#FFFFFF" : "#FFFFFF",
           borderColor: isActive
@@ -53,7 +53,7 @@ export function VerticalProgress({
 
         {/* Text */}
         <span
-          className="text-sm transition-colors"
+          className="text-sm transition-colors whitespace-nowrap"
           style={{
             color: isActive ? "#2563EB" : "#6B7280",
             fontFamily: "Inter",
