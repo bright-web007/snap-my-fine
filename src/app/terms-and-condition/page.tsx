@@ -19,6 +19,7 @@ import Section14 from "@/components/terms/section14";
 import Section15 from "@/components/terms/section15";
 import Section16 from "@/components/terms/section16";
 import Section17 from "@/components/terms/section17";
+import SideNav from "@/components/terms/SideNav";
 
 const logoColored = "/landing/logo/logoColored.svg";
 
@@ -56,7 +57,7 @@ const TermsAndConditionPage = () => {
                     {/* Badge */}
                     <div className="inline-flex items-center gap-[6px] px-4 py-2 bg-white rounded-full mb-4">
                         <Image src={logoColored} alt="Logo" width={16} height={16} className="flex-shrink-0" />
-                        <span className="text-[#2563EB] text-sm" style={{ fontFamily: "Inter", fontWeight: 500 }}>
+                        <span className="text-[#393939] text-sm" style={{ fontFamily: "Inter", fontWeight: 400 }}>
                             Legal document
                         </span>
                     </div>
@@ -116,70 +117,45 @@ const TermsAndConditionPage = () => {
                 </div>
             </div>
 
-            <div className="flex">
+            <div className="flex max-w-[1280px] mx-auto">
                 {/* side nav-bar */}
-                <aside className="lg:w-[320px] shrink-0">
-                    <div className="lg:sticky lg:top-8 bg-white rounded-2xl border border-[#F0F0F0] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.04)] p-6">
-                        <p
-                            className="text-[#9CA0AB] text-[10px] font-semibold uppercase tracking-[0.15em] mb-5"
-                            style={{ fontFamily: "Inter", fontWeight: 600 }}
-                        >
-                            Contents
-                        </p>
-                        <nav className="flex flex-col gap-1">
-                            {sections.map((section) => (
-                                <a
-                                    key={section.id}
-                                    href={`#${section.id}`}
-                                    className="group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-[#EBF3FF] text-[#374151] hover:text-[#2563EB]"
-                                    style={{ fontFamily: "Inter", fontWeight: 400, fontSize: "12px" }}
-                                >
-                                    <span className="text-[#9CA0AB] font-medium text-[10px] group-hover:text-[#2563EB] w-5 text-right" style={{ fontFamily: "Inter", fontWeight: 500 }}>
-                                        {section.number}
-                                    </span>
-                                    <span>{section.title}</span>
-                                </a>
-                            ))}
-                        </nav>
-                    </div>
-                </aside>
+                <SideNav sections={sections} />
 
                 {/* content  */}
-                <div className="flex-1 min-w-0">
+                <div className="flex flex-col gap-10 min-w-0 max-w-[1172px] px-4 md:px-8 py-10">
                     <Section1 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section2 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section3 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section4 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section5 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section6 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section7 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section8 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section9 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section10 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section11 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section12 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section13 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section14 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section15 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section16 />
-                    <hr className="border-t border-[#E5E7EB]" />
+                    <hr className="border-t border-[#E2E6EF]" />
                     <Section17 />
-                    <hr className="border-t border-[#E5E7EB]" />
                 </div>
             </div>
 

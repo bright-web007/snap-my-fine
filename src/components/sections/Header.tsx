@@ -13,7 +13,7 @@ const Header = () => {
             <header className="relative z-20 px-4 md:px-8 py-6">
                 <div className="max-w-[1280px] mx-auto flex items-center justify-between">
                     {/* Logo */}
-                    <div className="flex items-center gap-3">
+                    <a href="/" className="flex items-center gap-3">
                         <svg
                             width="29"
                             height="29"
@@ -48,7 +48,7 @@ const Header = () => {
                                 <path d={svgPaths.p1c80d000} fill="white" />
                             </g>
                         </svg>
-                    </div>
+                    </a>
 
                     {/* Desktop Navigation */}
                     <nav

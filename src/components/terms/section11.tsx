@@ -12,11 +12,11 @@ const Section11 = () => {
 
             {/* Heading */}
             <h2
-                className="text-[#0C2D76] mb-6"
+                className="text-[#0D0E10] mb-6"
                 style={{
                     fontFamily: "Sora",
                     fontWeight: 800,
-                    fontSize: "28px",
+                    fontSize: "20px",
                     lineHeight: "1.3",
                     letterSpacing: "-0.5px",
                 }}
@@ -26,16 +26,16 @@ const Section11 = () => {
 
             {/* Paragraph 1 */}
             <p
-                className="text-[#374151] mb-6"
-                style={{ fontFamily: "Inter", fontWeight: 400, fontSize: "15px", lineHeight: "27.2px" }}
+                className="text-[#5A5C63] mb-4"
+                style={{ fontFamily: "Inter", fontWeight: 400, fontSize: "14px", lineHeight: "27.2px" }}
             >
                 All intellectual property rights in the SnapMyFine App, website, and Service &mdash; including software, design, text, graphics, logos, and trade marks &mdash; are owned by or licensed to SnapMyFine. Nothing in these Terms grants you any right to use our intellectual property beyond what is necessary to use the Service.
             </p>
 
             {/* Paragraph 2 */}
             <p
-                className="text-[#374151]"
-                style={{ fontFamily: "Inter", fontWeight: 400, fontSize: "15px", lineHeight: "27.2px" }}
+                className="text-[#5A5C63]"
+                style={{ fontFamily: "Inter", fontWeight: 400, fontSize: "14px", lineHeight: "27.2px" }}
             >
                 You must not copy, reproduce, distribute, modify, or create derivative works from any part of the Service without our prior written consent, or reverse engineer, decompile, or attempt to extract the source code of the App.
             </p>

@@ -5,7 +5,7 @@ import svgPaths from "@/lib/landing/svg-im39sd3dvf";
 const Footer = () => {
     return (
         <footer className="relative bg-[#113279] py-17.5">
-            <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col gap-12">
+            <div className="max-w-[1280px] mx-auto px-4 md:px-8 flex flex-col gap-12">
                 {/* Main Footer Content */}
                 <div className="flex flex-col lg:flex-row justify-between gap-15.5 lg:gap-0 xl:gap-[97px]">
                     {/* Left Column - Logo & Description */}
@@ -95,7 +95,7 @@ const Footer = () => {
                         </div>
                     </section>
 
-                    <section className="flex flex-row flex-wrap justify-between gap-y-8 w-full">
+                    <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 gap-y-8 w-full">
                         <div className="flex flex-col gap-7.75">
                             <h3
                                 className="text-white text-[16px] leading-[27.2px] tracking-[-0.3px] font-medium"
@@ -168,9 +168,9 @@ const Footer = () => {
                             </h3>
                             <nav className="flex flex-col gap-3">
                                 {[
-                                    { label: "Privacy Policy", href: "/" },
+                                    // { label: "Privacy Policy", href: "/" },
                                     { label: "Terms and Conditions", href: "/terms-and-condition" },
-                                    { label: "Cookie", href: "/" },
+                                    // { label: "Cookie", href: "/" },
                                 ].map((link) => (
                                     <a
                                         key={link.href}
@@ -200,7 +200,7 @@ const Footer = () => {
                                 {[
                                     {
                                         name: "Facebook",
-                                        href: "#",
+                                        href: "https://www.facebook.com/SnapMyFine",
                                         icon: (
                                             <svg
                                                 width="18"
@@ -217,7 +217,7 @@ const Footer = () => {
                                     },
                                     {
                                         name: "Instagram",
-                                        href: "https://www.instagram.com/snapmyfine",
+                                        href: "https://www.instagram.com/snapmyfine?igsh=MXZ5N3VtZWM4YWR0dQ==",
                                         icon: (
                                             <svg
                                                 width="18"
@@ -242,7 +242,7 @@ const Footer = () => {
                                     },
                                     {
                                         name: "TikTok",
-                                        href: "https://www.tiktok.com/@snapmyfine?_r=1&_t=ZN-91MXBcSb5Wg",
+                                        href: "https://www.tiktok.com/@snapmyfine?_r=1&_t=ZS-95ipDFpUYE8",
                                         icon: (
                                             <svg
                                                 width="18"
