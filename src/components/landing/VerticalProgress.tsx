@@ -67,10 +67,9 @@ export function VerticalProgress({
       {/* Connecting Dashed Line - Centered */}
       {hasLine && (
         <div
-          className="mt-2"
+          className="mt-2 h-[230px] xl:h-[180px]"
           style={{
             width: "3px",
-            height: "260px",
             borderLeft: `3px dashed ${isActive ? "#105AE2" : "#E5E7EB"}`,
             transition: "border-color 0.3s",
           }}

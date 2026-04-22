@@ -95,7 +95,7 @@ const Footer = () => {
                         </div>
                     </section>
 
-                    <section className="flex flex-row justify-between w-full">
+                    <section className="flex flex-row flex-wrap justify-between gap-y-8 w-full">
                         <div className="flex flex-col gap-7.75">
                             <h3
                                 className="text-white text-[16px] leading-[27.2px] tracking-[-0.3px] font-medium"
@@ -168,9 +168,9 @@ const Footer = () => {
                             </h3>
                             <nav className="flex flex-col gap-3">
                                 {[
-                                    { label: "Privacy Policy", href: "/#privacy" },
-                                    { label: "Terms and Conditions", href: "/#terms" },
-                                    { label: "Cookie", href: "/#cookie" },
+                                    { label: "Privacy Policy", href: "/" },
+                                    { label: "Terms and Conditions", href: "/terms-and-condition" },
+                                    { label: "Cookie", href: "/" },
                                 ].map((link) => (
                                     <a
                                         key={link.href}

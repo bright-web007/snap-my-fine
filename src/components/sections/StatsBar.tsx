@@ -8,7 +8,7 @@ const StatsBar = () => {
         >
             <div className="max-w-[1280px] mx-auto px-4 md:px-8">
 
-                <div className="bg-[#2563EB] rounded-2xl px-6 py-6 md:px-10 md:py-8 grid grid-cols-2 xl:grid-cols-4 gap-6 md:gap-0">
+                <div className="bg-[#2563EB] rounded-2xl px-6 py-6 md:px-10 md:py-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-0">
                     {[
                         { value: '20,000+', label: 'PCNs issued across London every single day' },
                         { value: '2 in 3', label: 'PCN appeals are cancelled when challenged correctly' },

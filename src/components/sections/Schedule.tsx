@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 const logoColored = "/landing/logo/logoColored.svg";
 const Clock = "/landing/schedule/clock.png";
 const Notification = "/landing/schedule/Notification.png";
-const NotificationBg = "/landing/hero/bg-grid-image.png";
+const NotificationBg = "/landing/schedule/Notificationbg.png";
 
 const Schedule = () => {
     return (
@@ -33,7 +33,7 @@ const Schedule = () => {
                     </p>
                 </div>
                 {/* Cards */}
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Card 1 - Reminders that fit your schedule */}
                     <div className="bg-[#D1E3FFB0] rounded-2xl border border-gray-200 p-6 md:p-8">
                         <h3 className="text-[22px] md:text-[22px] font-medium text-[#131515] mb-2">
@@ -136,7 +136,7 @@ const Schedule = () => {
                                 src={NotificationBg}
                                 alt=""
                                 fill
-                                className="object-cover opacity-60 pointer-events-none"
+                                className="object-cover opacity-90 pointer-events-none"
                             />
 
                             {/* Notification card */}

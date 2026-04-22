@@ -1,0 +1,263 @@
+.container {
+  max-width: 898px;
+  margin: 0 auto;
+  
+  color: #393939;
+  line-height: 1.8;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+}
+
+/* Paragraph spacing */
+.container p {
+  margin-bottom: 20px;
+  color: #393939;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* Links */
+.container a {
+  color: #0464DD;
+  text-decoration: none;
+}
+
+.container a:hover {
+  text-decoration: underline;
+}
+
+/* Images */
+.container img {
+  border-radius: 12px;
+  margin: 24px 0;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Section divider — auto after first two paragraphs via h2 border */
+.container h2 {
+  font-family: "Sora", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0D0E10;
+  margin: 40px 0 16px;
+  padding-top: 32px;
+  border-top: 1px solid #e5e7eb;
+  line-height: 1.3;
+}
+
+.container h2:first-of-type {
+  border-top: 1px solid #e5e7eb;
+}
+
+/* =========================
+   KEY TAKEAWAYS — ul directly after first h2
+========================= */
+.container ul {
+  background: #F0F5FF;
+  border-radius: 12px;
+  padding: 24px 24px 24px 40px;
+  margin: 0 0 32px;
+  list-style: disc;
+}
+
+.container ul li {
+  margin-bottom: 12px;
+  color: #393939;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.container ul li:last-child {
+  margin-bottom: 0;
+}
+
+/* When ul is inside keyTakeaways, remove its own background */
+.keyTakeaways ul {
+  background: none;
+  border-radius: 0;
+  padding-left: 24px;
+  margin: 0;
+}
+
+/* =========================
+   BLOCKQUOTE — em + small pattern
+========================= */
+.container em {
+  font-style: italic;
+  color: #0C2D76;
+}
+
+.container small {
+  display: block;
+  font-size: 13px;
+  color: #9CA3AF;
+  margin-bottom: 24px;
+  padding-left: 24px;
+}
+
+/* =========================
+   NUMBERED STEPS — strong with 01, 02 etc
+========================= */
+.container p > strong {
+  color: #0C2D76;
+}
+
+/* Step items: bold text starting with 01-09 */
+.container p:has(> strong:only-child) {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+/* =========================
+   SUCCESS BOX — last strong + last p
+========================= */
+.container p:last-of-type {
+  margin-bottom: 0;
+}
+
+/* =========================
+   STEP LIST CARD WRAPPER
+========================= */
+.stepList {
+  margin-top: 16px;
+}
+
+.stepItem {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stepNumber {
+  min-width: 40px;
+  height: 40px;
+  background: #105AE2;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stepContent strong {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #0D0E10;
+}
+
+.stepContent p {
+  margin: 0;
+  color: #6b7280;
+}
+
+/* =========================
+   SUCCESS BOX
+========================= */
+.successBox {
+  background: #E6F4EA;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-top: 32px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.successIcon {
+  background: #16A34A;
+  color: white;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.successText strong {
+  display: block;
+  color: #16A34A;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.successText p {
+  margin: 0;
+  color: #065F46;
+  font-size: 15px;
+}
+
+/* =========================
+   QUOTE STYLES
+========================= */
+.quote {
+  border-left: 4px solid #2563EB;
+  padding-left: 20px;
+  margin: 32px 0 8px;
+  font-style: italic;
+  color: #0C2D76;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.quoteSource {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-top: 6px;
+}
+
+/* =========================
+   KEY TAKEAWAYS CARD (when used as component)
+========================= */
+.keyTakeaways {
+  background: #F0F5FF;
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  margin: 24px 0 32px;
+}
+
+.keyTakeawaysTitle {
+  font-weight: 600;
+  font-size: 18px;
+  color: #2563EB;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.keyTakeaways ul {
+  padding-left: 20px;
+  background: none;
+  border-radius: 0;
+  margin: 0;
+}
+
+.keyTakeaways li {
+  margin-bottom: 16px;
+  color: #393939;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.divider {
+  margin: 32px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+.h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 32px 0 12px;
+  color: #0D0E10;
+}
