@@ -53,10 +53,10 @@ const CallToAction = () => {
                                             letterSpacing: "-1px",
                                         }}
                                     >
-                                        Experience faster parking fine payments.
+                                        Most people download it after their first fine. You don't have to wait that long.
                                     </h2>
 
-                                    <p style={{ fontFamily: "Inter" }} className="text-white font-normal text-base leading-[22.5px] max-w-[489px]">Settle your parking fines in just 60 seconds! Simply snap a photo, and let SnapMyFine handle everything else effortlessly.</p>
+                                    <p style={{ fontFamily: "Inter" }} className="text-white font-normal text-[16px] leading-[22.5px] max-w-[489px]">SnapMyFine is free, takes seconds to set up, and is there for you the moment you need it. Download it now — and the next PCN won't catch you off guard.</p>
                                 </div>
 
                                 {/* Right Column - Form */}

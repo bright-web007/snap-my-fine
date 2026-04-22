@@ -135,8 +135,8 @@ export default function LandingPage() {
             <main className="relative z-10 px-4 md:px-8 pt-12 md:pt-20  lg:pb-32 ">
                 <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-32 items-center">
                     {/* Left Content */}
-                    <div className="w-full flex flex-col gap-10.5">
-                        <section className="flex flex-col gap-[12px]">
+                    <div className="w-full flex flex-col gap-6">
+                        <section className="flex flex-col gap-6">
                             <h1
                                 className="text-white text-[48px] md:text-[52px]"
                                 style={{
@@ -167,7 +167,7 @@ export default function LandingPage() {
                                 Just take a photo of your ticket. We'll read it, explain it in simple terms, tell you exactly how long you have, and whether you have grounds to challenge it. Free, on your phone, in under a minute!
                             </p>
                         </section>
-                        <section className="flex flex-col gap-4">
+                        <section className="flex flex-col gap-8">
                             <div className="flex flex-wrap gap-3">
                                 {[
                                     'Free to download',
@@ -188,25 +188,16 @@ export default function LandingPage() {
                                     </span>
                                 ))}
                             </div>
-                            <p className="text-white"
-                                style={{
-                                    fontFamily: "Inter",
-                                    fontWeight: 600,
-                                    fontSize: "16px",
-                                    lineHeight: "150%",
-                                    letterSpacing: "0%",
-                                }}
-                            >Download the app now:</p>
                             <div className="flex flex-col md:flex-row w-full justify-start gap-3">
                                 <a
                                     style={{
-                                        borderColor: "#FFFFFF5E",
+                                        borderColor: "none",
                                         paddingLeft: "18px",
                                         paddingRight: "18px",
                                         textDecoration: "none",
                                     }}
                                     target="_blank" rel="noopener noreferrer"
-                                    className="flex w-fit justify-center flex-row group transition-all items-center hover:bg-white bg-[#003880] border py-3 gap-[3.75px] rounded-[8px]" href={process.env.NEXT_PUBLIC_APP_STORE_LINK || "/"}>
+                                    className="flex w-fit justify-center flex-row group transition-all items-center hover:bg-white bg-[#003880] border-none py-3 gap-[3.75px] rounded-[8px]" href={process.env.NEXT_PUBLIC_APP_STORE_LINK || "/"}>
                                     <svg className="text-white transition-all group-hover:text-[#313131]" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M11.6781 8.37031C11.6719 7.30469 12.1547 6.50156 13.1297 5.90938C12.5844 5.12813 11.7594 4.69844 10.6719 4.61562C9.64219 4.53437 8.51562 5.21562 8.10312 5.21562C7.66719 5.21562 6.67031 4.64375 5.88594 4.64375C4.26719 4.66875 2.54688 5.93437 2.54688 8.50937C2.54688 9.27031 2.68594 10.0563 2.96406 10.8656C3.33594 11.9313 4.67656 14.5422 6.075 14.5C6.80625 14.4828 7.32344 13.9812 8.275 13.9812C9.19844 13.9812 9.67656 14.5 10.4922 14.5C11.9031 14.4797 13.1156 12.1063 13.4688 11.0375C11.5766 10.1453 11.6781 8.425 11.6781 8.37031ZM10.0359 3.60469C10.8281 2.66406 10.7563 1.80781 10.7328 1.5C10.0328 1.54062 9.22344 1.97656 8.7625 2.5125C8.25469 3.0875 7.95625 3.79844 8.02031 4.6C8.77656 4.65781 9.46719 4.26875 10.0359 3.60469Z" fill="currentColor" />
                                     </svg>
@@ -218,13 +209,13 @@ export default function LandingPage() {
                                 </a>
                                 <a
                                     style={{
-                                        borderColor: "#FFFFFF5E",
+                                        borderColor: "none",
                                         paddingLeft: "18px",
                                         paddingRight: "18px",
                                         textDecoration: "none",
                                     }}
                                     target="_blank" rel="noopener noreferrer"
-                                    className="flex w-fit justify-center flex-row group items-center hover:bg-white transition-all bg-[#FFFFFF42] border py-3 gap-[3.75px] rounded-[8px]" href={process.env.NEXT_PUBLIC_GOOGLE_PLAY_LINK || "/"}>
+                                    className="flex w-fit justify-center flex-row group items-center hover:bg-white transition-all bg-[#FFFFFF42] border-none py-3 gap-[3.75px] rounded-[8px]" href={process.env.NEXT_PUBLIC_GOOGLE_PLAY_LINK || "/"}>
                                     <svg className="text-white transition-all group-hover:text-[#313131]" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M2.40698 1.20935L9.19564 8.00002L2.40764 14.7907C2.28714 14.7396 2.18433 14.6543 2.11202 14.5452C2.0397 14.4361 2.00108 14.3082 2.00098 14.1774V1.82335C2.0009 1.69245 2.03935 1.56442 2.11155 1.45524C2.18375 1.34605 2.2865 1.26053 2.40698 1.20935ZM9.66698 8.47135L11.2016 10.006L3.91031 14.228L9.66698 8.47135ZM11.7996 6.33935L13.671 7.42335C13.772 7.48195 13.8559 7.56607 13.9142 7.66727C13.9724 7.76848 14.0031 7.88322 14.0031 8.00002C14.0031 8.11681 13.9724 8.23155 13.9142 8.33276C13.8559 8.43396 13.772 8.51808 13.671 8.57668L11.799 9.66068L10.1383 8.00002L11.7996 6.33935ZM3.91031 1.77202L11.2023 5.99335L9.66698 7.52868L3.91031 1.77202Z" fill="currentColor" />
                                     </svg>
@@ -264,11 +255,11 @@ export default function LandingPage() {
             {/* schedule section */}
             <Schedule />
 
-            {/* easy payment section */}
-            <EasyPayment />
-
             {/* StatsBar section */}
             <StatsBar />
+
+            {/* easy payment section */}
+            <EasyPayment />
 
             {/* dispute section */}
             <Dispute />
@@ -294,7 +285,7 @@ export default function LandingPage() {
 
                 <div className="relative z-10 max-w-[1280px] mx-auto px-4 md:px-8">
                     {/* Header */}
-                    <div className="text-left lg:text-center space-y-8 mb-20 md:mb-24">
+                    <div className="text-left  space-y-4 mb-20 md:mb-24">
                         {/* Badge */}
                         <div className="inline-flex items-center gap-[6px] px-3 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
                             <Image src={logoWhite} alt="Logo" width={16} height={16} className="flex-shrink-0" />
@@ -305,19 +296,32 @@ export default function LandingPage() {
 
                         {/* Main Heading */}
                         <h2
-                            className="text-white max-w-4xl lg:mx-auto"
+                            className="text-white max-w-md"
                             style={{
                                 fontFamily: "Sora",
-                                fontWeight: 400,
-                                fontSize: "40px",
-                                lineHeight: "57.6px",
+                                fontWeight: 800,
+                                fontSize: "36px",
+                                lineHeight: "41px",
                                 letterSpacing: "-1px",
                                 verticalAlign: "middle",
                             }}
                         >
-                            Pay your parking fines automatically without
-                            frustration
+                            Everything you need, in one app on your phone
                         </h2>
+
+                        <p
+                            className="text-white max-w-2xl"
+                            style={{
+                                fontFamily: "Sora",
+                                fontWeight: 400,
+                                fontSize: "14px",
+                                lineHeight: "20px",
+                                letterSpacing: "0px",
+                                verticalAlign: "middle",
+                            }}
+                        >
+                            Built for London drivers who don't have time to figure out the system. Every feature is designed to take something complicated and make it feel manageable.
+                        </p>
                     </div>
 
                     {/* Features Grid */}
@@ -359,7 +363,7 @@ export default function LandingPage() {
                                         letterSpacing: "0%",
                                     }}
                                 >
-                                    Photo-based Fine Capture
+                                    Instant ticket scanning
                                 </h3>
                                 <p
                                     className="text-white/80"
@@ -371,10 +375,7 @@ export default function LandingPage() {
                                         letterSpacing: "0px",
                                     }}
                                 >
-                                    Snap a photo of your parking or PCN ticket on
-                                    your system and let us handle all details like
-                                    council name, fine amount, and payment
-                                    deadline
+                                    Point your camera at any London Council PCN and the app reads it in seconds. No typing, no errors, no hunting through council portals.
                                 </p>
                             </div>
                         </div>
@@ -430,7 +431,7 @@ export default function LandingPage() {
                                         letterSpacing: "0%",
                                     }}
                                 >
-                                    Intelligent OCR Extraction
+                                    Honest pay-or-appeal guidance
                                 </h3>
                                 <p
                                     className="text-white/80"
@@ -442,9 +443,7 @@ export default function LandingPage() {
                                         letterSpacing: "0px",
                                     }}
                                 >
-                                    Our AI-powered OCR reads your parking fine
-                                    with 85%+ accuracy, removing parking and
-                                    manual data entry errors.
+                                    We'll tell you clearly whether you have genuine grounds to challenge and just as clearly when you don't. No false hope, no wasted effort.
                                 </p>
                             </div>
                         </div>
@@ -486,7 +485,7 @@ export default function LandingPage() {
                                         letterSpacing: "0%",
                                     }}
                                 >
-                                    Automated Payment Workflow
+                                    Appeal letters that get results
                                 </h3>
                                 <p
                                     className="text-white/80"
@@ -498,9 +497,7 @@ export default function LandingPage() {
                                         letterSpacing: "0px",
                                     }}
                                 >
-                                    Once verified, SnapMyFine processes your
-                                    payment automatically through secure Open
-                                    Banking no credit card required.
+                                    If you have a case, the app helps you write a structured, evidence-led dispute; the kind that councils take seriously and are harder to dismiss.
                                 </p>
                             </div>
                         </div>
@@ -542,7 +539,7 @@ export default function LandingPage() {
                                         letterSpacing: "0%",
                                     }}
                                 >
-                                    Council Integration Bots
+                                    Pay in seconds, no card needed
                                 </h3>
                                 <p
                                     className="text-white/80"
@@ -554,9 +551,7 @@ export default function LandingPage() {
                                         letterSpacing: "0px",
                                     }}
                                 >
-                                    We connect directly to UK council payment
-                                    systems to ensure every fine goes to the right
-                                    place, fast and securely.
+                                    Settle your fine safely through UK Open Banking. It takes seconds, and you get a proper digital receipt the moment it's done.
                                 </p>
                             </div>
                         </div>
@@ -605,7 +600,7 @@ export default function LandingPage() {
                                         letterSpacing: "0%",
                                     }}
                                 >
-                                    Payment Confirmation & Receipts
+                                    Deadline reminders built in
                                 </h3>
                                 <p
                                     className="text-white/80"
@@ -617,9 +612,7 @@ export default function LandingPage() {
                                         letterSpacing: "0px",
                                     }}
                                 >
-                                    Receive instant payment confirmation and
-                                    digital proof of your parking fine payment,
-                                    safely stored for your records.
+                                    The app keeps track of your fine and reminds you before the important windows close. You focus on your day while  we'll handle the clock-watching.
                                 </p>
                             </div>
                         </div>
@@ -660,7 +653,7 @@ export default function LandingPage() {
                                         letterSpacing: "0%",
                                     }}
                                 >
-                                    Pay Now / Pay Later Options
+                                    Your records, always safe
                                 </h3>
                                 <p
                                     className="text-white/80"
@@ -672,9 +665,7 @@ export default function LandingPage() {
                                         letterSpacing: "0px",
                                     }}
                                 >
-                                    Choose to settle your fine instantly or
-                                    schedule it before the due date — your
-                                    control, your timing.
+                                    Every payment and submission is stored securely in the app. If you ever need proof, it's right there — no digging through emails or paperwork.
                                 </p>
                             </div>
                         </div>
@@ -694,24 +685,38 @@ export default function LandingPage() {
                         <div className="inline-flex items-center gap-[6px] px-3 py-2 bg-white rounded-full border border-[#2563EB]/20">
                             <Image src={logoColored} alt="Logo" width={16} height={16} className="flex-shrink-0" />
                             <span className="text-[#393939] text-sm">
-                                Testimonials
+                                From the people who have used it
                             </span>
                         </div>
 
                         {/* Main Heading */}
                         <h2
-                            className="text-[#000000] max-w-3xl lg:mx-auto"
+                            className="text-[#0C2D76] max-w-3xl lg:mx-auto"
                             style={{
                                 fontFamily: "Sora",
-                                fontWeight: 400,
-                                fontSize: "40px",
-                                lineHeight: "57.6px",
+                                fontWeight: 800,
+                                fontSize: "38px",
+                                lineHeight: "100%",
                                 letterSpacing: "-1px",
                                 verticalAlign: "middle",
                             }}
                         >
-                            What people are saying
+                            What drivers say after using the app
                         </h2>
+
+                        <p
+                            className="text-[#393939] max-w-lg lg:mx-auto"
+                            style={{
+                                fontFamily: "Sora",
+                                fontWeight: 400,
+                                fontSize: "15px",
+                                lineHeight: "21px",
+                                letterSpacing: "-0.5px",
+                                verticalAlign: "middle",
+                            }}
+                        >
+                            From confused and frustrated — to sorted. Here's what London drivers told us.
+                        </p>
                     </div>
 
                     {/* Testimonials Animated Columns - Desktop Only */}
@@ -722,7 +727,7 @@ export default function LandingPage() {
                             speed={50}
                             testimonials={[
                                 {
-                                    quote: "I used to spend 20 minutes trying to pay a single parking fine on my council's website. With SnapMyFine, it's literally a photo and done. Best app I've downloaded this year.",
+                                    quote: "I used to spend 20 minutes trying to pay a single parking fine on my council’s website. With SnapMyFine, it’s literally a photo and done. Best app I’ve downloaded this year, saved me from a charge of £160.",
                                     rating: 5.0,
                                     name: "Sarah M., London Driver",
                                     role: "London Driver",
@@ -736,7 +741,7 @@ export default function LandingPage() {
                                     date: "Oct 25, 2025",
                                 },
                                 {
-                                    quote: "The OCR technology is spot-on. It read my parking ticket perfectly the first time, and payment was instant. This is the future of parking fines.",
+                                    quote: "I was ready to just pay it and move on. The app flagged that the signage wasn't clear; I challenged it, and the PCN was cancelled. Never would have known otherwise.",
                                     rating: 5.0,
                                     name: "Michael R., Tech Enthusiast",
                                     role: "Tech Enthusiast",
@@ -765,7 +770,7 @@ export default function LandingPage() {
                                     date: "Nov 5, 2025",
                                 },
                                 {
-                                    quote: "It's so refreshing to have something this simple for parking fines. No endless forms or confusing websites just one tap and done.",
+                                    quote: "It’s so refreshing to have something this simple for parking fines. No endless forms or confusing websites just one tap and done.",
                                     rating: 5.0,
                                     name: "Emma S., Taxi Driver",
                                     role: "Taxi Driver",
@@ -794,7 +799,7 @@ export default function LandingPage() {
                                     date: "Oct 29, 2025",
                                 },
                                 {
-                                    quote: "I was skeptical at first, but the app delivered exactly what it promised. Fast, secure, and incredibly convenient. Highly recommend!",
+                                    quote: "I wasn’t sure what to expect, but the whole experience is incredibly smooth. I love that I can see every payment confirmation instantly.",
                                     rating: 5.0,
                                     name: "Chris B., Rideshare Driver",
                                     role: "Rideshare Driver",
@@ -821,10 +826,7 @@ export default function LandingPage() {
                                         letterSpacing: "0px",
                                     }}
                                 >
-                                    I used to spend 20 minutes trying to pay a
-                                    single parking fine on my council's website.
-                                    With SnapMyFine, it's literally a photo and
-                                    done. Best app I've downloaded this year.
+                                    I used to spend 20 minutes trying to pay a single parking fine on my council’s website. With SnapMyFine, it’s literally a photo and done. Best app I’ve downloaded this year, saved me from a charge of £160.
                                 </p>
                                 <div className="flex items-center gap-2 mb-3">
                                     <span
@@ -1303,33 +1305,45 @@ export default function LandingPage() {
                 className="relative bg-[#F9FAFB] py-16 md:py-24 overflow-hidden min-h-[900px]"
             >
                 <div className="max-w-[1280px] mx-auto px-4 md:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-start">
                         {/* Left Column - Header & Illustration */}
-                        <div className="space-y-8 lg:sticky lg:top-24">
+                        <div className="space-y-3 lg:sticky lg:top-0">
                             {/* Badge */}
                             <div className="inline-flex items-center gap-[6px] px-3 py-2 bg-white rounded-full border border-[#2563EB]/20">
                                 <Image src={logoColored} alt="Logo" width={16} height={16} className="flex-shrink-0" />
-                                <span className="text-[#393939] text-sm">FAQs</span>
+                                <span className="text-[#393939] text-sm">Questions answered</span>
                             </div>
 
                             {/* Main Heading */}
                             <h2
-                                className="text-[#000000]"
+                                className="text-[#0C2D76]"
                                 style={{
                                     fontFamily: "Sora",
-                                    fontWeight: 400,
-                                    fontSize: "40px",
-                                    lineHeight: "57.6px",
+                                    fontWeight: 800,
+                                    fontSize: "38px",
+                                    lineHeight: "41px",
                                     letterSpacing: "-1px",
                                 }}
                             >
-                                Got questions?
+                                A few things drivers
                                 <br />
-                                We've got answers.
+                                often want to know
                             </h2>
+                            <p
+                                className="text-[#666666]"
+                                style={{
+                                    fontFamily: "Sora",
+                                    fontWeight: 400,
+                                    fontSize: "14px",
+                                    lineHeight: "24px",
+                                    letterSpacing: "-1px",
+                                }}
+                            >
+                                If something's holding you back, it's probably answered here.
+                            </p>
 
                             {/* Illustration with decorative elements */}
-                            <div className="relative max-w-md mx-auto lg:mx-0">
+                            <div className="relative max-w-md mx-auto xl:pt-9 lg:mx-0">
                                 {/* Background decorative circles */}
                                 <div className="absolute -top-8 -left-8 w-20 h-20 bg-[#E5E7EB] rounded-full opacity-50" />
                                 <div className="absolute top-12 -right-4 w-16 h-16 bg-[#E5E7EB] rounded-full opacity-40" />
@@ -1387,39 +1401,33 @@ export default function LandingPage() {
                                 faqs={[
                                     {
                                         value: "item-1",
-                                        question: "Who handles my payment?",
+                                        question: "Is the app actually free?",
                                         answer:
-                                            "Payments are processed through trusted UK-based gateways. You'll get a proper digital receipt, just like you would through the council's website only faster.",
+                                            "Yes. SnapMyFine is free to download on both iOS and Android. There's no subscription and no account required to get started.",
                                     },
                                     {
                                         value: "item-2",
-                                        question: "Do I still need my council's website?",
+                                        question: "Am I allowed to challenge a Council PCN?",
                                         answer:
-                                            "Nope! SnapMyFine handles everything from OCR scanning to secure payment processing. You can skip the council website entirely — unless you prefer the 10-minute login and slow forms.",
+                                            "Every driver has a statutory right to challenge. Councils expect appeals — they're built into the process. The app helps you understand whether you have genuine grounds before you decide.",
                                     },
                                     {
                                         value: "item-3",
-                                        question: "Is Snapmyfine official?",
+                                        question: "What if my case isn't strong enough to challenge?",
                                         answer:
-                                            "SnapMyFine is an independent service that makes paying parking fines easier. While we're not affiliated with councils, we work directly with their payment systems to process your fines securely and efficiently.",
+                                            "We'll tell you honestly. If it's not worth challenging, we'll say so clearly — and help you pay at the discounted rate before the deadline passes. No pressure either way.",
                                     },
                                     {
                                         value: "item-4",
-                                        question: "Is my information secure?",
+                                        question: "I've had the fine for a few weeks. Is it too late?",
                                         answer:
-                                            "Absolutely. We use bank-level encryption (256-bit SSL) to protect your data. Your payment details are never stored on our servers — they go directly to PCI-compliant payment gateways. We're GDPR compliant and take your privacy seriously.",
+                                            "It might not be. Download the app, snap your PCN, and we'll tell you exactly where you stand and what options are still available to you.",
                                     },
                                     {
                                         value: "item-5",
-                                        question: "What happens to the photo I upload?",
+                                        question: "Is my data and payment information safe?",
                                         answer:
-                                            "Your photo is securely processed by our OCR system to extract fine details, then encrypted and stored temporarily for verification. Once your payment is confirmed, we delete the image within 30 days, unless you choose to keep it for your records.",
-                                    },
-                                    {
-                                        value: "item-6",
-                                        question: "What if something goes wrong with my payment?",
-                                        answer:
-                                            "If a payment fails or there's an issue, we'll notify you immediately via email and in-app. Our support team is available to help resolve any problems, and we'll work with the council on your behalf if needed. You'll always have full visibility of your payment status.",
+                                            "Yes. Payments go through trusted UK Open Banking infrastructure. We never store your card details, and your personal data is never sold or shared with third parties.",
                                     },
                                 ]}
                             />

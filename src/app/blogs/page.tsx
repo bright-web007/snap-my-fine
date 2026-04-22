@@ -128,7 +128,7 @@ const Page = () => {
                             />
                             <button
                                 type="submit"
-                                className="bg-[#105AE2] text-white px-5 py-3 text-[14px] font-semibold hover:bg-[#0a2561] transition-colors"
+                                className="bg-[#105AE2] text-white px-5 py-3 text-[14px] font-semibold hover:bg-[#0a2561] transition-colors cursor-pointer"
                                 style={{ fontFamily: "Inter" }}
                             >
                                 Search
@@ -148,11 +148,10 @@ const Page = () => {
                                 <button
                                     key={cat}
                                     onClick={() => handleCategoryChange(cat)}
-                                    className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors border ${
-                                        activeCategory === cat
+                                    className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors cursor-pointer border ${activeCategory === cat
                                             ? "bg-[#105AE2] text-white border-[#0C2D76]"
                                             : "bg-white text-[#374151] border-[#E5E7EB] hover:border-[#0C2D76] hover:text-[#0C2D76]"
-                                    }`}
+                                        }`}
                                     style={{ fontFamily: "Inter" }}
                                 >
                                     {cat}
@@ -189,11 +188,10 @@ const Page = () => {
                                                 <button
                                                     key={option}
                                                     onClick={() => { setSortBy(option); setSortDropdownOpen(false); }}
-                                                    className={`block w-full text-left px-5 py-3 text-[14px] transition-colors ${
-                                                        sortBy === option
+                                                    className={`block w-full text-left px-5 py-3 text-[14px] transition-colors ${sortBy === option
                                                             ? "font-semibold text-[#0C2D76] bg-[#F9FAFB]"
                                                             : "font-normal text-[#374151] hover:bg-[#F9FAFB]"
-                                                    }`}
+                                                        }`}
                                                     style={{ fontFamily: "Inter" }}
                                                 >
                                                     {option}
@@ -327,6 +325,8 @@ const Page = () => {
                                         <p className="text-[#5A5C63] text-[13px] leading-[20px] mb-5 line-clamp-2 leading-[160%]">
                                             {post.excerpt.replace(/&hellip;/g, '...')}
                                         </p>
+
+                                        <hr className="border-t border-[#E5E7EB] mb-5" />
 
                                         {/* Footer: Author + Read Link */}
                                         <div className="mt-auto flex items-center justify-between">

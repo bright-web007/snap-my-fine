@@ -29,7 +29,7 @@ const Blog = () => {
     return (
         <section
             id="blog"
-            className="relative bg-white py-16 md:py-24 overflow-hidden"
+            className="relative bg-[#F5F9FF] py-16 md:py-24 overflow-hidden"
         >
             <div className="max-w-[1280px] mx-auto px-4 md:px-8">
                 {/* Header */}
@@ -42,14 +42,20 @@ const Blog = () => {
                         </span>
                     </div>
                     {/* Title */}
-                    <h2 className="text-[31px] md:text-[36px] leading-[41px] font-bold text-[#0C2D76] xl:w-[30%]">
-                        Know your rights. Beat the system.
+                    <h2 className="text-[31px] md:text-[36px] leading-[41px] text-[#0C2D76]"
+                        style={{
+                            fontFamily: "Sora",
+                            fontWeight: 800,
+                            letterSpacing: "-1px",
+                            verticalAlign: "middle",
+                        }}>
+                        Understand your fine, <br /> know your options
                     </h2>
                     <div className="flex flex-col xl:flex-row xl:justify-between gap-6">
-                        <p className="text-[#393939] text-[14px] font-regular leading-[23px] xl:w-[45%]">
-                            Practical guides, appeal tips, and PCN news written for London drivers — not lawyers.
+                        <p className="text-[#666666] text-[14px] font-regular leading-[23px] xl:w-[45%]">
+                            Simple, honest guides on PCNs, deadlines, appeals, and your rights as a London driver. Just the information you actually need.
                         </p>
-                        <Link href="/blogs" className="inline-flex w-fit items-center gap-2 text-white font-semibold text-[14px] leading-[100%] bg-[#0464DD] p-[12px] rounded-[6px] whitespace-nowrap cursor-pointer">
+                        <Link href="/blogs" className="inline-flex w-fit items-center gap-2 text-white font-semibold text-[14px] leading-[100%] bg-[#0464DD] hover:bg-[#0356b6] p-[12px] rounded-[6px] whitespace-nowrap cursor-pointer">
                             View all articles <ArrowRight size={18} />
                         </Link>
                     </div>
@@ -100,6 +106,8 @@ const Blog = () => {
                                     <p className="text-[#5A5C63] text-[13px] leading-[20px] mb-5 line-clamp-2 leading-[160%]">
                                         {post.excerpt.replace(/&hellip;/g, '...')}
                                     </p>
+
+                                    <hr className="border-t border-[#E5E7EB] mb-5" />
 
                                     {/* Footer: Author + Read Link */}
                                     <div className="mt-auto flex items-center justify-between">

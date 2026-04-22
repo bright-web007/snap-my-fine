@@ -35,7 +35,7 @@ const Schedule = () => {
                 {/* Cards */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Card 1 - Reminders that fit your schedule */}
-                    <div className="bg-[#D1E3FFB0] rounded-2xl border border-gray-200 p-6 md:p-8">
+                    <div className="bg-[#D1E3FFB0] rounded-2xl border border-gray-200 p-6 md:p-8 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
                         <h3 className="text-[22px] md:text-[22px] font-medium text-[#131515] mb-2">
                             Reminders that fit your schedule
                         </h3>
@@ -141,7 +141,7 @@ const Schedule = () => {
                     </div>
 
                     {/* Card 2 - Notifications that keep you ahead */}
-                    <div className="bg-[#0C2D76] rounded-2xl p-6 md:p-8 text-white overflow-hidden flex flex-col h-[618px] xl:h-full">
+                    <div className="bg-[#0C2D76] rounded-2xl p-6 md:p-8 text-white overflow-hidden flex flex-col h-[618px] xl:h-full transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
                         <h3 className="text-[20px] md:text-[22px] font-medium mb-2">
                             Notifications that keep you ahead
                         </h3>

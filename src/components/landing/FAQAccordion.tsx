@@ -22,18 +22,17 @@ interface FAQAccordionProps {
 }
 
 export function FAQAccordion({ faqs }: FAQAccordionProps) {
-  const [openItem, setOpenItem] = useState("item-1");
+  const [openItems, setOpenItems] = useState<string[]>(faqs.map(faq => faq.value));
 
   return (
     <Accordion
-      type="single"
-      collapsible
-      value={openItem}
-      onValueChange={setOpenItem}
+      type="multiple"
+      value={openItems}
+      onValueChange={setOpenItems}
       className="space-y-4"
     >
       {faqs.map((faq, index) => {
-        const isOpen = openItem === faq.value;
+        const isOpen = openItems.includes(faq.value);
         const isFirst = index === 0;
 
         return (
@@ -44,18 +43,18 @@ export function FAQAccordion({ faqs }: FAQAccordionProps) {
               isOpen && isFirst
                 ? "bg-white"
                 : "bg-[#F9FAFB]"
-            } border-[#E5E7EB] rounded-2xl border px-6 py-2 ${isFirst ? "shadow-sm" : ""}`}
+            } border-[#E5E7EB] rounded-2xl border px-6 py-4 ${isFirst ? "shadow-sm" : ""}`}
           >
             <AccordionPrimitive.Header className="flex">
               <AccordionPrimitive.Trigger
-                className="hover:no-underline flex flex-1 items-center gap-3 rounded-md py-4 text-left outline-none transition-all"
+                className="hover:no-underline flex flex-1 items-center gap-3 rounded-md py-1 text-left outline-none transition-all"
                 style={{
                   fontFamily: "Sora",
                   fontWeight: 400,
-                  fontSize: "18px",
+                  fontSize: "16px",
                   lineHeight: "130%",
                   letterSpacing: "0%",
-                  color: isOpen ? "#0464DD" : "#000000",
+                  color: isOpen ? "#112248" : "#000000",
                 }}
               >
                 <Image
@@ -69,13 +68,13 @@ export function FAQAccordion({ faqs }: FAQAccordionProps) {
               </AccordionPrimitive.Trigger>
             </AccordionPrimitive.Header>
             <AccordionContent
-              className="pt-2 pb-4 pl-11"
+              className=" pb-4 pl-11"
               style={{
                 fontFamily: "Inter",
                 fontWeight: 400,
                 fontSize: "14px",
                 lineHeight: "24px",
-                color: "#6B7280",
+                color: "#666666",
               }}
             >
               {faq.answer}

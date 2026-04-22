@@ -62,7 +62,7 @@ const Dispute = () => {
                         { title: 'Smart dispute support with AI', description: 'Technology that helps understand your fine and challenge it when appropriate.' },
                         { title: 'Dispute all in one place', description: 'Message councils, upload evidence, and track everything without leaving SnapMyFine.' },
                     ].map((card, i) => (
-                        <div key={i} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+                        <div key={i} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
                             <div className="w-8 h-8 bg-[#2563EB] rounded-lg flex items-center justify-center mb-4">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M7 0H15V11L11 8.5L7 11V0Z" fill="white" />

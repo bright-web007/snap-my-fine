@@ -111,7 +111,7 @@ const Footer = () => {
                                     { label: "Why SnapMyFine", href: "/#why" },
                                     { label: "Testimonials", href: "/#testimonials" },
                                     { label: "FAQ", href: "/#faq" },
-                                    { label: "Blog", href: "/#blog" },
+                                    { label: "Blog", href: "/blogs" },
                                 ].map((link) => (
                                     <a
                                         key={link.href}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { VerticalProgress } from "../landing/VerticalProgress";
 
@@ -13,6 +13,37 @@ const Phone = "/landing/hero/Phone.png";
 
 const OurProcess = () => {
     const [activeStep, setActiveStep] = useState(1);
+    const step1Ref = useRef<HTMLDivElement>(null);
+    const step2Ref = useRef<HTMLDivElement>(null);
+    const step3Ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const refs = [
+            { ref: step1Ref, step: 1 },
+            { ref: step2Ref, step: 2 },
+            { ref: step3Ref, step: 3 },
+        ];
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const visible = entries.filter((e) => e.isIntersecting);
+                if (visible.length > 0) {
+                    const top = visible.reduce((prev, curr) =>
+                        prev.boundingClientRect.top < curr.boundingClientRect.top ? prev : curr
+                    );
+                    const match = refs.find((r) => r.ref.current === top.target);
+                    if (match) setActiveStep(match.step);
+                }
+            },
+            { rootMargin: "-30% 0px -50% 0px", threshold: 0 }
+        );
+
+        refs.forEach(({ ref }) => {
+            if (ref.current) observer.observe(ref.current);
+        });
+
+        return () => observer.disconnect();
+    }, []);
 
     return (
         <section
@@ -21,11 +52,11 @@ const OurProcess = () => {
         >
             <div className="max-w-[1280px] mx-auto px-4 md:px-8">
                 {/* Header */}
-                <div className="text-left space-y-1 mb-16  max-w-3xl">
+                <div className="text-left space-y-1 mb-16  max-w-2xl">
                     {/* Badge */}
                     <div className="inline-flex items-center gap-[6px] px-3 py-2 bg-white rounded-full border border-[#2563EB]/20">
                         <Image src={logoColored} alt="Logo" width={16} height={16} className="flex-shrink-0" />
-                        <span className="text-[#2563EB] text-sm">
+                        <span className="text-[#393939] text-sm">
                             Our process
                         </span>
                     </div>
@@ -67,7 +98,7 @@ const OurProcess = () => {
                     {/* Left Content - Steps */}
                     <div className="w-full">
                         {/* Step 1 */}
-                        <div className="flex gap-6">
+                        <div ref={step1Ref} className="flex gap-6">
                             {/* Left - Step Indicator */}
                             <VerticalProgress
                                 stepNumber={1}
@@ -91,7 +122,7 @@ const OurProcess = () => {
                                     className="text-[#000000] mb-3"
                                     style={{
                                         fontFamily: "Sora",
-                                        fontWeight: 400,
+                                        fontWeight: 500,
                                         fontSize: "16px",
                                         lineHeight: "130%",
                                         letterSpacing: "0%",
@@ -100,7 +131,7 @@ const OurProcess = () => {
                                     Take a photo of your PCN
                                 </h3>
                                 <p
-                                    className="text-[#6B7280]"
+                                    className="text-[#4D4F51]"
                                     style={{
                                         fontFamily: "Inter",
                                         fontWeight: 400,
@@ -116,7 +147,7 @@ const OurProcess = () => {
                         </div>
 
                         {/* Step 2 */}
-                        <div className="flex gap-6">
+                        <div ref={step2Ref} className="flex gap-6">
                             {/* Left - Step Indicator */}
                             <VerticalProgress
                                 stepNumber={2}
@@ -140,16 +171,16 @@ const OurProcess = () => {
                                     className="text-[#000000] mb-3"
                                     style={{
                                         fontFamily: "Sora",
-                                        fontWeight: 400,
+                                        fontWeight: 500,
                                         fontSize: "16px",
                                         lineHeight: "130%",
                                         letterSpacing: "0%",
                                     }}
                                 >
-                                    We process it through OCR technology
+                                    We explain it in simple terms
                                 </h3>
                                 <p
-                                    className="text-[#6B7280]"
+                                    className="text-[#4D4F51]"
                                     style={{
                                         fontFamily: "Inter",
                                         fontWeight: 400,
@@ -159,16 +190,13 @@ const OurProcess = () => {
                                         verticalAlign: "middle",
                                     }}
                                 >
-                                    Our AI-powered OCR reads your ticket
-                                    instantly, identifying your council, fine
-                                    amount, and payment deadline with complete
-                                    accuracy.
+                                    No jargon, no legalese. The app tells you exactly what your ticket means, what your rights are, and whether you have real grounds to challenge it.
                                 </p>
                             </div>
                         </div>
 
                         {/* Step 3 */}
-                        <div className="flex gap-6">
+                        <div ref={step3Ref} className="flex gap-6">
                             {/* Left - Step Indicator */}
                             <VerticalProgress
                                 stepNumber={3}
@@ -192,16 +220,16 @@ const OurProcess = () => {
                                     className="text-[#000000] mb-3"
                                     style={{
                                         fontFamily: "Sora",
-                                        fontWeight: 400,
+                                        fontWeight: 500,
                                         fontSize: "16px",
                                         lineHeight: "130%",
                                         letterSpacing: "0%",
                                     }}
                                 >
-                                    Secure payment completed
+                                    Pay or appeal — your choice, made easy
                                 </h3>
                                 <p
-                                    className="text-[#6B7280] mb-4"
+                                    className="text-[#4D4F51] mb-4"
                                     style={{
                                         fontFamily: "Inter",
                                         fontWeight: 400,
@@ -211,23 +239,7 @@ const OurProcess = () => {
                                         verticalAlign: "middle",
                                     }}
                                 >
-                                    Your fine is paid safely through Open
-                                    Banking. You can track your payment status
-                                    in real time and receive instant
-                                    confirmation with a digital receipt.
-                                </p>
-                                <p
-                                    className="text-[#2563EB]"
-                                    style={{
-                                        fontFamily: "Inter",
-                                        fontWeight: 600,
-                                        fontSize: "14px",
-                                        lineHeight: "27.2px",
-                                        letterSpacing: "0px",
-                                        verticalAlign: "middle",
-                                    }}
-                                >
-                                    No credit card needed!
+                                    Pay securely through Open Banking in seconds. Or let us help you build a proper appeal letter — calm, clear, and written the way councils actually respond to.
                                 </p>
                             </div>
                         </div>
@@ -296,7 +308,7 @@ const OurProcess = () => {
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
                 <div className="mt-16 w-full bg-[#FFF5E4] p-[20px] text-center">
                     <p
                         className="text-[#D58600]"

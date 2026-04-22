@@ -80,7 +80,7 @@ const Header = () => {
                             Why Snapmyfine
                         </a>
                          <a
-                            href="/#blog"
+                            href="/blogs"
                             className="text-white hover:opacity-80 transition-opacity"
                         >
                             Blogs
