@@ -103,11 +103,31 @@ const Schedule = () => {
                                 {[...Array(2)].map((_, setIndex) => (
                                     <div key={setIndex} className="flex gap-4 shrink-0">
                                         <div className="flex items-center gap-2 bg-white rounded-full px-3 py-2 shrink-0">
-                                            <span className="w-8 h-8 rounded-full bg-[#FFF0F0] flex items-center justify-center text-sm">⏰</span>
+                                            <span className="w-8 h-8 rounded-full bg-[#7C3AED] flex items-center justify-center">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="12" cy="12" r="8" fill="white"/>
+                                                    <path d="M8.5 10.5C8.8 9.7 10 9.7 10.3 10.5" stroke="#7C3AED" strokeWidth="1.5" strokeLinecap="round"/>
+                                                    <path d="M13.7 10.5C14 9.7 15.2 9.7 15.5 10.5" stroke="#7C3AED" strokeWidth="1.5" strokeLinecap="round"/>
+                                                    <path d="M5.5 13C5.5 13 7 12 12 12C17 12 18.5 13 18.5 13L17.5 16C17.5 16 16 18 12 18C8 18 6.5 16 6.5 16L5.5 13Z" fill="#7C3AED"/>
+                                                    <path d="M5.5 13C5.5 13 7 14.5 12 14.5C17 14.5 18.5 13 18.5 13" stroke="white" strokeWidth="1" strokeLinecap="round"/>
+                                                </svg>
+                                            </span>
                                             <span className="text-[13px] text-[#393939] font-medium whitespace-nowrap">Enjoy free reminders</span>
                                         </div>
                                         <div className="flex items-center gap-2 bg-white rounded-full px-3 py-2 shrink-0">
-                                            <span className="w-8 h-8 rounded-full bg-[#E8F0FE] flex items-center justify-center text-sm">📅</span>
+                                            <span className="w-8 h-8 rounded-full bg-[#4A7C8A] flex items-center justify-center">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect x="4" y="5" width="16" height="15" rx="2" fill="white"/>
+                                                    <rect x="4" y="3" width="16" height="4" rx="1" fill="white"/>
+                                                    <line x1="8" y1="2" x2="8" y2="5" stroke="#4A7C8A" strokeWidth="1.5" strokeLinecap="round"/>
+                                                    <line x1="10.5" y1="2" x2="10.5" y2="5" stroke="#4A7C8A" strokeWidth="1.5" strokeLinecap="round"/>
+                                                    <line x1="13" y1="2" x2="13" y2="5" stroke="#4A7C8A" strokeWidth="1.5" strokeLinecap="round"/>
+                                                    <line x1="15.5" y1="2" x2="15.5" y2="5" stroke="#4A7C8A" strokeWidth="1.5" strokeLinecap="round"/>
+                                                    <text x="7" y="16" fill="#4A7C8A" fontSize="5" fontWeight="bold" fontFamily="sans-serif">SA</text>
+                                                    <line x1="8" y1="17" x2="16" y2="10" stroke="#4A7C8A" strokeWidth="1" strokeLinecap="round"/>
+                                                    <text x="11" y="19" fill="#4A7C8A" fontSize="5" fontWeight="bold" fontFamily="sans-serif">SU</text>
+                                                </svg>
+                                            </span>
                                             <span className="text-[13px] text-[#393939] font-medium whitespace-nowrap">Avoid missed deadlines</span>
                                         </div>
                                         <div className="flex items-center gap-2 bg-white rounded-full px-3 py-2 shrink-0">

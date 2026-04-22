@@ -35,13 +35,13 @@ const Section8 = () => {
             {/* Info callout */}
             <div className="rounded-xl border border-[#88B4F4] bg-[#E8F0FE] p-5 mb-8">
                 <p
-                    className="text-[#0C48C0] mb-1"
+                    className="text-[#0C48C0] mb-1 border-l-4 border-l-[#0C48C0] pl-2"
                     style={{ fontFamily: "Inter", fontWeight: 700, fontSize: "14px", lineHeight: "24px" }}
                 >
                     Always verify before acting
                 </p>
                 <p
-                    className="text-[#5A5C63]"
+                    className="text-[#5A5C63] pl-2"
                     style={{ fontFamily: "Inter", fontWeight: 400, fontSize: "13px", lineHeight: "22px" }}
                 >
                     You must always verify the information extracted by the App against your original PCN before taking any action, including making payment or submitting an appeal. SnapMyFine shall not be liable for any loss arising from reliance on inaccurately extracted information without verification.

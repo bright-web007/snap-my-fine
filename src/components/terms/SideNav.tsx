@@ -49,7 +49,7 @@ const SideNav = ({ sections }: SideNavProps) => {
 
     return (
         <aside className="hidden lg:block lg:w-[320px] shrink-0">
-            <div className="lg:sticky lg:top-8 bg-white rounded-2xl border border-[#F0F0F0] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.04)] p-6">
+            <div className="lg:sticky lg:top-8 bg-white border border-[#F0F0F0] p-6">
                 <p
                     className="text-[#9CA0AB] text-[10px] font-semibold uppercase tracking-[0.15em] mb-5"
                     style={{ fontFamily: "Inter", fontWeight: 600 }}

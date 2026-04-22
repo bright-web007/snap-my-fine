@@ -61,15 +61,15 @@ const Section6 = () => {
             </p>
 
             {/* Warning callout */}
-            <div className="rounded-xl border border-[#F59E0B]/30 bg-[#FFFBEB] p-5 mb-8 border-l-4 border-l-[#F59E0B]">
+            <div className="rounded-xl border border-[#F59E0B]/30 bg-[#FFFBEB] p-5 mb-8 ">
                 <p
-                    className="text-[#92400E] mb-1"
+                    className="text-[#92400E] mb-1 border-l-4 border-l-[#633806] pl-2"
                     style={{ fontFamily: "Inter", fontWeight: 700, fontSize: "15px", lineHeight: "24px" }}
                 >
                     Payment cannot be reversed
                 </p>
                 <p
-                    className="text-[#92400E]"
+                    className="text-[#92400E] pl-2"
                     style={{ fontFamily: "Inter", fontWeight: 400, fontSize: "14px", lineHeight: "22px" }}
                 >
                     Once a PCN payment has been successfully initiated through the App, it cannot be reversed by SnapMyFine. Payment is generally treated as acceptance of the charge. Seek independent advice before making payment if you intend to appeal.

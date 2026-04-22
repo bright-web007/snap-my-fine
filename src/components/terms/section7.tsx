@@ -32,15 +32,15 @@ const Section7 = () => {
             </h2>
 
             {/* Warning callout */}
-            <div className="rounded-xl border border-[#2563EB]/20 bg-[#EBF3FF] p-5 mb-8 border-l-4 border-l-[#2563EB]">
+            <div className="rounded-xl border border-[#F0A62A] bg-[#FAEFDA] p-5 mb-8 ">
                 <p
-                    className="text-[#0C2D76] mb-1"
+                    className="text-[#633806] mb-1 border-l-4 border-l-[#633806] pl-2"
                     style={{ fontFamily: "Inter", fontWeight: 700, fontSize: "14px", lineHeight: "24px" }}
                 >
                     Challenging a PCN may remove your right to the 50% discount
                 </p>
                 <p
-                    className="text-[#374151]"
+                    className="text-[#374151] pl-2"
                     style={{ fontFamily: "Inter", fontWeight: 400, fontSize: "13px", lineHeight: "22px" }}
                 >
                     If your informal challenge is unsuccessful and you choose to make a formal representation, the discounted payment rate may no longer be available to you. Consider this carefully before choosing to challenge.
