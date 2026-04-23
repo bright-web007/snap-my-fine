@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 // Import components
 import HamburgerModal from "../../components/HamburgerModal";
@@ -8,29 +9,29 @@ import { Notification } from "../../components/ui/notification";
 import { DeviceRestriction } from "../../components/landing/DeviceRestriction";
 import { useIsMobile } from "../../components/landing/ui/use-mobile";
 
-// Import section components
-import {
-    HomeSection,
-    CameraSection,
-    ImagePreviewSection,
-    ReviewSection,
-    PaymentSection,
-    RedirectingSection,
-    PaymentReceivedSection,
-    ProcessingSection,
-    PaymentStatusSection,
-    ReceiptSection,
-    SaveFineSection,
-    CheckInboxSection,
-    PaymentFailedSection,
-    SavedFinesSection,
-    AllTransactionsSection,
-    PartialPaymentStatusSection
-} from "../../components/sections";
+// Import HomeSection directly (initial view)
+import { HomeSection } from "../../components/sections";
+
+// Dynamically import remaining section components
+const CameraSection = dynamic(() => import("../../components/sections/CameraSection"));
+const ImagePreviewSection = dynamic(() => import("../../components/sections/ImagePreviewSection"));
+const ReviewSection = dynamic(() => import("../../components/sections/ReviewSection"));
+const PaymentSection = dynamic(() => import("../../components/sections/PaymentSection"));
+const RedirectingSection = dynamic(() => import("../../components/sections/RedirectingSection"));
+const PaymentReceivedSection = dynamic(() => import("../../components/sections/PaymentReceivedSection"));
+const ProcessingSection = dynamic(() => import("../../components/sections/ProcessingSection"));
+const PaymentStatusSection = dynamic(() => import("../../components/sections/PaymentStatusSection"));
+const ReceiptSection = dynamic(() => import("../../components/sections/ReceiptSection"));
+const SaveFineSection = dynamic(() => import("../../components/sections/SaveFineSection"));
+const CheckInboxSection = dynamic(() => import("../../components/sections/CheckInboxSection"));
+const PaymentFailedSection = dynamic(() => import("../../components/sections/PaymentFailedSection"));
+const SavedFinesSection = dynamic(() => import("../../components/sections/SavedFinesSection"));
+const AllTransactionsSection = dynamic(() => import("../../components/sections/AllTransactionsSection"));
+const PartialPaymentStatusSection = dynamic(() => import("../../components/sections/PartialPaymentStatusSection"));
 
 // Import new sections
-import FineNotReady from "../../components/sections/FineNotReadySection";
-import DetailsReceived from "../../components/sections/DetailsReceivedSection";
+const FineNotReady = dynamic(() => import("../../components/sections/FineNotReadySection"));
+const DetailsReceived = dynamic(() => import("../../components/sections/DetailsReceivedSection"));
 
 // Import types
 // Import types

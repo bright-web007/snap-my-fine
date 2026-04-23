@@ -3,29 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from 'lucide-react';
 import { Blogs } from '@/helpers/data';
+import { formatDate, formatReadTime, getFeaturedImage } from '@/helpers/blog';
 
 const logoColored = "/landing/logo/logoColored.svg";
 
 const Blog = () => {
-    const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    };
-
-    const formatReadTime = (seconds: number) => {
-        const minutes = Math.round(seconds / 60);
-        return `${minutes} min read`;
-    };
-
-    const getFeaturedImage = (featuredImage: string) => {
-        try {
-            const parsed = JSON.parse(featuredImage);
-            return parsed.src;
-        } catch {
-            return '';
-        }
-    };
-
     return (
         <section
             id="blog"
@@ -70,15 +52,17 @@ const Blog = () => {
                         return (
                             <div
                                 key={index}
-                                className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden flex flex-col"
+                                className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]"
                             >
                                 {/* Featured Image */}
                                 <div className="relative w-full h-[200px] bg-[#2563EB] overflow-hidden">
                                     {imageUrl && (
-                                        <img
+                                        <Image
                                             src={imageUrl}
                                             alt={post.title}
-                                            className="w-full h-full object-cover"
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                            className="object-cover"
                                         />
                                     )}
                                 </div>

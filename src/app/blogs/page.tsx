@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight } from 'lucide-react';
 import Header from "@/components/sections/Header";
 import { Blogs } from '@/helpers/data';
+import { formatDate, formatReadTime, getFeaturedImage } from '@/helpers/blog';
 import Pagination from '@/components/ui/Pagination';
 import Footer from "@/components/sections/Footer";
 import CallToAction from "@/components/sections/CallToAction";
@@ -19,25 +20,6 @@ const Page = () => {
     const [activeCategory, setActiveCategory] = useState("All");
     const [sortBy, setSortBy] = useState("Most recent");
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
-
-    const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    };
-
-    const formatReadTime = (seconds: number) => {
-        const minutes = Math.round(seconds / 60);
-        return `${minutes} min read`;
-    };
-
-    const getFeaturedImage = (featuredImage: string) => {
-        try {
-            const parsed = JSON.parse(featuredImage);
-            return parsed.src;
-        } catch {
-            return '';
-        }
-    };
 
     const filteredBlogs = useMemo(() => {
         let result = [...Blogs];
@@ -67,9 +49,10 @@ const Page = () => {
         return result;
     }, [searchQuery, activeCategory, sortBy]);
 
-    const totalPages = Math.max(1, Math.ceil(filteredBlogs.length / ITEMS_PER_PAGE));
+    const gridBlogs = filteredBlogs.slice(1);
+    const totalPages = Math.max(1, Math.ceil(gridBlogs.length / ITEMS_PER_PAGE));
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const paginatedBlogs = filteredBlogs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    const paginatedBlogs = gridBlogs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
     const featuredBlog = filteredBlogs[0];
     const featuredPost = featuredBlog?.data.post;
@@ -221,10 +204,12 @@ const Page = () => {
                             {/* Image */}
                             <div className="relative w-full md:w-[400px] h-[220px] md:h-auto bg-[#0C2D76] shrink-0 overflow-hidden">
                                 {featuredImageUrl && (
-                                    <img
+                                    <Image
                                         src={featuredImageUrl}
                                         alt={featuredPost.title}
-                                        className="w-full h-full object-cover"
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, 400px"
+                                        className="object-cover"
                                     />
                                 )}
                             </div>
@@ -294,10 +279,12 @@ const Page = () => {
                                     {/* Featured Image */}
                                     <div className="relative w-full h-[200px] bg-[#2563EB] overflow-hidden">
                                         {imageUrl && (
-                                            <img
+                                            <Image
                                                 src={imageUrl}
                                                 alt={post.title}
-                                                className="w-full h-full object-cover"
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                                className="object-cover"
                                             />
                                         )}
                                     </div>

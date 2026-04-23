@@ -1,18 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import svgPaths from "../lib/landing/svg-im39sd3dvf";
 import { useForms } from "@/lib/hooks/use-forms";
-import Blog from "@/components/sections/Blog";
-import Footer from "@/components/sections/Footer";
-import Organisation from "@/components/sections/Organisation";
-import Schedule from "@/components/sections/Schedule";
-import StatsBar from "@/components/sections/StatsBar";
-import EasyPayment from "@/components/sections/EasyPayment";
-import OurProcess from "@/components/sections/OurProcess";
-import CallToAction from "@/components/sections/CallToAction";
 import Header from "@/components/sections/Header";
+
+const Blog = dynamic(() => import("@/components/sections/Blog"));
+const Footer = dynamic(() => import("@/components/sections/Footer"));
+const Organisation = dynamic(() => import("@/components/sections/Organisation"));
+const Schedule = dynamic(() => import("@/components/sections/Schedule"));
+const StatsBar = dynamic(() => import("@/components/sections/StatsBar"));
+const EasyPayment = dynamic(() => import("@/components/sections/EasyPayment"));
+const OurProcess = dynamic(() => import("@/components/sections/OurProcess"));
+const CallToAction = dynamic(() => import("@/components/sections/CallToAction"));
+const Dispute = dynamic(() => import("@/components/sections/Dispute"));
+const TestimonialColumn = dynamic(() => import("../components/landing/TestimonialColumn").then(mod => ({ default: mod.TestimonialColumn })));
+const FAQAccordion = dynamic(() => import("../components/landing/FAQAccordion").then(mod => ({ default: mod.FAQAccordion })));
+const ClientOnly = dynamic(() => import("../components/ui/ClientOnly").then(mod => ({ default: mod.ClientOnly })));
 
 const heroPhoneMockup = "/landing/hero/right-image.png";
 const patternImage = "/landing/hero/bg-grid-image.png";
@@ -30,12 +36,6 @@ const testimonialQuote = "/landing/testimonial/quotes-icon.svg";
 
 const logoWhite = "/landing/logo/logoWhite.svg";
 const logoColored = "/landing/logo/logoColored.svg";
-
-import styles from "../components/landing/PhoneMockup.module.css";
-import { TestimonialColumn } from "../components/landing/TestimonialColumn";
-import { FAQAccordion } from "../components/landing/FAQAccordion";
-import { ClientOnly } from "../components/ui/ClientOnly";
-import Dispute from "@/components/sections/Dispute";
 
 export default function LandingPage() {
     const [email, setEmail] = useState("");
@@ -231,19 +231,17 @@ export default function LandingPage() {
                     </div>
 
                     {/* Right Content - Phone Mockup */}
-                    <div className="overflow-hidden h-[340px]  md:h-[500px] lg:h-full">
-                        <div className={styles.phoneSection}>
-                            {/* Large transparent circle background */}
-                            {/* <div className={styles.circleBackground}></div> */}
-
+                    <div className="overflow-hidden h-[340px] md:h-[500px] lg:h-full">
+                        <div className="relative flex justify-center items-center min-h-[500px] md:min-h-[800px]">
                             {/* Phone Mockup Image */}
-                            <div className={styles.phoneContainer}>
+                            <div className="relative flex items-center justify-center z-[2]">
                                 <Image
                                     src={heroPhoneMockup}
                                     width={542}
                                     height={602}
                                     alt="SnapMyFine app mockup"
-                                    className={styles.heroPhone}
+                                    className="w-auto h-[500px] md:h-[680px] object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
+                                    sizes="(max-width: 768px) 100vw, 542px"
                                     priority
                                 />
                             </div>

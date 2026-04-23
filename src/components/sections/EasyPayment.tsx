@@ -18,7 +18,7 @@ const EasyPayment = () => {
                     {/* Background decorative squares */}
                     {/* Bottom-left blue container - behind phone */}
                     <div className="absolute left-1/3 md:left-1/2 -translate-x-[55%] md:-translate-x-[95%] bottom-12 w-[255px] sm:w-[350px] h-[194px] sm:h-[260px] rounded-3xl overflow-hidden z-0">
-                        <Image src={NotificationBg} alt="" fill className="object-cover pointer-events-none z-30" />
+                        <Image src={NotificationBg} alt="" fill sizes="(max-width: 640px) 255px, 350px" className="object-cover pointer-events-none z-30" />
                         <div className="absolute inset-0 bg-gradient-to-r from-[#105AE2]/90 to-[#FFFFFF]/30" />
                         <div className="absolute top-6 right-6 w-8 h-8 bg-white/20 rounded-lg" />
                         <div className="absolute top-16 right-10 w-5 h-5 bg-white/15 rounded-md" />
@@ -26,7 +26,7 @@ const EasyPayment = () => {
                     </div>
                     {/* Top-right blue container - behind phone */}
                     <div className="absolute left-1/3  md:left-1/2 translate-x-[5%] sm:translate-x-[1%] md:translate-x-[5%] xl:-translate-x-[15%] -top-4 w-[255px] sm:w-[350px] h-[194px] sm:h-[260px] rounded-3xl overflow-hidden z-0">
-                        <Image src={NotificationBg} alt="" fill className="object-cover pointer-events-none z-30" />
+                        <Image src={NotificationBg} alt="" fill sizes="(max-width: 640px) 255px, 350px" className="object-cover pointer-events-none z-30" />
                         <div className="absolute inset-0 bg-gradient-to-l from-[#105AE2]/90 to-[#FFFFFF]/30" />
                         <div className="absolute top-4 left-4 w-7 h-7 bg-white/20 rounded-lg" />
                         <div className="absolute bottom-8 right-6 w-5 h-5 bg-white/15 rounded-md" />

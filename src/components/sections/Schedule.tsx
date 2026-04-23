@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 
 const logoColored = "/landing/logo/logoColored.svg";
-const Clock = "/landing/schedule/clock.png";
+const Clock = "/landing/schedule/Clock.png";
 const Notification = "/landing/schedule/Notification.png";
 const NotificationBg = "/landing/schedule/Notificationbg.png";
 

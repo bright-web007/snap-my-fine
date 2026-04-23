@@ -1,89 +1,29 @@
-"use client";
-
 import React from "react";
-import { useParams, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { Blogs } from "@/helpers/data";
 import Header from "@/components/sections/Header";
 import Footer from "@/components/sections/Footer";
-import styles from "./page.module.css";
+import { formatDate, formatReadTime, getFeaturedImage, transformContent } from "./utils";
+import { ShareButtons } from "./ShareButtons";
 
-const BlogDetailPage = () => {
-    const params = useParams();
-    const slug = `/${params.slug}`;
+interface BlogDetailPageProps {
+    params: Promise<{ slug: string }>;
+}
 
-    const blogEntry = Blogs.find((blog) => blog.data.post.slug === slug);
+const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
+    const { slug } = await params;
+    const fullSlug = `/${slug}`;
+
+    const blogEntry = Blogs.find((blog) => blog.data.post.slug === fullSlug);
 
     if (!blogEntry) {
         notFound();
     }
 
     const post = blogEntry.data.post;
-
-    const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-        });
-    };
-
-    const formatReadTime = (seconds: number) => {
-        const minutes = Math.round(seconds / 60);
-        return `${minutes} min read`;
-    };
-
-    const getFeaturedImage = (featuredImage: string) => {
-        try {
-            const parsed = JSON.parse(featuredImage);
-            return parsed.src;
-        } catch {
-            return "";
-        }
-    };
-
     const featuredImageUrl = getFeaturedImage(post.featured_image);
-
-    const transformContent = (html: string) => {
-        // Transform numbered steps (01-09) into styled step items with green badges
-        html = html.replace(
-            /<p><strong>(0\d)\s+(.+?)<\/strong><\/p>\s*<p>(.+?)<\/p>/g,
-            `<div class="${styles.stepItem}"><div class="${styles.stepNumber}">$1</div><div class="${styles.stepContent}"><strong>$2</strong><p>$3</p></div></div>`
-        );
-
-        // Wrap consecutive step items in a stepList container
-        html = html.replace(
-            /((?:<div class="[^"]*stepItem[^"]*">[\s\S]*?<\/div><\/div>\s*)+)/g,
-            `<div class="${styles.stepList}">$1</div>`
-        );
-
-        // Transform the success box pattern (last strong + last paragraph)
-        html = html.replace(
-            /<p><strong>(Informal challenges are free[^<]*)<\/strong><\/p>\s*<p>(If unsuccessful[^<]*)<\/p>/,
-            `<div class="${styles.successBox}"><div class="${styles.successIcon}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.3 4.3L6 11.6L2.7 8.3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="${styles.successText}"><strong>$1</strong><p>$2</p></div></div>`
-        );
-
-        // Transform blockquote: em followed by small
-        html = html.replace(
-            /<p><em>(.+?)<\/em><\/p>\s*<p><small>(.+?)<\/small><\/p>/g,
-            `<div class="${styles.quote}"><em>$1</em></div><div class="${styles.quoteSource}">$2</div>`
-        );
-
-        // Add "Key takeaways" title before the first ul
-        html = html.replace(
-            /<h2>Key takeaways<\/h2>\s*<ul>/,
-            `<div class="${styles.keyTakeaways}"><div class="${styles.keyTakeawaysTitle}"><span style="display:inline-block;width:4px;height:20px;background:#2563EB;border-radius:2px"></span> Key takeaways</div><ul>`
-        );
-
-        // Close the keyTakeaways wrapper after the ul
-        html = html.replace(
-            /(<div class="[^"]*keyTakeaways[^"]*">[\s\S]*?<\/ul>)/,
-            `$1</div>`
-        );
-
-        return html;
-    };
 
     return (
         <div>
@@ -106,10 +46,12 @@ const BlogDetailPage = () => {
                 <div className="bg-white lg:hidden">
                     <div className="max-w-[898px] mx-auto px-4 md:px-8 pb-2">
                         <div className="relative w-full h-[250px] md:h-[420px] rounded-2xl overflow-hidden bg-[#0C2D76]">
-                            <img
+                            <Image
                                 src={featuredImageUrl}
                                 alt={post.title}
-                                className="w-full h-full object-cover"
+                                fill
+                                sizes="(max-width: 768px) 100vw, 898px"
+                                className="object-cover"
                             />
                         </div>
                     </div>
@@ -180,35 +122,7 @@ const BlogDetailPage = () => {
                         </span>
 
                         {/* Share buttons */}
-                        <div className="flex items-center gap-2">
-                            <span
-                                className="text-[#9CA3AF] text-[13px]"
-                                style={{ fontFamily: "Inter" }}
-                            >
-                                Share:
-                            </span>
-                            <button
-                                onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`, '_blank')}
-                                className="px-3 py-1.5 rounded-sm text-[#105AE2] bg-[#E8F0FE] text-[13px] font-medium hover:bg-[#F3F4F6] transition-colors cursor-pointer"
-                                style={{ fontFamily: "Inter" }}
-                            >
-                                Twitter
-                            </button>
-                            <button
-                                onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank')}
-                                className="px-3 py-1.5 rounded-sm text-[#105AE2] bg-[#E8F0FE] text-[13px] font-medium hover:bg-[#F3F4F6] transition-colors cursor-pointer"
-                                style={{ fontFamily: "Inter" }}
-                            >
-                                LinkedIn
-                            </button>
-                            <button
-                                onClick={() => navigator.clipboard.writeText(window.location.href)}
-                                className="px-3 py-1.5 rounded-sm text-[#105AE2] bg-[#E8F0FE] text-[13px] font-medium hover:bg-[#F3F4F6] transition-colors cursor-pointer"
-                                style={{ fontFamily: "Inter" }}
-                            >
-                                Copy link
-                            </button>
-                        </div>
+                        <ShareButtons title={post.title} />
                     </div>
                 </div>
             </div>
@@ -218,10 +132,12 @@ const BlogDetailPage = () => {
                 <div className="bg-white hidden lg:block">
                     <div className="max-w-[898px] mx-auto px-4 md:px-8 pb-8">
                         <div className="relative w-full h-[250px] md:h-[420px] rounded-2xl overflow-hidden bg-[#0C2D76]">
-                            <img
+                            <Image
                                 src={featuredImageUrl}
                                 alt={post.title}
-                                className="w-full h-full object-cover"
+                                fill
+                                sizes="898px"
+                                className="object-cover"
                             />
                         </div>
                     </div>
@@ -232,7 +148,7 @@ const BlogDetailPage = () => {
             <div className="bg-white pb-16">
                 <div className="max-w-[898px] mx-auto px-4 md:px-8">
                     <article
-                        className={styles.container}
+                        className="blog-content"
                         dangerouslySetInnerHTML={{ __html: transformContent(post.content) }}
                     />
                 </div>
@@ -260,34 +176,8 @@ const BlogDetailPage = () => {
                                     </span>
                                 ))}
                             </div>
-                            <div className=" hidden lg:flex items-center gap-2">
-                                <span
-                                    className="text-[#9CA3AF] text-[13px]"
-                                    style={{ fontFamily: "Inter" }}
-                                >
-                                    Share:
-                                </span>
-                                <button
-                                    onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`, '_blank')}
-                                    className="px-3 py-1.5 rounded-sm text-[#105AE2] bg-[#E8F0FE] text-[13px] font-medium hover:bg-[#F3F4F6] transition-colors cursor-pointer"
-                                    style={{ fontFamily: "Inter" }}
-                                >
-                                    Twitter
-                                </button>
-                                <button
-                                    onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank')}
-                                    className="px-3 py-1.5 rounded-sm text-[#105AE2] bg-[#E8F0FE] text-[13px] font-medium hover:bg-[#F3F4F6] transition-colors cursor-pointer"
-                                    style={{ fontFamily: "Inter" }}
-                                >
-                                    LinkedIn
-                                </button>
-                                <button
-                                    onClick={() => navigator.clipboard.writeText(window.location.href)}
-                                    className="px-3 py-1.5 rounded-sm text-[#105AE2] bg-[#E8F0FE] text-[13px] font-medium hover:bg-[#F3F4F6] transition-colors cursor-pointer"
-                                    style={{ fontFamily: "Inter" }}
-                                >
-                                    Copy link
-                                </button>
+                            <div className="hidden lg:flex items-center gap-2">
+                                <ShareButtons title={post.title} />
                             </div>
                         </div>
                     </div>

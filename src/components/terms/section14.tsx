@@ -1,6 +1,6 @@
 import React from 'react'
 
-const section14 = () => {
+const Section14 = () => {
   return (
     <section id="termination">
       {/* Badge */}
@@ -69,4 +69,4 @@ const section14 = () => {
   )
 }
 
-export default section14
+export default Section14

@@ -268,5 +268,59 @@ export const Blogs = [
                 "slug": "/pcn-deadlines-explained-key-dates"
             }
         }
+    },
+    {
+        "data": {
+            "post": {
+                "content": "<p>Getting a Penalty Charge Notice (PCN) is frustrating \u2014 but paying immediately may not be the right move. Over 50% of PCNs that are formally challenged are overturned or reduced. The system relies on drivers not knowing their rights.</p><p>This guide walks you through everything: from understanding what your notice actually says, to writing a winning challenge letter.</p><h2>Key takeaways</h2><ul><li>You have 28 days to challenge (14 days for the 50% discount).</li><li>Any council error can make a PCN invalid.</li><li>Informal challenges are free and don't affect your right to appeal.</li><li>SnapMyFine identifies grounds automatically from a photo of your PCN.</li></ul><h2>Step 1 \u2014 Read your PCN carefully</h2><p>Not all PCNs are the same. Look for: the contravention code, the issuing authority, the location and time, and the deadline dates. Pay special attention to whether it was issued by a council traffic warden or a private operator.</p><p><em>Over 50% of formally contested PCNs are overturned. The system relies on drivers not knowing they have grounds.</em></p><p><small>\u2014 UK Traffic Penalty Tribunal, 2024 Annual Report</small></p><h2>Step 2 \u2014 Check for common grounds to challenge</h2><p>Councils issue thousands of PCNs with errors every year. These are the most common valid grounds for challenging:</p><p><strong>01 Non-compliant signage</strong></p><p>Signs must meet TSRGD standards. If obscured, missing, or incorrectly placed, the PCN may be invalid.</p><p><strong>02 Incorrect information on the notice</strong></p><p>Any factual error \u2014 wrong plate, wrong location, wrong contravention code \u2014 can be grounds for cancellation.</p><p><strong>03 Exemption applies</strong></p><p>Blue badge holders, loading/unloading, medical emergencies, and breakdowns all have exemptions.</p><p><strong>04 Procedural error by the council</strong></p><p>PCNs issued after a valid grace period has expired are a common procedural failure.</p><h2>Step 3 \u2014 Write your informal representation</h2><p>The first stage is an informal challenge directly to the council. There is no set format \u2014 you can write it yourself or use SnapMyFine to generate one based on your specific PCN details and the grounds identified.</p><p><strong>Informal challenges are free and don't commit you to anything</strong></p><p>If unsuccessful, you can still escalate to the independent adjudicator \u2014 challenging first costs nothing.</p>",
+                "excerpt": "Getting a Penalty Charge Notice (PCN) is frustrating \u2014 but paying immediately may not be the right move. Over 50% of PCNs that are formally challenged are overturned or reduced. This guide walks you through everything&hellip;",
+                "status": 1,
+                "featured_image": "{\"src\":\"https:\\/\\/img.fournine.net\\/2021\\/09\\/Untitled-design.jpeg\"}",
+                "title": "PCN deadlines explained: key dates you must not miss",
+                "tags": [
+                    {
+                        "name": "deadlines"
+                    },
+                    {
+                        "name": "PCN"
+                    }
+                ],
+                "author_uuid": "b061ee7d-6e6d-4306-a8e3-36513597e8e8",
+                "read_time": 310,
+                "updated_at": "2024-12-20 15:30:00",
+                "category": {
+                    "name": "Legal",
+                    "slug": "/legal"
+                },
+                "slug": "/pcn-deadlines-explained-key-dates-1"
+            }
+        }
+    },
+    {
+        "data": {
+            "post": {
+                "content": "<p>Getting a Penalty Charge Notice (PCN) is frustrating \u2014 but paying immediately may not be the right move. Over 50% of PCNs that are formally challenged are overturned or reduced. The system relies on drivers not knowing their rights.</p><p>This guide walks you through everything: from understanding what your notice actually says, to writing a winning challenge letter.</p><h2>Key takeaways</h2><ul><li>You have 28 days to challenge (14 days for the 50% discount).</li><li>Any council error can make a PCN invalid.</li><li>Informal challenges are free and don't affect your right to appeal.</li><li>SnapMyFine identifies grounds automatically from a photo of your PCN.</li></ul><h2>Step 1 \u2014 Read your PCN carefully</h2><p>Not all PCNs are the same. Look for: the contravention code, the issuing authority, the location and time, and the deadline dates. Pay special attention to whether it was issued by a council traffic warden or a private operator.</p><p><em>Over 50% of formally contested PCNs are overturned. The system relies on drivers not knowing they have grounds.</em></p><p><small>\u2014 UK Traffic Penalty Tribunal, 2024 Annual Report</small></p><h2>Step 2 \u2014 Check for common grounds to challenge</h2><p>Councils issue thousands of PCNs with errors every year. These are the most common valid grounds for challenging:</p><p><strong>01 Non-compliant signage</strong></p><p>Signs must meet TSRGD standards. If obscured, missing, or incorrectly placed, the PCN may be invalid.</p><p><strong>02 Incorrect information on the notice</strong></p><p>Any factual error \u2014 wrong plate, wrong location, wrong contravention code \u2014 can be grounds for cancellation.</p><p><strong>03 Exemption applies</strong></p><p>Blue badge holders, loading/unloading, medical emergencies, and breakdowns all have exemptions.</p><p><strong>04 Procedural error by the council</strong></p><p>PCNs issued after a valid grace period has expired are a common procedural failure.</p><h2>Step 3 \u2014 Write your informal representation</h2><p>The first stage is an informal challenge directly to the council. There is no set format \u2014 you can write it yourself or use SnapMyFine to generate one based on your specific PCN details and the grounds identified.</p><p><strong>Informal challenges are free and don't commit you to anything</strong></p><p>If unsuccessful, you can still escalate to the independent adjudicator \u2014 challenging first costs nothing.</p>",
+                "excerpt": "Getting a Penalty Charge Notice (PCN) is frustrating \u2014 but paying immediately may not be the right move. Over 50% of PCNs that are formally challenged are overturned or reduced. This guide walks you through everything&hellip;",
+                "status": 1,
+                "featured_image": "{\"src\":\"https:\\/\\/img.fournine.net\\/2021\\/09\\/Untitled-design.jpeg\"}",
+                "title": "PCN deadlines explained: key dates you must not miss",
+                "tags": [
+                    {
+                        "name": "deadlines"
+                    },
+                    {
+                        "name": "PCN"
+                    }
+                ],
+                "author_uuid": "b061ee7d-6e6d-4306-a8e3-36513597e8e8",
+                "read_time": 310,
+                "updated_at": "2024-12-20 15:30:00",
+                "category": {
+                    "name": "Legal",
+                    "slug": "/legal"
+                },
+                "slug": "/pcn-deadlines-explained-key-dates-2"
+            }
+        }
     }
 ]

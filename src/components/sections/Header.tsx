@@ -4,6 +4,15 @@ import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import svgPaths from "@/lib/landing/svg-im39sd3dvf";
 
+const navLinks = [
+    { label: "Features", href: "/#schedule" },
+    { label: "Our process", href: "/#process" },
+    { label: "Why Snapmyfine", href: "/#why" },
+    { label: "Blogs", href: "/blogs" },
+    { label: "Testimonials", href: "/#testimonials" },
+    { label: "FAQs", href: "/#faqs" },
+];
+
 const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -61,42 +70,15 @@ const Header = () => {
                             letterSpacing: "0%",
                         }}
                     >
-                        <a
-                            href="/#schedule"
-                            className="text-white hover:opacity-80 transition-opacity"
-                        >
-                            Features
-                        </a>
-                        <a
-                            href="/#process"
-                            className="text-white hover:opacity-80 transition-opacity"
-                        >
-                            Our process
-                        </a>
-                        <a
-                            href="/#why"
-                            className="text-white hover:opacity-80 transition-opacity"
-                        >
-                            Why Snapmyfine
-                        </a>
-                         <a
-                            href="/blogs"
-                            className="text-white hover:opacity-80 transition-opacity"
-                        >
-                            Blogs
-                        </a>
-                        <a
-                            href="/#testimonials"
-                            className="text-white hover:opacity-80 transition-opacity"
-                        >
-                            Testimonials
-                        </a>
-                        <a
-                            href="/#faqs"
-                            className="text-white hover:opacity-80 transition-opacity"
-                        >
-                            FAQs
-                        </a>
+                        {navLinks.map((link) => (
+                            <a
+                                key={link.href}
+                                href={link.href}
+                                className="text-white hover:opacity-80 transition-opacity"
+                            >
+                                {link.label}
+                            </a>
+                        ))}
                     </nav>
 
                     {/* Mobile Menu Button */}
@@ -164,61 +146,20 @@ const Header = () => {
                     {/* Navigation Links */}
                     <nav className="px-4">
                         <div className="bg-[#0B4F8E] rounded-3xl p-8 space-y-8">
-                            <a
-                                href="#problem"
-                                className="block text-white text-lg"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                style={{
-                                    fontFamily: "Sora",
-                                    fontWeight: 400,
-                                }}
-                            >
-                                The problem
-                            </a>
-                            <a
-                                href="/#process"
-                                className="block text-white text-lg"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                style={{
-                                    fontFamily: "Sora",
-                                    fontWeight: 400,
-                                }}
-                            >
-                                Our process
-                            </a>
-                            <a
-                                href="/#why"
-                                className="block text-white text-lg"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                style={{
-                                    fontFamily: "Sora",
-                                    fontWeight: 400,
-                                }}
-                            >
-                                Why Snapmyfine
-                            </a>
-                            <a
-                                href="/#testimonials"
-                                className="block text-white text-lg"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                style={{
-                                    fontFamily: "Sora",
-                                    fontWeight: 400,
-                                }}
-                            >
-                                Testimonials
-                            </a>
-                            <a
-                                href="/#faqs"
-                                className="block text-white text-lg"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                style={{
-                                    fontFamily: "Sora",
-                                    fontWeight: 400,
-                                }}
-                            >
-                                FAQs
-                            </a>
+                            {navLinks.map((link) => (
+                                <a
+                                    key={link.href}
+                                    href={link.href}
+                                    className="block text-white text-lg"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    style={{
+                                        fontFamily: "Sora",
+                                        fontWeight: 400,
+                                    }}
+                                >
+                                    {link.label}
+                                </a>
+                            ))}
                         </div>
                     </nav>
 
