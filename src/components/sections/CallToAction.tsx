@@ -46,7 +46,7 @@ const CallToAction = () => {
 
                                     {/* Main Heading */}
                                     <h2
-                                        className="text-white text-[36px] leading-12 max-w-xl"
+                                        className="text-white text-[36px] leading-12 max-w-md"
                                         style={{
                                             fontFamily: "Sora",
                                             fontWeight: 800,

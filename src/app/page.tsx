@@ -25,7 +25,7 @@ const ocrExtraction = "/landing/whyus/icons/ocr_extraction.svg";
 const photoCamera = "/landing/whyus/icons/photo_camera.svg";
 const receipts = "/landing/whyus/icons/receipts.svg";
 
-const faqIllustration = "/landing/faq/illustration.png";
+const faqIllustration = "/landing/faq/illustration.svg";
 const testimonialQuote = "/landing/testimonial/quotes-icon.svg";
 
 const logoWhite = "/landing/logo/logoWhite.svg";
