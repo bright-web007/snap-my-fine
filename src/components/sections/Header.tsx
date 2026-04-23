@@ -19,7 +19,7 @@ const Header = () => {
     return (
         <>
             {/* Header */}
-            <header className="relative z-20 px-4 md:px-8 py-6">
+            <header className="fixed top-0 left-0 right-0 z-20 px-4 md:px-8 py-6 backdrop-blur-md bg-[#034496]/60">
                 <div className="max-w-[1280px] mx-auto flex items-center justify-between">
                     {/* Logo */}
                     <a href="/" className="flex items-center gap-3">

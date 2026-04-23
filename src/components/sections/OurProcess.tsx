@@ -52,7 +52,7 @@ const OurProcess = () => {
         >
             <div className="max-w-[1280px] mx-auto px-4 md:px-8">
                 {/* Header */}
-                <div className="text-left space-y-1 mb-16  max-w-2xl">
+                <div className="text-center md:text-left space-y-1 mb-16  max-w-2xl">
                     {/* Badge */}
                     <div className="inline-flex items-center gap-[6px] px-3 py-2 bg-white rounded-full border border-[#2563EB]/20">
                         <Image src={logoColored} alt="Logo" width={16} height={16} className="flex-shrink-0" />
@@ -63,12 +63,10 @@ const OurProcess = () => {
 
                     {/* Main Heading */}
                     <h2
-                        className="text-[#0C2D76]"
+                        className="text-[#0C2D76] text-[30px] leading-[36px] md:text-[36px] md:leading-[43.2px]"
                         style={{
                             fontFamily: "Sora",
                             fontWeight: 800,
-                            fontSize: "40px",
-                            lineHeight: "57.6px",
                             letterSpacing: "-1px",
                             verticalAlign: "middle",
                         }}
@@ -79,12 +77,12 @@ const OurProcess = () => {
 
                     {/* Subheading */}
                     <p
-                        className="text-[#6B7280]"
+                        className="text-[#393939]"
                         style={{
                             fontFamily: "Inter",
                             fontWeight: 400,
                             fontSize: "16px",
-                            lineHeight: "27.2px",
+                            lineHeight: "24px",
                             letterSpacing: "0px",
                             verticalAlign: "middle",
                         }}

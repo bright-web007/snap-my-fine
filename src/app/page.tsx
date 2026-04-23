@@ -33,7 +33,7 @@ const logoColored = "/landing/logo/logoColored.svg";
 
 export default function LandingPage() {
     return (
-        <div className="relative h-[120vh] lg:h-[98vh] w-full bg-[#2563EB]">
+        <div className="relative h-[120vh] lg:h-[110vh] w-full bg-[#2563EB]">
             {/* Grid Pattern Background */}
             <div
                 className="absolute inset-0 pointer-events-none opacity-[0.7] z-0"
@@ -47,11 +47,11 @@ export default function LandingPage() {
             <Header />
 
             {/* Main Content */}
-            <main className="relative z-10 px-4 md:px-8 pt-12 md:pt-0 lg:pb-5  xl:pb-0 ">
-                <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-32 items-center">
+            <main className="relative z-10 px-4 md:px-8 pt-30 lg:pt-15 lg:pb-5  xl:pb-0">
+                <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-32 items-center overflow-hidden">
                     {/* Left Content */}
-                    <div className="w-full flex flex-col gap-6">
-                        <section className="flex flex-col gap-6">
+                    <div className="w-full flex flex-col gap-4 md:gap-6">
+                        <section className="flex flex-col gap-4 md:gap-6">
                             <h1
                                 className="text-white text-[48px] md:text-[52px]"
                                 style={{
@@ -82,7 +82,7 @@ export default function LandingPage() {
                                 Just take a photo of your ticket. We'll read it, explain it in simple terms, tell you exactly how long you have, and whether you have grounds to challenge it. Free, on your phone, in under a minute!
                             </p>
                         </section>
-                        <section className="flex flex-col gap-8">
+                        <section className="flex flex-col gap-4 md:gap-6">
                             <div className="flex flex-wrap gap-3">
                                 {[
                                     'Free to download',

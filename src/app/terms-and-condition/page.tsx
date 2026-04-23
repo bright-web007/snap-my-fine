@@ -50,7 +50,7 @@ const TermsAndConditionPage = () => {
             <div className="bg-[#105AE2]">
                 <Header />
             </div>
-
+            <div className="bg-[#105AE2] h-20 lg:h-17 w-full" />
             {/* Hero Section */}
             <div className="bg-[#0C2D76] py-16 md:py-20">
                 <div className="max-w-[1280px] mx-auto px-4 md:px-8">

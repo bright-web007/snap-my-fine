@@ -74,8 +74,9 @@ const Page = () => {
             <div className="bg-[#105AE2]">
                 <Header />
             </div>
+            <div className="bg-[#105AE2] h-20 lg:h-17 w-full" />
             {/* Hero Section */}
-            <div className="bg-[#FFFFFF] pt-16 pb-12 md:pt-24 md:pb-16">
+            <div className="bg-[#FFFFFF] pt-16 pb-12 md:pt-20 md:pb-16">
                 <div className="max-w-[1280px] mx-auto px-4 md:px-8">
                     {/* Heading */}
                     <div className="lg:text-center max-w-2xl mx-auto mb-8">

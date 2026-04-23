@@ -78,7 +78,7 @@ const Footer = () => {
                             >
                                 +44 330 133 5245
                                 <br />
-                                support@snapmyfine.co.uk.
+                                support@snapmyfine.com
                             </p>
                         </div>
 
