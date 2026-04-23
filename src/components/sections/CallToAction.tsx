@@ -46,10 +46,10 @@ const CallToAction = () => {
 
                                     {/* Main Heading */}
                                     <h2
-                                        className="text-white text-[40px] leading-12"
+                                        className="text-white text-[36px] leading-12 max-w-xl"
                                         style={{
                                             fontFamily: "Sora",
-                                            fontWeight: 700,
+                                            fontWeight: 800,
                                             letterSpacing: "-1px",
                                         }}
                                     >

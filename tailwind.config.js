@@ -15,10 +15,6 @@ module.exports = {
               '0%': { transform: 'translateY(0)' },
               '100%': { transform: 'translateY(-100%)' },
             },
-            'scroll-badges': {
-              '0%': { transform: 'translateX(0)' },
-              '100%': { transform: 'translateX(-50%)' },
-            },
           },
           fontFamily: {
             'sans': ['Sora', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
@@ -27,7 +23,6 @@ module.exports = {
           },
           animation: {
             'slide-vertical': 'slide-vertical 15s linear infinite',
-            'scroll-badges': 'scroll-badges 12s linear infinite',
           },
         },
       },

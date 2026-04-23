@@ -35,7 +35,7 @@ const Dispute = () => {
                             <p className="text-[#393939] text-[16px] font-regular">
                                 Join <span className="font-bold">2,347</span> users on the waitlist.
                             </p>
-                            <p className="text-[#5D55FF] text-[16px] font-semibold">
+                            <p className="text-[#1A71DF] text-[16px] font-semibold">
                                 We&apos;ll notify you the moment disputes go live.
                             </p>
                             <div className="flex flex-col lg:flex-row gap-3">

@@ -3,6 +3,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
   }
 
   section[id] {
@@ -117,6 +122,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  overflow-x: hidden;
 }
 
 /* Testimonial animation styles */
@@ -151,6 +157,20 @@ body {
 .mask-gradient {
   mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+/* Badge carousel animation */
+@keyframes scrollBadges {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-badges {
+  animation: scrollBadges 12s linear infinite;
 }
 
 @theme inline {
