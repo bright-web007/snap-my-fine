@@ -1,24 +1,18 @@
-"use client";
-
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
+import React from "react";
 import Image from "next/image";
 import svgPaths from "../lib/landing/svg-im39sd3dvf";
-import { useForms } from "@/lib/hooks/use-forms";
 import Header from "@/components/sections/Header";
-
-const Blog = dynamic(() => import("@/components/sections/Blog"));
-const Footer = dynamic(() => import("@/components/sections/Footer"));
-const Organisation = dynamic(() => import("@/components/sections/Organisation"));
-const Schedule = dynamic(() => import("@/components/sections/Schedule"));
-const StatsBar = dynamic(() => import("@/components/sections/StatsBar"));
-const EasyPayment = dynamic(() => import("@/components/sections/EasyPayment"));
-const OurProcess = dynamic(() => import("@/components/sections/OurProcess"));
-const CallToAction = dynamic(() => import("@/components/sections/CallToAction"));
-const Dispute = dynamic(() => import("@/components/sections/Dispute"));
-const TestimonialColumn = dynamic(() => import("../components/landing/TestimonialColumn").then(mod => ({ default: mod.TestimonialColumn })));
-const FAQAccordion = dynamic(() => import("../components/landing/FAQAccordion").then(mod => ({ default: mod.FAQAccordion })));
-const ClientOnly = dynamic(() => import("../components/ui/ClientOnly").then(mod => ({ default: mod.ClientOnly })));
+import Blog from "@/components/sections/Blog";
+import Footer from "@/components/sections/Footer";
+import Organisation from "@/components/sections/Organisation";
+import Schedule from "@/components/sections/Schedule";
+import StatsBar from "@/components/sections/StatsBar";
+import EasyPayment from "@/components/sections/EasyPayment";
+import OurProcess from "@/components/sections/OurProcess";
+import CallToAction from "@/components/sections/CallToAction";
+import Dispute from "@/components/sections/Dispute";
+import { TestimonialColumn } from "../components/landing/TestimonialColumn";
+import { FAQAccordion } from "../components/landing/FAQAccordion";
 
 const heroPhoneMockup = "/landing/hero/right-image.png";
 const patternImage = "/landing/hero/bg-grid-image.png";
@@ -38,85 +32,6 @@ const logoWhite = "/landing/logo/logoWhite.svg";
 const logoColored = "/landing/logo/logoColored.svg";
 
 export default function LandingPage() {
-    const [email, setEmail] = useState("");
-    const [ctaEmail, setCtaEmail] = useState("");
-    const [formState, setFormState] = useState<'idle' | 'error' | 'success'>('idle');
-    const [ctaFormState, setCtaFormState] = useState<'idle' | 'error' | 'success'>('idle');
-
-    // Use forms hook for both hero and CTA forms
-    const heroForm = useForms({
-        onSuccess: () => {
-            setFormState('success');
-            setEmail('');
-        },
-        onError: () => setFormState('error')
-    });
-
-    const ctaForm = useForms({
-        onSuccess: () => {
-            setCtaFormState('success');
-            setCtaEmail('');
-        },
-        onError: () => setCtaFormState('error')
-    });
-
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!validateEmail(email)) {
-            setFormState('error');
-            return;
-        }
-
-        try {
-            await heroForm.submitWaitlist({
-                email,
-                source: 'hero'
-            });
-        } catch (error) {
-            console.error('Hero form submission failed:', error);
-        }
-    };
-
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-        // Reset error state when user starts typing
-        if (formState === 'error') {
-            setFormState('idle');
-        }
-    };
-
-    const handleCtaSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!validateEmail(ctaEmail)) {
-            setCtaFormState('error');
-            return;
-        }
-
-        try {
-            await ctaForm.submitWaitlist({
-                email: ctaEmail,
-                source: 'cta'
-            });
-        } catch (error) {
-            console.error('CTA form submission failed:', error);
-        }
-    };
-
-    const handleCtaEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCtaEmail(e.target.value);
-        // Reset error state when user starts typing
-        if (ctaFormState === 'error') {
-            setCtaFormState('idle');
-        }
-    };
-
     return (
         <div className="relative h-[120vh] lg:min-h-screen w-full bg-[#2563EB] overflow-x-hidden">
             {/* Grid Pattern Background */}

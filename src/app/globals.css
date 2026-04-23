@@ -153,21 +153,6 @@ body {
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
-/* Badge carousel animation */
-@keyframes scrollBadges {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-scroll-badges {
-  animation: scrollBadges 12s linear infinite;
-}
-
 @theme inline {
   --breakpoint-xxs: 370px;
   --font-roboto: var(--font-roboto);

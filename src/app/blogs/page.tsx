@@ -49,7 +49,8 @@ const Page = () => {
         return result;
     }, [searchQuery, activeCategory, sortBy]);
 
-    const gridBlogs = filteredBlogs.slice(1);
+    const isFiltered = searchQuery.trim() !== '' || activeCategory !== 'All';
+    const gridBlogs = isFiltered && filteredBlogs.length === 1 ? [] : filteredBlogs.slice(1);
     const totalPages = Math.max(1, Math.ceil(gridBlogs.length / ITEMS_PER_PAGE));
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const paginatedBlogs = gridBlogs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -266,6 +267,15 @@ const Page = () => {
             >
                 <div className="max-w-[1280px] mx-auto px-4 md:px-8">
                     {/* Blog cards */}
+                    {paginatedBlogs.length === 0 ? (
+                        <div className="text-center py-16">
+                            <p className="text-[#6B7280] text-[16px]" style={{ fontFamily: "Inter" }}>
+                                {filteredBlogs.length === 0
+                                    ? "No articles found. Try a different search or category."
+                                    : "No other articles in this selection."}
+                            </p>
+                        </div>
+                    ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {paginatedBlogs.map((blog, index) => {
                             const post = blog.data.post;
@@ -337,6 +347,7 @@ const Page = () => {
                             );
                         })}
                     </div>
+                    )}
 
                     <Pagination
                         currentPage={currentPage}

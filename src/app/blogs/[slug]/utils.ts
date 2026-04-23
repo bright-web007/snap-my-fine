@@ -16,10 +16,22 @@ export const transformContent = (html: string) => {
     `<div class="blog-step-list">$1</div>`
   );
 
-  // Transform success box pattern: a standalone bold line followed by a paragraph
+  // Transform success box: matches a bold line + paragraph that are wrapped in
+  // a <!-- success-box --> HTML comment marker. This avoids false positives from
+  // positional matching. CMS content should include the marker explicitly.
+  // Fallback: also match if the bold text contains keywords like "free", "cost nothing", "don't commit".
   html = html.replace(
-    /<p><strong>([^<]+)<\/strong><\/p>\s*<p>([^<]+)<\/p>(?=\s*$|\s*<\/)/g,
+    /<!--\s*success-box\s*-->\s*<p><strong>([^<]+)<\/strong><\/p>\s*<p>([^<]+)<\/p>/g,
     `<div class="blog-success-box"><div class="blog-success-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.3 4.3L6 11.6L2.7 8.3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="blog-success-text"><strong>$1</strong><p>$2</p></div></div>`
+  );
+  // Keyword-based fallback for content without the HTML comment marker
+  html = html.replace(
+    /<p><strong>((?=[^<]*(?:free|cost nothing|don't commit))[^<]+)<\/strong><\/p>\s*<p>((?=[^<]*(?:challeng|escalat|cost))[^<]+)<\/p>/gi,
+    (match, title, body) => {
+      // Avoid double-transforming if already wrapped
+      if (match.includes('blog-success-box')) return match;
+      return `<div class="blog-success-box"><div class="blog-success-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.3 4.3L6 11.6L2.7 8.3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="blog-success-text"><strong>${title}</strong><p>${body}</p></div></div>`;
+    }
   );
 
   // Transform blockquote: em followed by small
