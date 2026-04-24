@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import type { Metadata } from "next";
 import svgPaths from "../lib/landing/svg-im39sd3dvf";
 import Header from "@/components/sections/Header";
 import Blog from "@/components/sections/Blog";
@@ -30,6 +31,11 @@ const testimonialQuote = "/landing/testimonial/quotes-icon.svg";
 
 const logoWhite = "/landing/logo/logoWhite.svg";
 const logoColored = "/landing/logo/logoColored.svg";
+
+export const metadata: Metadata = {
+    title: "Manage Parking Tickets & Fines - Snapmyfine | London, UK",
+    description: "Snapmyfine helps drivers and organisations manage parking tickets, track important deadlines, understand parking notices, and take the next step with less stress. Download the app or book a demo.",
+};
 
 export default function LandingPage() {
     return (
