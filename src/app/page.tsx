@@ -33,7 +33,7 @@ const logoColored = "/landing/logo/logoColored.svg";
 
 export default function LandingPage() {
     return (
-        <div className="relative h-[120vh] lg:h-[110vh] w-full bg-[#2563EB]">
+        <div className="relative h-[120vh] lg:h-[110vh] w-full bg-[#2563EB] overflow-x-clip">
             {/* Grid Pattern Background */}
             <div
                 className="absolute inset-0 pointer-events-none opacity-[0.7] z-0"

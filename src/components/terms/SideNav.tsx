@@ -43,13 +43,14 @@ const SideNav = ({ sections }: SideNavProps) => {
         setActiveId(id);
         const el = document.getElementById(id);
         if (el) {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
+            const top = el.getBoundingClientRect().top + window.scrollY - 96;
+            window.scrollTo({ top, behavior: "smooth" });
         }
     };
 
     return (
         <aside className="hidden lg:block lg:w-[320px] shrink-0">
-            <div className="lg:sticky lg:top-8 bg-white border border-[#F0F0F0] p-6">
+            <div className="sticky top-8 bg-white border border-[#F0F0F0] p-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
                 <p
                     className="text-[#9CA0AB] text-[10px] font-semibold uppercase tracking-[0.15em] mb-5"
                     style={{ fontFamily: "Inter", fontWeight: 600 }}
