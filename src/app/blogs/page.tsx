@@ -84,8 +84,7 @@ const Page = () => {
                             className="text-[#0C2D76] text-[30px] md:text-[48px] leading-[1.2] mb-4"
                             style={{
                                 fontFamily: "Sora",
-                                fontWeight: 700,
-                                fontStyle: "italic",
+                                fontWeight: 800,
                             }}
                         >
                             Understand your fine,
@@ -134,8 +133,8 @@ const Page = () => {
                                     key={cat}
                                     onClick={() => handleCategoryChange(cat)}
                                     className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors cursor-pointer border ${activeCategory === cat
-                                            ? "bg-[#105AE2] text-white border-[#0C2D76]"
-                                            : "bg-white text-[#374151] border-[#E5E7EB] hover:border-[#0C2D76] hover:text-[#0C2D76]"
+                                        ? "bg-[#105AE2] text-white"
+                                        : "bg-white text-[#374151] border-[#E5E7EB] hover:border-[#0C2D76] hover:text-[#0C2D76]"
                                         }`}
                                     style={{ fontFamily: "Inter" }}
                                 >
@@ -174,8 +173,8 @@ const Page = () => {
                                                     key={option}
                                                     onClick={() => { setSortBy(option); setSortDropdownOpen(false); }}
                                                     className={`block w-full text-left px-5 py-3 text-[14px] transition-colors ${sortBy === option
-                                                            ? "font-semibold text-[#0C2D76] bg-[#F9FAFB]"
-                                                            : "font-normal text-[#374151] hover:bg-[#F9FAFB]"
+                                                        ? "font-semibold text-[#0C2D76] bg-[#F9FAFB]"
+                                                        : "font-normal text-[#374151] hover:bg-[#F9FAFB]"
                                                         }`}
                                                     style={{ fontFamily: "Inter" }}
                                                 >
@@ -204,13 +203,13 @@ const Page = () => {
                         {/* Featured Card */}
                         <div className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden flex flex-col md:flex-row">
                             {/* Image */}
-                            <div className="relative w-full md:w-[400px] h-[220px] md:h-auto bg-[#0C2D76] shrink-0 overflow-hidden">
+                            <div className="relative w-full md:w-[480px] h-[220px] md:h-auto bg-[#0C2D76] shrink-0 overflow-hidden">
                                 {featuredImageUrl && (
                                     <Image
                                         src={featuredImageUrl}
                                         alt={featuredPost.title}
                                         fill
-                                        sizes="(max-width: 768px) 100vw, 400px"
+                                        sizes="(max-width: 768px) 100vw, 480px"
                                         className="object-cover"
                                     />
                                 )}
@@ -220,8 +219,7 @@ const Page = () => {
                             <div className="p-6 md:p-8 flex flex-col justify-center flex-1">
                                 {/* Tag + Date + Read Time */}
                                 <div className="flex flex-wrap items-center gap-2 text-[12px] text-[#6B7280] mb-4">
-                                    <span className="inline-flex items-center bg-[#E1F5E9] px-3 py-1 rounded-2xl gap-1 text-[#16A34A] font-medium">
-                                        <span className="w-[6px] h-[6px] rounded-full bg-[#16A34A] inline-block" />
+                                    <span className="inline-flex items-center bg-[#E1EBFF] px-3 py-1 rounded-2xl gap-1 text-[#105AE2] font-medium">
                                         {featuredPost.category.name}
                                     </span>
                                     <span>{formatDate(featuredPost.updated_at)}</span>
@@ -252,7 +250,7 @@ const Page = () => {
                                     </div>
                                     <a
                                         href={`/blogs${featuredPost.slug}`}
-                                        className="inline-flex items-center gap-1.5 text-[#0464DD] text-[13px] font-semibold bg-[#F0F5FF] px-4 py-2 rounded-full hover:bg-[#E0EDFF] transition-colors"
+                                        className="inline-flex items-center gap-1.5 text-[#0464DD] text-[13px] font-semibold bg-[#E8F0FE] px-4 py-2 rounded-full hover:bg-[#E0EDFF] transition-colors"
                                         style={{ fontFamily: "Inter" }}
                                     >
                                         Read article <ArrowRight size={14} />
@@ -266,6 +264,9 @@ const Page = () => {
             <div
                 className="relative bg-white py-16 md:py-24 overflow-hidden"
             >
+                <h2 className="text-[#0C2D76] font-bold text-[22px] md:text-[32px] leading-[130%] mb-9 max-w-[1280px] mx-auto px-4 md:px-8" style={{ fontFamily: "Sora" }}>
+                    All Articles
+                </h2>
                 <div className="max-w-[1280px] mx-auto px-4 md:px-8">
                     {/* Blog cards */}
                     {paginatedBlogs.length === 0 ? (
@@ -277,77 +278,77 @@ const Page = () => {
                             </p>
                         </div>
                     ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {paginatedBlogs.map((blog, index) => {
-                            const post = blog.data.post;
-                            const imageUrl = getFeaturedImage(post.featured_image);
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {paginatedBlogs.map((blog, index) => {
+                                const post = blog.data.post;
+                                const imageUrl = getFeaturedImage(post.featured_image);
 
-                            return (
-                                <div
-                                    key={index}
-                                    className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden flex flex-col"
-                                >
-                                    {/* Featured Image */}
-                                    <div className="relative w-full h-[200px] bg-[#2563EB] overflow-hidden">
-                                        {imageUrl && (
-                                            <Image
-                                                src={imageUrl}
-                                                alt={post.title}
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                                className="object-cover"
-                                            />
-                                        )}
-                                    </div>
-
-                                    {/* Card Content */}
-                                    <div className="p-5 flex flex-col flex-1">
-                                        {/* Tag + Date + Read Time */}
-                                        <div className="flex items-center gap-2 text-[12px] text-[#6B7280] mb-3">
-                                            <span className="inline-flex items-center bg-[#E1F5E9] px-3 py-1 rounded-2xl gap-1 text-[#16A34A] font-medium">
-                                                <span className="w-[6px] h-[6px] rounded-full bg-[#16A34A] inline-block" />
-                                                {post.category.name}
-                                            </span>
-                                            <span>•</span>
-                                            <span>{formatDate(post.updated_at)}</span>
-                                            <span>•</span>
-                                            <span>{formatReadTime(post.read_time)}</span>
+                                return (
+                                    <div
+                                        key={index}
+                                        className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden flex flex-col"
+                                    >
+                                        {/* Featured Image */}
+                                        <div className="relative w-full h-[200px] bg-[#2563EB] overflow-hidden">
+                                            {imageUrl && (
+                                                <Image
+                                                    src={imageUrl}
+                                                    alt={post.title}
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                                    className="object-cover"
+                                                />
+                                            )}
                                         </div>
 
-                                        {/* Title */}
-                                        <h3 className="text-[#0D0E10] font-bold text-[16px] leading-[130%] mb-2">
-                                            {post.title}
-                                        </h3>
-
-                                        {/* Excerpt */}
-                                        <p className="text-[#5A5C63] text-[13px] leading-[20px] mb-5 line-clamp-2 leading-[160%]">
-                                            {post.excerpt.replace(/&hellip;/g, '...')}
-                                        </p>
-
-                                        <hr className="border-t border-[#E5E7EB] mb-5" />
-
-                                        {/* Footer: Author + Read Link */}
-                                        <div className="mt-auto flex items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 rounded-full bg-[#E0EDFF] flex items-center justify-center text-[#0464DD] text-[11px] font-bold">
-                                                    ST
-                                                </div>
-                                                <span className="text-[#374151] text-[13px] font-medium">
-                                                    SnapMyFine Team
+                                        {/* Card Content */}
+                                        <div className="p-5 flex flex-col flex-1">
+                                            {/* Tag + Date + Read Time */}
+                                            <div className="flex items-center gap-2 text-[12px] text-[#6B7280] mb-3">
+                                                <span className="inline-flex items-center bg-[#E1F5E9] px-3 py-1 rounded-2xl gap-1 text-[#16A34A] font-medium">
+                                                    <span className="w-[6px] h-[6px] rounded-full bg-[#16A34A] inline-block" />
+                                                    {post.category.name}
                                                 </span>
+                                                <span>•</span>
+                                                <span>{formatDate(post.updated_at)}</span>
+                                                <span>•</span>
+                                                <span>{formatReadTime(post.read_time)}</span>
                                             </div>
-                                            <a
-                                                href={`/blogs${post.slug}`}
-                                                className="inline-flex items-center gap-1 text-[#0464DD] text-[13px] font-semibold hover:underline"
-                                            >
-                                                Read <ArrowRight size={14} />
-                                            </a>
+
+                                            {/* Title */}
+                                            <h3 className="text-[#0D0E10] font-bold text-[16px] leading-[130%] mb-2">
+                                                {post.title}
+                                            </h3>
+
+                                            {/* Excerpt */}
+                                            <p className="text-[#5A5C63] text-[13px] leading-[20px] mb-5 line-clamp-2 leading-[160%]">
+                                                {post.excerpt.replace(/&hellip;/g, '...')}
+                                            </p>
+
+                                            <hr className="border-t border-[#E5E7EB] mb-5" />
+
+                                            {/* Footer: Author + Read Link */}
+                                            <div className="mt-auto flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 rounded-full bg-[#E0EDFF] flex items-center justify-center text-[#0464DD] text-[11px] font-bold">
+                                                        ST
+                                                    </div>
+                                                    <span className="text-[#374151] text-[13px] font-medium">
+                                                        SnapMyFine Team
+                                                    </span>
+                                                </div>
+                                                <a
+                                                    href={`/blogs${post.slug}`}
+                                                    className="inline-flex items-center gap-1 text-[#0464DD] text-[13px] font-semibold hover:underline"
+                                                >
+                                                    Read <ArrowRight size={14} />
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
                     )}
 
                     <Pagination

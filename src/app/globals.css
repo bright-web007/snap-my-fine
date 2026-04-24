@@ -183,12 +183,12 @@ body {
    BLOG ARTICLE STYLES
 ========================= */
 .blog-content {
-  @apply max-w-[898px] mx-auto text-[#393939] leading-[1.8] text-base;
+  @apply max-w-[898px] mx-auto text-[#393939] leading-[1.8] text-[16px];
   font-family: "Inter", sans-serif;
 }
 
 .blog-content p {
-  @apply mb-5 text-[#393939] text-base leading-[1.8];
+  @apply mb-5 text-[#5A5C63] text-[16px] leading-[1.8];
 }
 
 .blog-content a {

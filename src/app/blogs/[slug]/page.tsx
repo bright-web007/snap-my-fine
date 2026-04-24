@@ -7,6 +7,7 @@ import Header from "@/components/sections/Header";
 import Footer from "@/components/sections/Footer";
 import { formatDate, formatReadTime, getFeaturedImage, transformContent } from "./utils";
 import { ShareButtons } from "./ShareButtons";
+import { ReadingProgressBar } from "./ReadingProgressBar";
 
 interface BlogDetailPageProps {
     params: Promise<{ slug: string }>;
@@ -31,21 +32,22 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
             <div className="bg-[#105AE2]">
                 <Header />
             </div>
+            <div className="bg-[#105AE2] h-20 lg:h-17 w-full" />
             <div className="relative z-20 px-4 md:px-8 py-6 bg-[#F6F8FF] ">
-                <div className="max-w-[1280px] mx-auto flex items-center gap-2 text-sm text-[#9CA0AB] overflow-hidden">
-                    <Link href="/">Home</Link>
+                <div className="max-w-[1280px] mx-auto flex items-center font-medium gap-2 text-sm text-[#9CA0AB] overflow-hidden">
+                    <Link href="/" className="hidden lg:inline-block">Home</Link>
+                    <span className="hidden lg:inline-block">›</span>
+                    <Link href="/blogs" className="text-[#105AE2] lg:text-[#9CA0AB]">Blog</Link>
                     <span>›</span>
-                    <Link href="/blogs">Blog</Link>
-                    <span>›</span>
-                    <p className="text-[#105AE2] font-semibold w-[80%] flex-shrink-0 line-clamp-1 ">
+                    <p className="text-[#9CA0AB] lg:text-[#105AE2] font-semibold w-[80%] flex-shrink-0 line-clamp-1 ">
                         {post.title}
                     </p>
                 </div>
             </div>
             {featuredImageUrl && (
                 <div className="bg-white lg:hidden">
-                    <div className="max-w-[898px] mx-auto px-4 md:px-8 pb-2">
-                        <div className="relative w-full h-[250px] md:h-[420px] rounded-2xl overflow-hidden bg-[#0C2D76]">
+                    <div className="max-w-[898px] mx-auto  pb-2">
+                        <div className="relative w-full h-[250px] md:h-[420px] overflow-hidden bg-[#0C2D76]">
                             <Image
                                 src={featuredImageUrl}
                                 alt={post.title}
@@ -58,7 +60,7 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
                 </div>
             )}
             {/* Back link + Meta */}
-            <div className="bg-white pt-8 pb-4">
+            <div className="bg-white pt-5 lg:pt-8 pb-4">
                 <div className="max-w-[898px] mx-auto px-4 md:px-8  lg:text-center">
 
                     {/* Category + Date + Read time */}
@@ -115,7 +117,7 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
 
                         {/* Updated date */}
                         <span
-                            className="text-[#9CA3AF] text-[13px]"
+                            className="text-[#9CA3AF] text-[13px] hidden lg:inline-block"
                             style={{ fontFamily: "Inter" }}
                         >
                             Updated {formatDate(post.updated_at)}
@@ -124,6 +126,7 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
                         {/* Share buttons */}
                         <ShareButtons title={post.title} />
                     </div>
+                    <ReadingProgressBar />
                 </div>
             </div>
 
