@@ -33,7 +33,7 @@ const logoWhite = "/landing/logo/logoWhite.svg";
 const logoColored = "/landing/logo/logoColored.svg";
 
 export const metadata: Metadata = {
-    title: "Manage Parking Tickets & Fines - Snapmyfine | London, UK",
+    title: "Manage Parking Tickets & Appeals - Snapmyfine | London, UK",
     description: "Snapmyfine helps drivers and organisations manage parking tickets, track important deadlines, understand parking notices, and take the next step with less stress. Download the app or book a demo.",
 };
 
