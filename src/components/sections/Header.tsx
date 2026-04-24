@@ -22,13 +22,13 @@ const Header = () => {
             <header className="fixed top-0 left-0 right-0 z-20 px-4 md:px-8 py-6 backdrop-blur-md bg-[#034496]/60">
                 <div className="max-w-[1280px] mx-auto flex items-center justify-between">
                     {/* Logo */}
-                    <a href="/" className="flex items-center gap-3">
+                    <a href="/" className="flex items-center gap-0 lg:gap-3">
                         <svg
                             width="29"
-                            height="29"
+                            height="25"
                             viewBox="0 0 29 29"
                             fill="none"
-                            className="flex-shrink-0"
+                            className="flex-shrink-0 lg:h-[29px]"
                         >
                             <g>
                                 <path d={svgPaths.p1c6a0600} fill="white" />
@@ -37,12 +37,12 @@ const Header = () => {
                                 <path d={svgPaths.p251c2700} fill="white" />
                             </g>
                         </svg>
+                        
                         <svg
                             width="137"
-                            height="24"
                             viewBox="0 0 137 24"
                             fill="none"
-                            className="flex-shrink-0"
+                            className="flex-shrink-0 h-[20px] lg:h-[24px]"
                         >
                             <g>
                                 <path d={svgPaths.p4fbf500} fill="white" />

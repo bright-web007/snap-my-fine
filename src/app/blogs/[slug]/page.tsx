@@ -126,9 +126,10 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
                         {/* Share buttons */}
                         <ShareButtons title={post.title} />
                     </div>
-                    <ReadingProgressBar />
                 </div>
+                <ReadingProgressBar />
             </div>
+            
 
             {/* Featured Image */}
             {featuredImageUrl && (

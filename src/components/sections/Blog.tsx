@@ -105,7 +105,7 @@ const Blog = () => {
                                         </div>
                                         <a
                                             href={`/blogs${post.slug}`}
-                                            className="inline-flex items-center gap-1 text-[#0464DD] text-[13px] font-semibold hover:underline"
+                                            className="inline-flex items-center gap-1.5 text-[#0464DD] text-[13px] font-semibold bg-[#E8F0FE] px-4 py-1 rounded-full hover:bg-[#E0EDFF] transition-colors"
                                         >
                                             Read <ArrowRight size={14} />
                                         </a>
