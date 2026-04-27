@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Header from "@/components/sections/Header";
 import Footer from "@/components/sections/Footer";
 import Link from 'next/dist/client/link';
+import { ArrowRight } from "lucide-react";
 
 
 const page = () => {
@@ -56,10 +57,10 @@ const page = () => {
                     <div className="w-full flex flex-col gap-4 md:gap-6">
                         <section className="flex flex-col gap-4 md:gap-6">
                             <span
-                                className="px-4 py-2 w-fit flex items-center gap-2 rounded-full bg-[#FFFFFF12] border border-[#FFFFFF1A] text-white text-[13px] font-medium"
+                                className="px-4 py-1 w-fit flex items-center gap-2 rounded-full bg-[#105AE22E] border border-[#FFFFFF1A] text-white text-[11px] font-medium"
                             >
                                 <span className="w-[6px] h-[6px] rounded-full bg-[#5FAAFF] inline-block" />
-                                Coming Soon
+                                Launching soon in London
                             </span>
                             <h1
                                 className="text-white text-[48px] md:text-[52px]"
@@ -71,7 +72,7 @@ const page = () => {
                                     verticalAlign: "middle",
                                 }}
                             >
-                                The app is almost ready. You should be first.
+                                One missed deadline, one app that makes sure it never happens again.
                             </h1>
                             <p
                                 className="text-[#FFFFFFCC] w-full"
@@ -85,21 +86,21 @@ const page = () => {
                                     maxWidth: "489px",
                                 }}
                             >
-                                SnapMyFine is putting the finishing touches on its iOS and Android app. Drop your email and we'll notify you the moment it's live — plus early access perks.
+                                SnapMyFine catches your fine the moment you get it, reminds you before the deadline hits, and pays it in 60 seconds flat. Just take a photo — we handle everything else.
                             </p>
                         </section>
                         <section className="flex flex-col gap-4 md:gap-6">
                             <div className="flex flex-wrap gap-3">
                                 {[
-                                    'Snap PCN',
-                                    'AI analysis',
-                                    'Reminders',
-                                    'Appeal letters',
-                                    'Secure pay',
+                                    'Snap parking ticket',
+                                    'AI reads it instantly',
+                                    'Deadline reminder',
+                                    'Auto appeal letter',
+                                    'Secure open banking payment',
                                 ].map((tag) => (
                                     <span
                                         key={tag}
-                                        className="px-4 py-2 flex items-center gap-2 rounded-full bg-[#FFFFFF12] border border-[#FFFFFF1A] text-white text-[13px] font-medium"
+                                        className="px-4 py-1 flex items-center gap-2 rounded-full bg-[#FFFFFF12] border border-[#FFFFFF1A] text-[#FFFFFFCC] text-[12px] font-medium"
                                     >
                                         <span className="w-[6px] h-[6px] rounded-full bg-[#5FAAFF] inline-block" />
                                         {tag}
@@ -111,8 +112,15 @@ const page = () => {
                     <div>
                         <div className={`w-full flex flex-col gap-5 border border-[#FFFFFF1F] bg-[#FFFFFF0F] rounded-[20px] p-[20px] lg:p-[32px] ${submitted ? 'hidden' : 'block'}`}>
                             <div className="flex flex-col gap-1">
-                                <h2 className="text-white text-[18px] font-bold">Join the waitlist</h2>
-                                <p className="text-[#FFFFFFCC] text-[13px] font-regular">Be first in line when we launch.</p>
+                                <h2 className="text-white text-[18px] font-bold">Get early access before we launch</h2>
+                                <div className="flex items-center gap-2">
+                                    <div className="flex -space-x-2">
+                                        <div className="h-5 w-5 sm:w-8 sm:h-8 rounded-full bg-[#2563EB] border-2 border-[#07122A] flex items-center justify-center text-white text-[9px] sm:text-[11px] font-bold">JT</div>
+                                        <div className="h-5 w-5 sm:w-8 sm:h-8 rounded-full bg-[#5FAAFF] border-2 border-[#07122A] flex items-center justify-center text-white text-[9px] sm:text-[11px] font-bold">SR</div>
+                                        <div className="h-5 w-5 sm:w-8 sm:h-8 rounded-full bg-[#0CEDFF] border-2 border-[#07122A] flex items-center justify-center text-white text-[9px] sm:text-[11px] font-bold">PM</div>
+                                    </div>
+                                    <span className="text-[#FFFFFFCC] text-[10px] sm:text-[11px] font-regular whitespace-nowrap">Join 1,240+ London drivers on the waitlist</span>
+                                </div>
                             </div>
                             <div className="flex flex-col gap-3">
                                 <input
@@ -134,12 +142,13 @@ const page = () => {
                                 <button
                                     onClick={handleSubmit}
                                     disabled={!isFormValid}
-                                    className={`px-6 py-4 text-white text-[14px] font-semibold rounded-lg whitespace-nowrap transition-all ${isFormValid
+                                    className={`px-6 py-4 text-white text-[14px] font-semibold rounded-lg whitespace-nowrap transition-all flex gap-2 items-center justify-center ${isFormValid
                                         ? 'bg-[#2563EB] cursor-pointer hover:bg-[#1d4ed8]'
                                         : 'bg-[#2563EB]/50 cursor-not-allowed opacity-50'
                                         }`}
                                 >
                                     Get early access
+                                    <ArrowRight size={20} />
                                 </button>
                             </div>
                             <div className="flex items-center gap-1 lg:gap-8 pt-4">
@@ -153,14 +162,6 @@ const page = () => {
                                         />
                                     </svg>
                                     <span className="text-[#FFFFFFCC] text-[10px] sm:text-[11px] font-regular whitespace-nowrap">No spam. Unsubscribe anytime.</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="flex -space-x-2">
-                                        <div className="h-5 w-5 sm:w-8 sm:h-8 rounded-full bg-[#2563EB] border-2 border-[#07122A] flex items-center justify-center text-white text-[9px] sm:text-[11px] font-bold">JT</div>
-                                        <div className="h-5 w-5 sm:w-8 sm:h-8 rounded-full bg-[#5FAAFF] border-2 border-[#07122A] flex items-center justify-center text-white text-[9px] sm:text-[11px] font-bold">SR</div>
-                                        <div className="h-5 w-5 sm:w-8 sm:h-8 rounded-full bg-[#0CEDFF] border-2 border-[#07122A] flex items-center justify-center text-white text-[9px] sm:text-[11px] font-bold">PM</div>
-                                    </div>
-                                    <span className="text-[#FFFFFFCC] text-[10px] sm:text-[11px] font-regular whitespace-nowrap">1,240+ on the waitlist</span>
                                 </div>
                             </div>
                         </div>
