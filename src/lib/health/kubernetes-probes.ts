@@ -91,7 +91,7 @@ export class KubernetesProbeHandler {
       // This includes checking critical dependencies
       
       let allReady = true;
-      let message = 'Service is ready to accept traffic';
+      const message = 'Service is ready to accept traffic';
       const checks: string[] = [];
       
       // Check if Kafka consumer is running (critical for Snapmyfine)
