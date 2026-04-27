@@ -9,19 +9,32 @@ const page = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [submitted, setSubmitted] = useState(false);
+    const [emailError, setEmailError] = useState('');
 
     const isValidEmail = (emailValue: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(emailValue);
     };
 
-    const isFormValid = name.trim() !== '' && isValidEmail(email);
+    const validateEmail = () => {
+        if (!email.trim()) {
+            setEmailError('Email is required.');
+        } else if (!isValidEmail(email)) {
+            setEmailError('Please enter a valid email address.');
+        } else {
+            setEmailError('');
+        }
+    };
+
+    const isFormValid = name.trim() !== '' && isValidEmail(email) && !emailError;
 
     const handleSubmit = () => {
+        validateEmail();
         if (isFormValid) {
             setSubmitted(true);
             setName('');
             setEmail('');
+            setEmailError('');
         }
     };
     return (
@@ -58,7 +71,7 @@ const page = () => {
                                     verticalAlign: "middle",
                                 }}
                             >
-                                The app is almost ready. You should be first.?
+                                The app is almost ready. You should be first.
                             </h1>
                             <p
                                 className="text-[#FFFFFFCC] w-full"
@@ -113,9 +126,11 @@ const page = () => {
                                     type="email"
                                     placeholder="Email address"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
+                                    onBlur={validateEmail}
                                     className="flex-1 px-4 py-4 rounded-lg border border-[#FFFFFF2E] bg-[#FFFFFF14] text-[14px] text-white placeholder:text-gray-400 outline-none focus:border-[#2563EB]"
                                 />
+                                {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
                                 <button
                                     onClick={handleSubmit}
                                     disabled={!isFormValid}
