@@ -24,10 +24,9 @@ pipelines:
             - aws configure set region $AWS_DEFAULT_REGION
             - aws s3 cp s3://snapmyfine/envs/env.development .env || echo "Development environment file not found, continuing without it"
             # Install dependencies
-            - npm install -g pnpm
-            - pnpm install --frozen-lockfile
+            - yarn install --frozen-lockfile
             # Code quality checks
-            - pnpm lint
+            - yarn lint
           artifacts:
             - node_modules/**
             - .env
@@ -37,13 +36,12 @@ pipelines:
           script:
             # Build the application
             - echo "Building Next.js application..."
-            - npm install -g pnpm
-            - pnpm build
+            - yarn build
             # Verify build artifacts
             - echo "Verifying build artifacts..."
             - ls -la .next/
             # Smoke test
-            - timeout 30s pnpm start &
+            - timeout 30s yarn start &
             - sleep 15
             - curl -f http://localhost:3000 || echo "Application health check completed"
             - pkill -f "next start" || echo "Test server cleanup completed"
@@ -66,10 +64,9 @@ pipelines:
             - aws configure set region $AWS_DEFAULT_REGION
             - aws s3 cp s3://snapmyfine/envs/env.production .env
             # Install dependencies
-            - npm install -g pnpm
-            - pnpm install --frozen-lockfile
+            - yarn install --frozen-lockfile
             # Code quality checks
-            - pnpm lint
+            - yarn lint
           artifacts:
             - node_modules/**
             - src/**
@@ -78,8 +75,7 @@ pipelines:
           name: Build
           size: 2x
           script:
-            - npm install -g pnpm
-            - pnpm build
+            - yarn build
             # Verify build artifacts
             - ls -la .next/
           artifacts:
@@ -133,10 +129,9 @@ pipelines:
             - aws configure set region $AWS_DEFAULT_REGION
             - aws s3 cp s3://snapmyfine/envs/env.development .env
             # Install dependencies and build
-            - npm install -g pnpm
-            - pnpm install --frozen-lockfile
-            - pnpm lint
-            - pnpm build
+            - yarn install --frozen-lockfile
+            - yarn lint
+            - yarn build
             - echo "Build completed successfully for develop branch"
             - ls -la .next/
       - step:
@@ -171,10 +166,9 @@ pipelines:
             - aws configure set region $AWS_DEFAULT_REGION
             - aws s3 cp s3://snapmyfine/envs/env.staging .env
             # Install dependencies and build
-            - npm install -g pnpm
-            - pnpm install --frozen-lockfile
-            - pnpm lint
-            - pnpm build
+            - yarn install --frozen-lockfile
+            - yarn lint
+            - yarn build
             - echo "Build completed successfully for staging branch"
             - ls -la .next/
       - step:
@@ -209,10 +203,9 @@ pipelines:
             - aws configure set region $AWS_DEFAULT_REGION
             - aws s3 cp s3://snapmyfine/envs/env.production .env
             # Install dependencies and build
-            - npm install -g pnpm
-            - pnpm install --frozen-lockfile
-            - pnpm lint
-            - pnpm build
+            - yarn install --frozen-lockfile
+            - yarn lint
+            - yarn build
             - echo "Production build completed successfully"
             - ls -la .next/
       - step:
