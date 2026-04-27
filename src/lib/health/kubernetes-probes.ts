@@ -20,7 +20,6 @@ export class KubernetesProbeHandler {
       // - Basic Node.js functionality works
       
       const memUsage = process.memoryUsage();
-      const uptime = process.uptime();
       
       // Check if we have basic memory available
       const heapUsedPercent = (memUsage.heapUsed / memUsage.heapTotal) * 100;

@@ -101,7 +101,7 @@ export default function ReviewSection({
             onConfirmationError();
           }, 500);
         }
-      } catch (error) {
+      } catch {
         setTimeout(() => {
           onConfirmationError();
         }, 500);
@@ -111,7 +111,17 @@ export default function ReviewSection({
     };
 
     confirmTicketDetails();
-  }, [ticketData?.pcn_number, ticketData?.council_name]);
+  }, [
+    ticketData?.pcn_number,
+    ticketData?.council_name,
+    ticketData?.plate_number,
+    confirmTicket,
+    confirmationAttempted,
+    onConfirmationError,
+    onFineNotReady,
+    onInputChange,
+    onNoOutstandingCharge,
+  ]);
 
   return (
     <div className="w-full min-h-screen flex flex-col relative">

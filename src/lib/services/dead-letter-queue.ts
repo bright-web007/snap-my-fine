@@ -1,5 +1,3 @@
-import { FineReminderEvent } from '@/lib/schema';
-
 export interface FailedMessage {
   id: string;
   topic: string;

@@ -2,11 +2,11 @@
 import React, { useState } from 'react'
 import Header from "@/components/sections/Header";
 import Footer from "@/components/sections/Footer";
-import Link from 'next/dist/client/link';
+import Link from 'next/link';
 import { ArrowRight } from "lucide-react";
 
 
-const page = () => {
+const Page = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [submitted, setSubmitted] = useState(false);
@@ -147,7 +147,7 @@ const page = () => {
                                         : 'bg-[#2563EB]/50 cursor-not-allowed opacity-50'
                                         }`}
                                 >
-                                    Get early access
+                                    Claim my early access spot
                                     <ArrowRight size={20} />
                                 </button>
                             </div>
@@ -189,4 +189,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import HamburgerModal from "../../components/HamburgerModal";
 import { Notification } from "../../components/ui/notification";
 import { DeviceRestriction } from "../../components/landing/DeviceRestriction";
-import { useIsMobile } from "../../components/landing/ui/use-mobile";
 
 // Import HomeSection directly (initial view)
 import { HomeSection } from "../../components/sections";
@@ -45,10 +44,9 @@ import { usePayment } from "../../lib/hooks/use-payment";
 
 export default function Home() {
     const router = useRouter();
-    const isMobile = useIsMobile();
     const { processTicket, callbackPendingTicket } = useTicketProcessor();
     const { makePayment } = usePayment();
-    const { addTransaction: addSuccessfulTransaction, getSuccessfulTransactions } = useTransactionStore();
+    const { getSuccessfulTransactions } = useTransactionStore();
     const [showCamera, setShowCamera] = useState(false);
     const [isVideoVisible, setIsVideoVisible] = useState(false);
     const [showImagePreview, setShowImagePreview] = useState(false);

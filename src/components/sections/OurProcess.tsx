@@ -9,7 +9,7 @@ const processStep2 = "/landing/process/step2.png";
 const processStep3 = "/landing/process/step3.png";
 const logoColored = "/landing/logo/logoColored.svg";
 const NotificationBg = "/landing/hero/bg-grid-image.png";
-const Phone = "/landing/hero/Phone.png";
+// Phone not used
 
 const OurProcess = () => {
     const [activeStep, setActiveStep] = useState(1);

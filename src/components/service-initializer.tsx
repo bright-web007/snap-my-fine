@@ -13,8 +13,8 @@ interface ConsumerStatus {
 
 export default function ServiceInitializer() {
   const [status, setStatus] = useState<ConsumerStatus | null>(null);
-  const [initialized, setInitialized] = useState(false);
-  const [checking, setChecking] = useState(true);
+  const [, setInitialized] = useState(false);
+  const [, setChecking] = useState(true);
 
   useEffect(() => {
     let mounted = true;

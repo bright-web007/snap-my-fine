@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import type { Metadata } from "next";
-import svgPaths from "../lib/landing/svg-im39sd3dvf";
+// svgPaths import removed (unused) to satisfy linter
 import Header from "@/components/sections/Header";
 import Blog from "@/components/sections/Blog";
 import Footer from "@/components/sections/Footer";
@@ -124,8 +124,8 @@ export default function LandingPage() {
                                         style={{
                                             fontFamily: "Inter",
                                         }}
-                                    >Get the application</p>
-                                    <ArrowRight size={24} className="group-hover:text-[#313131]" />
+                                    >Claim Your Early Access Spot</p>
+                                    <ArrowRight size={24} className="text-white group-hover:text-[#313131]" />
                                 </a>
 
 

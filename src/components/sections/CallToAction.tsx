@@ -72,7 +72,7 @@ const CallToAction = () => {
                                             fontFamily: "Inter",
                                         }}
                                     >Get the application</p>
-                                    <ArrowRight size={24} className="group-hover:text-[#313131]" />
+                                    <ArrowRight size={24} className="text-white group-hover:text-[#313131]" />
                                 </a>
                             </div>
 

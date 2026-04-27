@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import svgPaths from "@/lib/landing/svg-im39sd3dvf";
 
@@ -22,7 +23,7 @@ const Header = () => {
             <header className="fixed top-0 left-0 right-0 z-20 px-4 md:px-8 py-6 backdrop-blur-md bg-[#034496]/60">
                 <div className="max-w-[1280px] mx-auto flex items-center justify-between">
                     {/* Logo */}
-                    <a href="/" className="flex items-center gap-0 lg:gap-3">
+                    <Link href="/" className="flex items-center gap-0 lg:gap-3">
                         <svg
                             width="29"
                             height="25"
@@ -57,7 +58,7 @@ const Header = () => {
                                 <path d={svgPaths.p1c80d000} fill="white" />
                             </g>
                         </svg>
-                    </a>
+                    </Link>
 
                     {/* Desktop Navigation */}
                     <nav
@@ -71,13 +72,13 @@ const Header = () => {
                         }}
                     >
                         {navLinks.map((link) => (
-                            <a
+                            <Link
                                 key={link.href}
                                 href={link.href}
                                 className="text-white hover:opacity-80 transition-opacity"
                             >
                                 {link.label}
-                            </a>
+                            </Link>
                         ))}
                     </nav>
 
@@ -147,7 +148,7 @@ const Header = () => {
                     <nav className="px-4">
                         <div className="bg-[#0B4F8E] rounded-3xl p-8 space-y-8">
                             {navLinks.map((link) => (
-                                <a
+                                <Link
                                     key={link.href}
                                     href={link.href}
                                     className="block text-white text-lg"
@@ -158,14 +159,14 @@ const Header = () => {
                                     }}
                                 >
                                     {link.label}
-                                </a>
+                                </Link>
                             ))}
                         </div>
                     </nav>
 
                     {/* Join Waitlist Button */}
                     <div className="px-4 pt-4">
-                        <a
+                        <Link
                             href="/#waitlist"
                             className="block w-full py-4 bg-white text-[#034496] text-center rounded-xl"
                             onClick={() => setIsMobileMenuOpen(false)}
@@ -176,7 +177,7 @@ const Header = () => {
                             }}
                         >
                             Join the waitlist
-                        </a>
+                        </Link>
                     </div>
                 </div>
             )}

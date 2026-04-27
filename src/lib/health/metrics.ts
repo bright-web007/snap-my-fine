@@ -1,14 +1,4 @@
-interface MetricsData {
-  endpoint: string;
-  responseTime: number;
-  status: 'Healthy' | 'Unhealthy' | 'Degraded';
-  cached: boolean;
-  clientInfo: {
-    ip: string;
-    headers: Headers;
-  };
-  serviceChecks?: Record<string, string>;
-}
+// Removed unused MetricsData interface (lint)
 
 interface HealthMetrics {
   totalRequests: number;
@@ -224,8 +214,6 @@ class HealthMetricsCollector {
 
     // Endpoint-specific metrics
     for (const [endpoint, stats] of Object.entries(this.metrics.endpointStats)) {
-      const endpointLabel = endpoint.replace(/[^a-zA-Z0-9_]/g, '_');
-      
       prometheus += `health_check_endpoint_requests_total{service="snapmyfine",endpoint="${endpoint}"} ${stats.requests}\n`;
       prometheus += `health_check_endpoint_healthy_total{service="snapmyfine",endpoint="${endpoint}"} ${stats.healthy}\n`;
       prometheus += `health_check_endpoint_unhealthy_total{service="snapmyfine",endpoint="${endpoint}"} ${stats.unhealthy}\n`;
