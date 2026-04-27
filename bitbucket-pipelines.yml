@@ -22,7 +22,7 @@ pipelines:
             - aws configure set aws_access_key_id $AWS_ACCESS_KEY
             - aws configure set aws_secret_access_key $AWS_SECRET_KEY
             - aws configure set region $AWS_DEFAULT_REGION
-            - aws s3 cp s3://snapmyfine/envs/env.development .env || echo "Development environment file not found, continuing without it"
+            - aws s3 cp s3://hivedeck/snapmyfine/envs/.env.development .env || echo "Development environment file not found, continuing without it"
             # Install dependencies
             - yarn install --frozen-lockfile
             # Code quality checks
@@ -62,7 +62,7 @@ pipelines:
             - aws configure set aws_access_key_id $AWS_ACCESS_KEY
             - aws configure set aws_secret_access_key $AWS_SECRET_KEY
             - aws configure set region $AWS_DEFAULT_REGION
-            - aws s3 cp s3://snapmyfine/envs/env.production .env
+            - aws s3 cp s3://hivedeck/snapmyfine/envs/.env.production .env
             # Install dependencies
             - yarn install --frozen-lockfile
             # Code quality checks
@@ -93,7 +93,7 @@ pipelines:
             - aws configure set aws_access_key_id $AWS_ACCESS_KEY
             - aws configure set aws_secret_access_key $AWS_SECRET_KEY
             - aws configure set region $AWS_DEFAULT_REGION
-            - aws s3 cp s3://snapmyfine/envs/env.production .env
+            - aws s3 cp s3://hivedeck/snapmyfine/envs/.env.production .env
             # Login to Docker registry
             - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
             # Build once, tag multiple times
@@ -127,7 +127,7 @@ pipelines:
             - aws configure set aws_access_key_id $AWS_ACCESS_KEY
             - aws configure set aws_secret_access_key $AWS_SECRET_KEY
             - aws configure set region $AWS_DEFAULT_REGION
-            - aws s3 cp s3://snapmyfine/envs/env.development .env
+            - aws s3 cp s3://hivedeck/snapmyfine/envs/.env.development .env
             # Install dependencies and build
             - yarn install --frozen-lockfile
             - yarn lint
@@ -145,7 +145,7 @@ pipelines:
             - aws configure set aws_access_key_id $AWS_ACCESS_KEY
             - aws configure set aws_secret_access_key $AWS_SECRET_KEY
             - aws configure set region $AWS_DEFAULT_REGION
-            - aws s3 cp s3://snapmyfine/envs/env.development .env
+            - aws s3 cp s3://hivedeck/snapmyfine/envs/.env.development .env
             - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
             - docker build -t $DOCKER_TEAM_USERNAME/snapmyfine:develop .
             - docker push $DOCKER_TEAM_USERNAME/snapmyfine:develop
@@ -164,7 +164,7 @@ pipelines:
             - aws configure set aws_access_key_id $AWS_ACCESS_KEY
             - aws configure set aws_secret_access_key $AWS_SECRET_KEY
             - aws configure set region $AWS_DEFAULT_REGION
-            - aws s3 cp s3://snapmyfine/envs/env.staging .env
+            - aws s3 cp s3://hivedeck/snapmyfine/envs/.env.staging .env
             # Install dependencies and build
             - yarn install --frozen-lockfile
             - yarn lint
@@ -182,7 +182,7 @@ pipelines:
             - aws configure set aws_access_key_id $AWS_ACCESS_KEY
             - aws configure set aws_secret_access_key $AWS_SECRET_KEY
             - aws configure set region $AWS_DEFAULT_REGION
-            - aws s3 cp s3://snapmyfine/envs/env.staging .env
+            - aws s3 cp s3://hivedeck/snapmyfine/envs/.env.staging .env
             - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
             - docker build -t $DOCKER_TEAM_USERNAME/snapmyfine:staging .
             - docker push $DOCKER_TEAM_USERNAME/snapmyfine:staging
@@ -201,7 +201,7 @@ pipelines:
             - aws configure set aws_access_key_id $AWS_ACCESS_KEY
             - aws configure set aws_secret_access_key $AWS_SECRET_KEY
             - aws configure set region $AWS_DEFAULT_REGION
-            - aws s3 cp s3://snapmyfine/envs/env.production .env
+            - aws s3 cp s3://hivedeck/snapmyfine/envs/.env.production .env
             # Install dependencies and build
             - yarn install --frozen-lockfile
             - yarn lint
@@ -219,7 +219,7 @@ pipelines:
             - aws configure set aws_access_key_id $AWS_ACCESS_KEY
             - aws configure set aws_secret_access_key $AWS_SECRET_KEY
             - aws configure set region $AWS_DEFAULT_REGION
-            - aws s3 cp s3://snapmyfine/envs/env.production .env
+            - aws s3 cp s3://hivedeck/snapmyfine/envs/.env.production .env
             - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
             - docker build -t $DOCKER_TEAM_USERNAME/snapmyfine:production .
             - docker tag $DOCKER_TEAM_USERNAME/snapmyfine:production $DOCKER_TEAM_USERNAME/snapmyfine:latest
