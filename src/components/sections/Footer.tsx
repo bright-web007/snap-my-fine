@@ -82,7 +82,7 @@ const Footer = () => {
                             </p>
                         </div>
 
-                        <div className="w-full flex flex-col gap-3">
+                        <div className="w-full flex flex-col gap-3 hidden">
                             <p className="font-medioum text-sm leading-6 text-[#FFFFFFDB]">Download the Snapmyfine mobile app</p>
                             <div className="flex flex-row gap-4">
                                 <a href={process.env.NEXT_PUBLIC_APP_STORE_LINK || "/"} target="_blank" rel="noopener noreferrer">

@@ -12,7 +12,16 @@ import CallToAction from "@/components/sections/CallToAction";
 
 const logoColored = "/landing/logo/logoColored.svg";
 const ITEMS_PER_PAGE = 9;
-const CATEGORIES = ["All", "Guides", "Tips", "Legal", "News", "Appeals"];
+const CATEGORIES = [
+  "All",
+  ...Blogs.reduce<string[]>((uniqueCategories, blog) => {
+    const category = blog.data.post.category.name;
+    if (!uniqueCategories.includes(category)) {
+      uniqueCategories.push(category);
+    }
+    return uniqueCategories;
+  }, []),
+];
 
 const Page = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -222,7 +231,7 @@ const Page = () => {
                                     <span className="inline-flex items-center bg-[#E1EBFF] px-3 py-1 rounded-2xl gap-1 text-[#105AE2] font-medium">
                                         {featuredPost.category.name}
                                     </span>
-                                    <span>{formatDate(featuredPost.updated_at)}</span>
+                                    <span>{formatDate(featuredPost.updated_at, true)}</span>
                                     <span>·</span>
                                     <span>{formatReadTime(featuredPost.read_time)}</span>
                                 </div>
@@ -310,7 +319,7 @@ const Page = () => {
                                                     {post.category.name}
                                                 </span>
                                                 <span>•</span>
-                                                <span>{formatDate(post.updated_at)}</span>
+                                                <span>{formatDate(post.updated_at, true)}</span>
                                                 <span>•</span>
                                                 <span>{formatReadTime(post.read_time)}</span>
                                             </div>

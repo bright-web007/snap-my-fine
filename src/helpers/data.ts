@@ -49,7 +49,7 @@ export const Blogs = [
                     "name": "Guides",
                     "slug": "/guides"
                 },
-                "slug": "/ultimate-guide-challenging-uk-parking-fine-2025"
+                "slug": "/ultimate-guide-challenging-uk-parking-fine-2025-2"
             }
         }
     },
@@ -296,6 +296,7 @@ export const Blogs = [
             }
         }
     },
+    // TODO: replace placeholder duplicate entries before CMS integration
     {
         "data": {
             "post": {

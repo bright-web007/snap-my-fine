@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useState, useEffect, useRef } from "react";
 
 export function ReadingProgressBar() {
@@ -17,14 +18,12 @@ export function ReadingProgressBar() {
     };
 
     const onScroll = () => {
-      // Update progress
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (docHeight > 0) {
         setProgress(Math.min((scrollTop / docHeight) * 100, 100));
       }
 
-      // Check if header has reached the bar's natural position
       if (placeholderRef.current) {
         const rect = placeholderRef.current.getBoundingClientRect();
         const header = document.querySelector("header");
@@ -33,19 +32,24 @@ export function ReadingProgressBar() {
       }
     };
 
+    const onResize = () => {
+      measureHeader();
+      onScroll();
+    };
+
     measureHeader();
     onScroll();
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", () => { measureHeader(); onScroll(); });
+    window.addEventListener("resize", onResize, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", measureHeader);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
   return (
-    <div ref={placeholderRef} className="w-full h-[3px]">
+    <div ref={placeholderRef} className="w-full h-[3px] lg:hidden">
       <div
         className={`h-[3px] bg-[#E5E7EB] z-20 ${isFixed ? "fixed left-0 right-0" : "w-full"}`}
         style={isFixed ? { top: `${headerHeight}px` } : undefined}
@@ -56,5 +60,5 @@ export function ReadingProgressBar() {
         />
       </div>
     </div>
-  );
-}
+  )
+};

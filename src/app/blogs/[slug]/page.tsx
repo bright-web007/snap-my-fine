@@ -68,7 +68,7 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
                         <span className="inline-flex items-center bg-[#E8F0FE] px-3 py-1 rounded-2xl gap-1 text-[#105AE2] font-semibold">
                             {post.category.name}
                         </span>
-                        <span>{formatDate(post.updated_at)}</span>
+                        <span>{formatDate(post.updated_at, true)}</span>
                         <span className="w-[5px] h-[5px] rounded-full bg-[#9CA0AB] inline-block" />
                         <span className="whitespace-nowrap line-clamp-1">{formatReadTime(post.read_time)}</span>
                     </div>
