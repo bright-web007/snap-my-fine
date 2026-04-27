@@ -57,9 +57,9 @@ const Organisation = () => {
                                     </span>
                                 ))}
                             </div>
-                            <button className="inline-flex w-fit items-center gap-2 text-white font-semibold text-[14px] leading-[100%] bg-[#105AE2] hover:bg-[#0a2561] py-[16px] px-[32px] rounded-[6px] whitespace-nowrap cursor-pointer">
+                            <a href="/coming-soon" className="inline-flex w-fit items-center gap-2 text-white font-semibold text-[14px] leading-[100%] bg-[#105AE2] hover:bg-[#0a2561] py-[16px] px-[32px] rounded-[6px] whitespace-nowrap cursor-pointer">
                                 Book a demo call
-                            </button>
+                            </a>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                             {[
