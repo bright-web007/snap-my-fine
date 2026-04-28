@@ -63,7 +63,7 @@ const Page = () => {
                                 Launching soon in London
                             </span>
                             <h1
-                                className="text-white text-[48px] md:text-[52px]"
+                                className="text-white text-[32px] md:text-[52px]"
                                 style={{
                                     fontFamily: "Sora",
                                     fontWeight: 800,
@@ -75,11 +75,10 @@ const Page = () => {
                                 One missed deadline, one app that makes sure it never happens again.
                             </h1>
                             <p
-                                className="text-[#FFFFFFCC] w-full"
+                                className="text-[#FFFFFFCC] text-[14px] md:text-[16px] w-full"
                                 style={{
                                     fontFamily: "Inter",
                                     fontWeight: 400,
-                                    fontSize: "15px",
                                     lineHeight: "22.5px",
                                     letterSpacing: "0%",
                                     verticalAlign: "middle",

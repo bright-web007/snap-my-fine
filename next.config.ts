@@ -21,7 +21,10 @@ const nextConfig: NextConfig = {
     // your project has type errors.
     ignoreBuildErrors: true,
   },
-  output: 'standalone',
+  // Produce a standalone build on non-Windows environments. On Windows
+  // creating symlinks for the standalone package can fail without
+  // elevated permissions, so disable it locally on Windows.
+  output: process.platform === 'win32' ? undefined : 'standalone',
 };
 
 export default withSentryConfig(nextConfig, {

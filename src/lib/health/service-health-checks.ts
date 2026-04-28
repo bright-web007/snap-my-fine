@@ -34,7 +34,7 @@ export class KafkaHealthCheck extends BaseHealthCheck {
       
       try {
         // Import the global consumer service if available
-        const { consumerService: globalConsumerService } = await import('../../scripts/kafka-consumer');
+        const { consumerService: globalConsumerService } = await import('../../../scripts/kafka-consumer');
         consumerService = globalConsumerService || new KafkaConsumerService();
       } catch {
         // Fallback to creating new instance for health check

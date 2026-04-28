@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
     return (
-        <div className="relative h-[120vh] lg:h-[110vh] w-full bg-[#2563EB] overflow-x-clip">
+        <div className="relative h-[120vh] lg:h-[150vh] xl:h-[110vh] w-full bg-[#2563EB] overflow-x-clip">
             {/* Grid Pattern Background */}
             <div
                 className="absolute inset-0 pointer-events-none opacity-[0.7] z-0"
@@ -54,7 +54,7 @@ export default function LandingPage() {
             <Header />
 
             {/* Main Content */}
-            <main className="relative z-10 px-4 md:px-8 pt-30 lg:pt-15 lg:pb-5  xl:pb-0">
+            <main className="relative z-10 px-4 md:px-8 pt-30 lg:pt-15 lg:pb-1  xl:pb-0">
                 <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-32 items-center overflow-hidden">
                     {/* Left Content */}
                     <div className="w-full flex flex-col gap-4 md:gap-6">

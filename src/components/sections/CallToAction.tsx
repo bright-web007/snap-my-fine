@@ -71,7 +71,7 @@ const CallToAction = () => {
                                         style={{
                                             fontFamily: "Inter",
                                         }}
-                                    >Get the application</p>
+                                    > Claim my early access spot</p>
                                     <ArrowRight size={24} className="text-white group-hover:text-[#313131]" />
                                 </a>
                             </div>

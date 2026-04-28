@@ -95,7 +95,7 @@ export class KubernetesProbeHandler {
       
       // Check if Kafka consumer is running (critical for Snapmyfine)
       try {
-        const { consumerService } = await import('../../scripts/kafka-consumer');
+        const { consumerService } = await import('../../../scripts/kafka-consumer');
         if (consumerService) {
           const status = consumerService.getStatus();
           if (!status.isConnected) {
