@@ -4,9 +4,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { VerticalProgress } from "../landing/VerticalProgress";
 
-const processStep1 = "/landing/process/step1.png";
-const processStep2 = "/landing/process/step2.png";
-const processStep3 = "/landing/process/step3.png";
+const processStep1 = "/landing/process/process1.png";
+const processStep2 = "/landing/process/process2.png";
+const processStep3 = "/landing/process/process3.png";
 const logoColored = "/landing/logo/logoColored.svg";
 const NotificationBg = "/landing/hero/bg-grid-image.png";
 // Phone not used

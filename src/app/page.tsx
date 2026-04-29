@@ -17,7 +17,7 @@ import { TestimonialColumn } from "../components/landing/TestimonialColumn";
 import { FAQAccordion } from "../components/landing/FAQAccordion";
 import { ArrowRight } from "lucide-react";
 
-const heroPhoneMockup = "/landing/hero/right-image.png";
+const heroPhoneMockup = "/landing/hero/hero-right.png";
 const patternImage = "/landing/hero/bg-grid-image.png";
 
 const whyUsPattern = "/landing/whyus/bgPattern.png";
