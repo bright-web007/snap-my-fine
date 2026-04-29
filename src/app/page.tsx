@@ -121,13 +121,20 @@ export default function LandingPage() {
                         name: "SnapMyFine — PCN & Parking Fine App",
                         operatingSystem: "iOS, Android",
                         applicationCategory: "FinanceApplication",
+                        applicationSubCategory: "Parking & Transport",
                         url: "https://snap-my-fine.wazobia.uk/",
-                        description: "Scan your London Council PCN with your phone camera. SnapMyFine reads it instantly, explains your rights in plain English, reminds you of deadlines, and helps you pay or appeal — all in under 60 seconds.",
-                        screenshot: "https://snap-my-fine.wazobia.uk/_next/image?url=%2Flanding%2Fhero%2Fright-image.png&w=3840&q=75",
+                        description:
+                            "Scan your London Council PCN with your phone camera. SnapMyFine reads it instantly, explains your rights in plain English, reminds you of deadlines, and helps you pay or appeal — all in under 60 seconds.",
+                        screenshot:
+                            "https://snap-my-fine.wazobia.uk/_next/image?url=%2Flanding%2Fhero%2Fright-image.png&w=3840&q=75",
                         offers: {
                             "@type": "Offer",
                             price: "0",
                             priceCurrency: "GBP",
+                        },
+                        publisher: {
+                            "@type": "Organization",
+                            name: "SnapMyFine Ltd"
                         },
                         featureList: [
                             "Instant PCN ticket scanning with OCR",
@@ -137,15 +144,77 @@ export default function LandingPage() {
                             "Secure payment via UK Open Banking",
                             "Covers 33+ London councils",
                             "Real-time payment status tracking",
-                            "Digital receipts on every payment"
+                            "Digital receipts on every payment",
                         ],
                         aggregateRating: {
                             "@type": "AggregateRating",
                             ratingValue: "4.97",
                             reviewCount: "12",
                             bestRating: "5",
-                            worstRating: "1"
-                        }
+                            worstRating: "1",
+                        },
+                        review: [
+                            {
+                                "@type": "Review",
+                                author: { "@type": "Person", name: "Sarah M." },
+                                datePublished: "2025-11-02",
+                                reviewBody:
+                                    "I used to spend 20 minutes trying to pay a single parking fine on my council's website. With SnapMyFine, it's literally a photo and done.",
+                                reviewRating: {
+                                    "@type": "Rating",
+                                    ratingValue: "5",
+                                    bestRating: "5",
+                                },
+                            },
+                            {
+                                "@type": "Review",
+                                author: { "@type": "Person", name: "Tom W." },
+                                datePublished: "2025-10-25",
+                                reviewBody:
+                                    "Finally, a service that takes away the headache of fine payments. It's secure, transparent, and super easy to use.",
+                                reviewRating: {
+                                    "@type": "Rating",
+                                    ratingValue: "5",
+                                    bestRating: "5",
+                                },
+                            },
+                            {
+                                "@type": "Review",
+                                author: { "@type": "Person", name: "Michael R." },
+                                datePublished: "2025-10-30",
+                                reviewBody:
+                                    "The app flagged that the signage wasn't clear — I challenged it, and the PCN was cancelled.",
+                                reviewRating: {
+                                    "@type": "Rating",
+                                    ratingValue: "5",
+                                    bestRating: "5",
+                                },
+                            },
+                            {
+                                "@type": "Review",
+                                author: { "@type": "Person", name: "James O." },
+                                datePublished: "2025-10-28",
+                                reviewBody:
+                                    "SnapMyFine reminds me early and I haven't had a single late fee since.",
+                                reviewRating: {
+                                    "@type": "Rating",
+                                    ratingValue: "4.9",
+                                    bestRating: "5",
+                                },
+                            },
+                            {
+                                "@type": "Review",
+                                author: { "@type": "Person", name: "Rachel P." },
+                                datePublished: "2025-10-29",
+                                reviewBody:
+                                    "Now SnapMyFine handles them automatically, and every transaction is tracked.",
+                                reviewRating: {
+                                    "@type": "Rating",
+                                    ratingValue: "5",
+                                    bestRating: "5",
+                                },
+                            },
+                        ],
                     }),
                 }}
             />
@@ -254,63 +323,6 @@ export default function LandingPage() {
                 }}
             />
 
-            {/* Reviews */}
-            <Script
-                id="reviews-schema"
-                type="application/ld+json"
-                strategy="afterInteractive"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "SoftwareApplication",
-                        name: "SnapMyFine",
-                        aggregateRating: {
-                            "@type": "AggregateRating",
-                            ratingValue: "4.97",
-                            reviewCount: "12",
-                            bestRating: "5",
-                            worstRating: "1"
-                        },
-                        review: [
-                            {
-                                "@type": "Review",
-                                author: { "@type": "Person", name: "Sarah M." },
-                                datePublished: "2025-11-02",
-                                reviewBody: "I used to spend 20 minutes trying to pay a single parking fine on my council's website. With SnapMyFine, it's literally a photo and done. Best app I've downloaded this year, saved me from a charge of £160.",
-                                reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" }
-                            },
-                            {
-                                "@type": "Review",
-                                author: { "@type": "Person", name: "Tom W." },
-                                datePublished: "2025-10-25",
-                                reviewBody: "Finally, a service that takes away the headache of fine payments. It's secure, transparent, and super easy to use.",
-                                reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" }
-                            },
-                            {
-                                "@type": "Review",
-                                author: { "@type": "Person", name: "Michael R." },
-                                datePublished: "2025-10-30",
-                                reviewBody: "I was ready to just pay it and move on. The app flagged that the signage wasn't clear — I challenged it, and the PCN was cancelled. Never would have known otherwise.",
-                                reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" }
-                            },
-                            {
-                                "@type": "Review",
-                                author: { "@type": "Person", name: "James O." },
-                                datePublished: "2025-10-28",
-                                reviewBody: "I missed two payments last year because I forgot the due dates. Now SnapMyFine reminds me early and I haven't had a single late fee since.",
-                                reviewRating: { "@type": "Rating", ratingValue: "4.9", bestRating: "5" }
-                            },
-                            {
-                                "@type": "Review",
-                                author: { "@type": "Person", name: "Rachel P." },
-                                datePublished: "2025-10-29",
-                                reviewBody: "As someone managing a small fleet, I used to waste hours paying fines one by one. Now SnapMyFine handles them automatically, and every transaction is tracked. Brilliant.",
-                                reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" }
-                            }
-                        ],
-                    }),
-                }}
-            />
 
 
             {/* content  */}
