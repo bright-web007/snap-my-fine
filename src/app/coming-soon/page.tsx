@@ -45,7 +45,7 @@ const Page = () => {
                 <Header />
             </div>
             <div className="bg-[#105AE2] h-20 lg:h-17 w-full" />
-            <div className="relative z-20 px-4 md:px-8 py-6 bg-[#F6F8FF] ">
+            <div className="px-4 md:px-8 py-6 bg-[#F6F8FF] ">
                 <div className="max-w-[1280px] mx-auto flex items-center font-medium gap-2 text-sm text-[#9CA0AB] overflow-hidden">
                     <Link href="/">Home</Link>
                     <span>›</span>
