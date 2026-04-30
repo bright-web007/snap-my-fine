@@ -40,7 +40,7 @@ export async function GET() {
         timeout: 5000
       });
       heraclesStatus = heraclesResponse.ok ? 'healthy' : 'unhealthy';
-    } catch (error) {
+    } catch {
       heraclesStatus = 'unreachable';
     }
 

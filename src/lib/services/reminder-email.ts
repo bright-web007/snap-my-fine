@@ -40,7 +40,7 @@ export class ReminderEmailService {
   /**
    * Determine email type based on Kafka event type
    */
-  private getEmailType(eventType: string): 'reminder' | 'success' {
+  private getEmailType(): 'reminder' | 'success' {
     // All the fine reminder events should trigger reminder emails
     // Payment success events would trigger success emails (but those aren't in our topics list)
     return 'reminder';

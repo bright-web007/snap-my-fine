@@ -45,7 +45,7 @@ export default function HomeSection({
                         {/* Left content */}
                         <div className="space-y-4 flex flex-col gap-[120px] z-10 w-[100%]">
                             <div className="flex flex-row justify-between items-center w-[100%]">
-                                <Image src={logo} alt="SnapMyFine Logo" className="w-[128px] h-[21px]" />
+                                <Image src={logo} alt="SnapMyFine Logo" width={128} height={21} className="w-[128px] h-[21px]" />
 
                                 <button
                                     className="p-2 hover:bg-gray-100 rounded-full transition-colors font-sora font-medium"
@@ -67,7 +67,7 @@ export default function HomeSection({
 
                         {/* Right illustration - positioned absolutely */}
                         <div className="absolute top-18 -right-12">
-                            <Image src={logo2} alt="Car illustration" className="w-[290px] h-[200px]" />
+                            <Image src={logo2} alt="Car illustration" width={290} height={200} className="w-[290px] h-[200px]" />
                         </div>
                     </div>
 

@@ -1,5 +1,5 @@
 import { Kafka, Consumer, KafkaMessage, logLevel } from 'kafkajs';
-import { FineReminderEvent, FineReminderEventSchema } from '@/lib/schema';
+import { FineReminderEventSchema } from '@/lib/schema';
 import { ReminderEmailService } from '@/lib/services/reminder-email';
 import { DeadLetterQueueService, FailedMessage } from '@/lib/services/dead-letter-queue';
 import { MetricsCollector } from '@/lib/services/metrics-collector';

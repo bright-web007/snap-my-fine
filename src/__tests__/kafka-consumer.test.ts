@@ -22,7 +22,7 @@ describe('Kafka Consumer Service', () => {
     if (consumerService) {
       try {
         await consumerService.disconnect();
-      } catch (error) {
+      } catch {
         // Ignore cleanup errors in tests
       }
     }
