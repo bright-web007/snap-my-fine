@@ -3,6 +3,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.fournine.net',
+      },
+    ],
+  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -13,7 +21,10 @@ const nextConfig: NextConfig = {
     // your project has type errors.
     ignoreBuildErrors: true,
   },
-  output: 'standalone',
+  // Produce a standalone build on non-Windows environments. On Windows
+  // creating symlinks for the standalone package can fail without
+  // elevated permissions, so disable it locally on Windows.
+  output: process.platform === 'win32' ? undefined : 'standalone',
 };
 
 export default withSentryConfig(nextConfig, {

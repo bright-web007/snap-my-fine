@@ -20,7 +20,6 @@ export class KubernetesProbeHandler {
       // - Basic Node.js functionality works
       
       const memUsage = process.memoryUsage();
-      const uptime = process.uptime();
       
       // Check if we have basic memory available
       const heapUsedPercent = (memUsage.heapUsed / memUsage.heapTotal) * 100;
@@ -96,7 +95,7 @@ export class KubernetesProbeHandler {
       
       // Check if Kafka consumer is running (critical for Snapmyfine)
       try {
-        const { consumerService } = await import('../../scripts/kafka-consumer');
+        const { consumerService } = await import('../../../scripts/kafka-consumer');
         if (consumerService) {
           const status = consumerService.getStatus();
           if (!status.isConnected) {

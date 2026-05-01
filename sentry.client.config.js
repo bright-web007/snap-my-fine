@@ -25,7 +25,7 @@ Sentry.init({
   ],
 
   // Capture payment-related errors specifically
-  beforeSend(event, hint) {
+  beforeSend(event) {
     // Add client context to all errors
     if (event.tags) {
       event.tags.environment = event.tags.environment || 'client';

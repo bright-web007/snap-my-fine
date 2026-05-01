@@ -183,6 +183,8 @@ function PaymentVerificationContent() {
         };
 
         processPaymentVerification();
+    // Intentionally ignore exhaustive deps here because handlers are stable and we control invocation
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams, ticketData, paymentVerificationStarted]);
 
     // Handle council payment and update payment record
@@ -337,34 +339,13 @@ function PaymentVerificationContent() {
         }, 5000);
     };
 
-    // Handle receipt section close (from ReceiptSection)
-    const handleReceiptClose = () => {
-        clearTicketData();
-        router.push('/');
-    };
-
     // Handle back button (redirect to home)
     const handleBack = () => {
         clearTicketData();
         router.push('/');
     };
 
-    // Function to open Gmail app (from ReceiptSection)
-    const openGmailApp = () => {
-        const userAgent = navigator.userAgent || navigator.vendor;
-        const isMobile = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
-
-        if (isMobile) {
-            const isIOS = /iphone|ipad|ipod/i.test(userAgent);
-            if (isIOS) {
-                window.open('googlegmail://');
-            } else {
-                window.open('intent://send?to=#Intent;scheme=mailto;package=com.google.android.gm;end');
-            }
-        } else {
-            window.open('https://mail.google.com', '_blank');
-        }
-    };
+    // (Removed unused handlers for receipt close / open gmail — not referenced in this page)
 
     // Show loading state while processing payment verification or council payment
     if (loading || councilPaymentInProgress || (paymentVerificationStarted && !showReceiptSection)) {

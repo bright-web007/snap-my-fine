@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 interface MercuryTokenResponse {
   success: boolean;
@@ -8,7 +8,7 @@ interface MercuryTokenResponse {
 // Mercury token endpoint
 const MERCURY_TOKEN_ENDPOINT = process.env.MERCURY_TOKEN_ENDPOINT!;
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const response = await fetch(MERCURY_TOKEN_ENDPOINT, {
       method: 'POST',
