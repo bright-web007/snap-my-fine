@@ -1,3 +1,4 @@
+"use client";
 import React from 'react'
 import Image from "next/image";
 // ArrowRight not used
@@ -7,6 +8,18 @@ import Image from "next/image";
 const logoColored = "/landing/logo/logoColored.svg";
 
 const Organisation = () => {
+
+    const openCalendly = () => {
+        // @ts-ignore
+        if (window.Calendly) {
+            window.Calendly.initPopupWidget({
+                url: "https://calendly.com/YOUR_USERNAME/30min"
+            });
+        } else {
+            console.warn("Calendly script not loaded yet");
+        }
+    };
+
     return (
         <section
             id="organisation"
@@ -57,9 +70,11 @@ const Organisation = () => {
                                     </span>
                                 ))}
                             </div>
-                            <a href="/coming-soon" className="inline-flex w-fit items-center gap-2 text-white font-semibold text-[14px] leading-[100%] bg-[#105AE2] hover:bg-[#0a2561] py-[16px] px-[32px] rounded-[6px] whitespace-nowrap cursor-pointer">
+                            <button
+                                onClick={openCalendly}
+                                className="inline-flex w-fit items-center gap-2 text-white font-semibold text-[14px] leading-[100%] bg-[#105AE2] hover:bg-[#0a2561] py-[16px] px-[32px] rounded-[6px] whitespace-nowrap cursor-pointer">
                                 Book a demo call
-                            </a>
+                            </button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                             {[

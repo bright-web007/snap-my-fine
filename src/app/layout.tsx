@@ -52,10 +52,10 @@ export default function RootLayout({
         </Script>
         <noscript>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            height="1" 
-            width="1" 
-            style={{display: 'none'}}
+          <img
+            height="1"
+            width="1"
+            style={{ display: 'none' }}
             src="https://www.facebook.com/tr?id=2273906359769401&ev=PageView&noscript=1"
             alt=""
           />
@@ -68,6 +68,12 @@ export default function RootLayout({
         </Providers>
         {/* Alternative: Using Next.js third-party package (uncomment to use) */}
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
+
+        {/* Calendly Script */}
+        <Script
+          src="https://assets.calendly.com/assets/external/widget.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
